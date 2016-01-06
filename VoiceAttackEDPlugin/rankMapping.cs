@@ -12,7 +12,6 @@ class RankMapping
         return rankings[rank];
     }
 
-
     public static string tradeRankToString(int rank)
     {
         string[] rankings = new string[] { "Penniless", "Mostly Penniless", "Pedlar",
@@ -20,7 +19,6 @@ class RankMapping
 
         return rankings[rank];
     }
-
 
     public static string exploreRankToString(int rank)
     {
@@ -30,7 +28,6 @@ class RankMapping
         return rankings[rank];
     }
 
-
     public static string cqcRankToString(int rank)
     {
         string[] rankings = new string[] { "Helpless", "Mostly Helpless", "Amateur",
@@ -38,7 +35,6 @@ class RankMapping
 
         return rankings[rank];
     }
-
 
     public static string federationRankToString(int rank)
     {
@@ -50,7 +46,6 @@ class RankMapping
         return rankings[rank];
     }
 
-
     public static string empireRankToString(int rank)
     {
         string[] rankings = new string[] { "None", "Outsider", "Serf",
@@ -60,7 +55,6 @@ class RankMapping
 
         return rankings[rank];
     }
-
 
     public static string powerPlayRankToString(int rank)
     {

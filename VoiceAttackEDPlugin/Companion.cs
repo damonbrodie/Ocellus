@@ -75,7 +75,6 @@ class Companion
         return cookieStrings;
     }
 
-
     private static Cookie convertCookieStringToCookie(string cookieString, string strHost)
     {
 
@@ -188,7 +187,6 @@ class Companion
         }
     }
 
-
     public static void WriteCookiesToDisk(string file, CookieContainer cookieJar)
     {
         Utility.writeDebug("in writecookiestodisk");
@@ -210,7 +208,6 @@ class Companion
         }
     }
 
-
     public static CookieContainer ReadCookiesFromDisk(string file)
     {
         try
@@ -229,7 +226,6 @@ class Companion
             return new CookieContainer();
         }
     }
-
 
     public static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer, string referer = null, string sendData = null)
     {
@@ -354,7 +350,6 @@ class Companion
         }
         return Tuple.Create(cookieContainer, htmldata);
     }
-
 
     public static Tuple<CookieContainer, string> loginToAPI(string email, string password)
     {

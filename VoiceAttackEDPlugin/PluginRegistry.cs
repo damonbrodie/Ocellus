@@ -37,6 +37,7 @@ class PluginRegistry
             return null;
         }
     }
+
     public static bool setIntegerValue(string attribute, int value)
     {
         try
