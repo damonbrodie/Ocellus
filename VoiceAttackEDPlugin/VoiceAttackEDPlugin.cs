@@ -64,6 +64,8 @@ namespace VoiceAttackEDPlugin
                 isSteam = tResponse.Item2;
             }
 
+
+            // XXX need to make this work for Season 1 of ED - both 32 and 64 bit versions
             string logPath = string.Empty;
             if (gamePath != string.Empty)
             {
@@ -74,9 +76,9 @@ namespace VoiceAttackEDPlugin
             state.Add("VAEDlogPath", logPath);
             state.Add("VAEDnetLogFile", String.Empty);
 
-            string gameConfigPath = Path.Combine(gamePath, "Products", "elite-dangerous-64");
 
             // verboseEnabled:  0 - not enabled, 1 - was already enabled, 2 - just enabled now
+            string gameConfigPath = Path.Combine(gamePath, "Products", "elite-dangerous-64");
             int verboseEnabled = Elite.enableVerboseLogging(gameConfigPath);
             state.Add("VAEDverboseLoggingEnabled", verboseEnabled);
 
