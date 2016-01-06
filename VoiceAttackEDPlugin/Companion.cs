@@ -12,6 +12,10 @@ using System.Text;
 
 class Companion
 {
+    private const string loginURL = "https://companion.orerve.net/user/login";
+    private const string confirmURL = "https://companion.orerve.net/user/confirm";
+    private const string profileURL = "https://companion.orerve.net/profile";
+
     private static List<string> cookieStringsFromHeader(string header)
     {
         // Look for delimiters - either ; or ,.  Deal with commas that may exist in the attribute values
@@ -187,47 +191,7 @@ class Companion
         }
     }
 
-    public static void WriteCookiesToDisk(string file, CookieContainer cookieJar)
-    {
-        Utility.writeDebug("in writecookiestodisk");
-        if (File.Exists(file))
-        {
-            File.Delete(file);
-        }
-        using (Stream stream = File.Create(file))
-        {
-            try
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, cookieJar);
-            }
-            catch (Exception e)
-            {
-                Utility.writeDebug("Problem writing cookies to disk: " + e.GetType());
-            }
-        }
-    }
-
-    public static CookieContainer ReadCookiesFromDisk(string file)
-    {
-        try
-        {
-            using (Stream stream = File.Open(file, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                CookieContainer cookieJar = (CookieContainer)formatter.Deserialize(stream);
-
-                return cookieJar;
-            }
-        }
-        catch (Exception e)
-        {
-            Utility.writeDebug("Problem reading cookies from disk: " + e.GetType());
-            return new CookieContainer();
-        }
-    }
-
-    public static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer, string referer = null, string sendData = null)
+    private static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer, string referer = null, string sendData = null)
     {
 
         Utility.writeDebug("sendRequest:  " + url);
@@ -351,12 +315,52 @@ class Companion
         return Tuple.Create(cookieContainer, htmldata);
     }
 
+    public static void WriteCookiesToDisk(string file, CookieContainer cookieJar)
+    {
+        Utility.writeDebug("in writecookiestodisk");
+        if (File.Exists(file))
+        {
+            File.Delete(file);
+        }
+        using (Stream stream = File.Create(file))
+        {
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, cookieJar);
+            }
+            catch (Exception e)
+            {
+                Utility.writeDebug("Problem writing cookies to disk: " + e.GetType());
+            }
+        }
+    }
+
+    public static CookieContainer ReadCookiesFromDisk(string file)
+    {
+        try
+        {
+            using (Stream stream = File.Open(file, FileMode.Open))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                CookieContainer cookieJar = (CookieContainer)formatter.Deserialize(stream);
+
+                return cookieJar;
+            }
+        }
+        catch (Exception e)
+        {
+            Utility.writeDebug("Problem reading cookies from disk: " + e.GetType());
+            return new CookieContainer();
+        }
+    }
+
     public static Tuple<CookieContainer, string> loginToAPI(string email, string password)
     {
 
         string returnString;
         CookieContainer cookieContainer = new CookieContainer();
-        string loginURL = "https://companion.orerve.net/user/login";
+
 
         Tuple<CookieContainer, string> tInitialGet = sendRequest(loginURL, cookieContainer);
 
@@ -390,5 +394,22 @@ class Companion
         return Tuple.Create(cookieContainer, returnString);
 
     }
-}
 
+    public static Tuple<CookieContainer, string> verifyWithAPI(CookieContainer cookieContainer, string verificationCode)
+    {
+        string sendData = "code=" + verificationCode;
+        Tuple<CookieContainer, string> tRespon = Companion.sendRequest(confirmURL, cookieContainer, confirmURL, sendData);
+        //XXX this is broken for now - verification returns a 404 error - why?
+
+        // XXX Handle wrong verification code case
+        // Currently we just assume we're logged in.
+        return Tuple.Create(tRespon.Item1, "yes");
+
+    }
+
+    public static Tuple<CookieContainer, string> getProfile(CookieContainer cookieContainer)
+    {
+        Tuple<CookieContainer, string> tRespon = sendRequest(profileURL, cookieContainer);
+        return Tuple.Create(tRespon.Item1, tRespon.Item2);
+    }
+}

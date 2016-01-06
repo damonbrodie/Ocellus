@@ -97,12 +97,6 @@ namespace VoiceAttackEDPlugin
             state.Add("VAEDcooldown", DateTime.Now.AddHours(-6));
 
 
-            // Frontier's companion API URLs
-            // XXX Make these CONST? refactor API functions
-            state.Add("VAEDconfirmURL", "https://companion.orerve.net/user/confirm");
-            state.Add("VAEDprofileURL", "https://companion.orerve.net/profile");
-
-
             // Get FD credentials from registry
             Boolean haveConfig = true;
 
@@ -224,16 +218,14 @@ namespace VoiceAttackEDPlugin
                             {
                                 Utility.writeDebug("in send verification code is:  " + textValues["VAEDvalue"]);
 
-                                string sendData = "code=" + textValues["VAEDvalue"];
-
                                 CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
-                                Tuple<CookieContainer, string> tRespon = Companion.sendRequest(state["VAEDconfirmURL"].ToString(), cookieContainer, state["VAEDconfirmURL"].ToString(), sendData);
+                                
+                                Tuple<CookieContainer, string> tRespon = Companion.verifyWithAPI(cookieContainer, textValues["VAEDvalue"]);
                                 state["VAEDcookieContainer"] = tRespon.Item1;
 
                                 Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
 
-                                //XXX this is broken for now - verification returns a 404 error - why?
-                                // Currently we just assume we're logged in.
+
                                 state["VAEDloggedIn"] = "yes";
                                 textValues.Add("VAEDprofileStatus", "yes");
                                 break;
@@ -313,7 +305,7 @@ namespace VoiceAttackEDPlugin
 
                             state["VAEDcooldown"] = DateTime.Now;
 
-                            Tuple<CookieContainer, string> tRespon = Companion.sendRequest(state["VAEDprofileURL"].ToString(), cookieContainer);
+                            Tuple<CookieContainer, string> tRespon = Companion.getProfile(cookieContainer);
                             state["VAEDcookieContainer"] = tRespon.Item1;
                             Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
 
