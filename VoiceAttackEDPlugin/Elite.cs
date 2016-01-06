@@ -196,12 +196,20 @@ class Elite
             }
             catch (Exception ex)
             {
-                Utility.writeDebug("Error:  Unable to modify AppConfig.xml:  " + ex.ToString());
+                Utility.writeDebug("Error:  Unable to create temporary AppConfig.xml:  " + ex.ToString());
                 return 0;
             }
 
-            File.Replace(newConfig, configFile, backupFile);
-            return 2;
+            try
+            {
+                File.Replace(newConfig, configFile, backupFile);
+                return 2;
+            }
+            catch (Exception ex)
+            {
+                Utility.writeDebug("Error:  Unable to replace AppConfig.xml:  " + ex.ToString());
+                return 0;
+            }
         }
         else
         {
