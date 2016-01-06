@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 
 
-// **************************************************************
-// *  Accessing ED's "netLog" for current star system location  *
-// **************************************************************
+// **********************************************
+// *  Functions for working with ED game files  *
+// **********************************************
 
-class NetLog
+class Elite
 {
     private static string getLogFile(string path)
     {

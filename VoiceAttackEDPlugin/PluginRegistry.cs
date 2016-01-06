@@ -9,7 +9,7 @@ class PluginRegistry
 {
     private const string pluginRegistryPath = @"SOFTWARE\VoiceAttackEliteDangerousPlugin";
 
-    public static bool writeValue(string attribute, string value)
+    public static bool setValue(string attribute, string value)
     { 
         try
         {

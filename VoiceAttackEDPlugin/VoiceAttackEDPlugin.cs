@@ -46,9 +46,19 @@ namespace VoiceAttackEDPlugin
                 File.Delete(debugFile);
             }
 
-            // XXX deal with non-steam locations.  Deal with ED vs. Horizons.  32bit vs. 64 bit, etc.
-            state.Add("VAEDnetLogPath", @"C:\Program Files (x86)\Steam\steamapps\common\Elite Dangerous Horizons\Products\elite-dangerous-64\Logs");
+
+            string gamePath = PluginRegistry.getValue("GamePath");
+            if (gamePath != null)
+            {
+                gamePath = EliteRegistry.getInstallPath();
+            }
+
+            string logPath = Path.Combine(gamePath, "Logs");
+
+            
+            state.Add("VAEDnetLogPath", logPath);
             state.Add("VAEDnetLogFile", String.Empty);
+
 
             Int32 processId = EliteProcess.getPID();
             state.Add("VAEDelitePid", processId);
@@ -160,7 +170,7 @@ namespace VoiceAttackEDPlugin
                         break;
 
                     case "save email":
-                        if(!PluginRegistry.writeValue("email", textValues["VAEDvalue"]))
+                        if(!PluginRegistry.setValue("email", textValues["VAEDvalue"]))
                         {
                             textValues["VAEDerror"] = "registry";
                         }                        
@@ -177,7 +187,7 @@ namespace VoiceAttackEDPlugin
                         break;
 
                     case "save password":
-                        if(!PluginRegistry.writeValue("password", textValues["VAEDvalue"]))
+                        if(!PluginRegistry.setValue("password", textValues["VAEDvalue"]))
                         {
                             textValues["VAEDerror"] = "registry";
                         }
@@ -380,7 +390,7 @@ namespace VoiceAttackEDPlugin
 
                                 string filename = state["VAEDnetLogFile"].ToString();
 
-                                Tuple<Boolean, string, string, long, Int32> tLogReturn = NetLog.tailNetLog(state["VAEDnetLogPath"].ToString(), filename, currentPosition, elitePid);
+                                Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(state["VAEDnetLogPath"].ToString(), filename, currentPosition, elitePid);
                                 //string newTimestamp = tLogReturn.Item1;
 
                                 Boolean success = tLogReturn.Item1;
