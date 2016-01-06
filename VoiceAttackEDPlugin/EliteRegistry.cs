@@ -10,7 +10,7 @@ class EliteRegistry
 {
     const string uninstallRegistryPath64bit = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall";
 
-    public static string getInstallPath ()
+    public static Tuple <string, int> getGameDetails ()
     {
         RegistryKey localMachine = Registry.LocalMachine;
         RegistryKey uninstallKey = null;
@@ -24,25 +24,30 @@ class EliteRegistry
         }
         foreach (string child in uninstallKey.GetSubKeyNames())
         {
-            Utility.writeDebug("KEY " + child);
-
             RegistryKey programKey = uninstallKey.OpenSubKey(child);
             try
             {
-                string publisher = programKey.GetValue("Publisher").ToString();
-                Utility.writeDebug("Publisher " + publisher);
+                string publisher = programKey.GetValue("Publisher", string.Empty).ToString();
+                string displayName = programKey.GetValue("Display Name", string.Empty).ToString();
+                string uninstallString = programKey.GetValue("UninstallString", string.Empty).ToString();
 
                 if (publisher == "Frontier Developments")
                 {
-
                     string gameLocation = programKey.GetValue("InstallLocation").ToString();
-                    PluginRegistry.setValue("GamePath", gameLocation);
-                    return gameLocation;
+                    int isSteam = 0;
+                    if (uninstallString.Contains("steam.exe"))
+                    {
+                        isSteam = 1;
+                    }
+
+                    PluginRegistry.setStringValue("GamePath", gameLocation);
+                    PluginRegistry.setIntegerValue("isSteamGame", isSteam);
+                    return Tuple.Create(gameLocation, isSteam);
                 }
             }
-            catch { } // No publisher - definietely not Frontier
+            catch {} // No publisher - definietely not Frontier
         }
-        return null;
+        return Tuple.Create(string.Empty, -1);
     }
 
 }

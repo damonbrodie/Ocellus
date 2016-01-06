@@ -46,21 +46,29 @@ namespace VoiceAttackEDPlugin
                 File.Delete(debugFile);
             }
 
+            string gamePath = PluginRegistry.getStringValue("GamePath");
+            int isSteam = (int) PluginRegistry.getIntegerValue("isSteamGame");
 
-            string gamePath = PluginRegistry.getValue("GamePath");
-            if (gamePath != null)
+            Utility.writeDebug("is Steam" + isSteam.ToString());
+
+            if (gamePath != null || isSteam == -1)
             {
-                gamePath = EliteRegistry.getInstallPath();
+                Tuple<string, int> tResponse = EliteRegistry.getGameDetails();
+                gamePath = tResponse.Item1;
+                isSteam = tResponse.Item2;
             }
 
-            string logPath = Path.Combine(gamePath, "Logs");
+            string logPath = string.Empty;
+            if (gamePath != string.Empty)
+            {
+                logPath = Path.Combine(gamePath, "Products", "elite-dangerous-64", "Logs");
+            }
 
-            
-            state.Add("VAEDnetLogPath", logPath);
+            state.Add("VAEDgamePath", gamePath);
+            state.Add("VAEDlogPath", logPath);
             state.Add("VAEDnetLogFile", String.Empty);
 
-
-            Int32 processId = EliteProcess.getPID();
+            Int32 processId = Elite.getPID();
             state.Add("VAEDelitePid", processId);
 
             long pos = 0;
@@ -68,7 +76,7 @@ namespace VoiceAttackEDPlugin
 
             Boolean haveConfig = true;
 
-            string FDemail = PluginRegistry.getValue("email");
+            string FDemail = PluginRegistry.getStringValue("email");
             if (FDemail != "null")
             {
                 state.Add("VAEDemail", FDemail);
@@ -78,7 +86,7 @@ namespace VoiceAttackEDPlugin
                 haveConfig = false;
             }
 
-            string FDpassword = PluginRegistry.getValue("password");
+            string FDpassword = PluginRegistry.getStringValue("password");
             if (FDpassword != "null")
             {
                 state.Add("VAEDpassword", FDpassword);
@@ -121,7 +129,6 @@ namespace VoiceAttackEDPlugin
                     cookieJar = Companion.ReadCookiesFromDisk(cookieFile);
                     state.Add("VAEDcookieContainer", cookieJar);
                     state["VAEDloggedIn"] = "yes";
-                    Utility.writeDebug("Init - have config, cookies exist - assume we are logged in");
                 }
                 else
                 {
@@ -170,7 +177,7 @@ namespace VoiceAttackEDPlugin
                         break;
 
                     case "save email":
-                        if(!PluginRegistry.setValue("email", textValues["VAEDvalue"]))
+                        if(!PluginRegistry.setStringValue("email", textValues["VAEDvalue"]))
                         {
                             textValues["VAEDerror"] = "registry";
                         }                        
@@ -187,7 +194,7 @@ namespace VoiceAttackEDPlugin
                         break;
 
                     case "save password":
-                        if(!PluginRegistry.setValue("password", textValues["VAEDvalue"]))
+                        if(!PluginRegistry.setStringValue("password", textValues["VAEDvalue"]))
                         {
                             textValues["VAEDerror"] = "registry";
                         }
@@ -388,9 +395,10 @@ namespace VoiceAttackEDPlugin
                                 long currentPosition = (long)state["VAEDcurrentLogPosition"];
                                 Int32 elitePid = (Int32)state["VAEDelitePid"];
 
+                                string logPath = state["VAEDlogPath"].ToString();
                                 string filename = state["VAEDnetLogFile"].ToString();
 
-                                Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(state["VAEDnetLogPath"].ToString(), filename, currentPosition, elitePid);
+                                Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(logPath, filename, currentPosition, elitePid);
                                 //string newTimestamp = tLogReturn.Item1;
 
                                 Boolean success = tLogReturn.Item1;

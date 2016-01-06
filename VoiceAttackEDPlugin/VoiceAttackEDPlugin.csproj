@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Companion.cs" />
-    <Compile Include="EliteProcess.cs" />
     <Compile Include="EliteRegistry.cs" />
     <Compile Include="PluginRegistry.cs" />
     <Compile Include="Utility.cs" />

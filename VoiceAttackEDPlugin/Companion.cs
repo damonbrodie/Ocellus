@@ -213,8 +213,6 @@ class Companion
 
     public static CookieContainer ReadCookiesFromDisk(string file)
     {
-        Utility.writeDebug("in readcookiesfromdisk");
-        Utility.writeDebug("cookiefile:  " + file);
         try
         {
             using (Stream stream = File.Open(file, FileMode.Open))

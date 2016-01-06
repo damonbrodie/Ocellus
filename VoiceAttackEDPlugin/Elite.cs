@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 
 // **********************************************
@@ -12,6 +13,7 @@ class Elite
 {
     private static string getLogFile(string path)
     {
+        Utility.writeDebug("game log path " + path);
         try
         {
             string file = Directory.GetFiles(path, "netLog*.log").OrderByDescending(f => f).First();
@@ -58,8 +60,6 @@ class Elite
                     {
                         currentSystem = match.Groups[1].Value;
                     }
-
-
                 }
 
                 fs.Close();
@@ -70,17 +70,14 @@ class Elite
 
             }
         }
-
         return Tuple.Create(currentSystem, fileLength);
-
-
     }
 
 
     public static Tuple<Boolean, string, string, long, Int32> tailNetLog(string path, string logFile, long seekPos, Int32 elitePid)
     {
 
-        Int32 checkPid = EliteProcess.getPID(elitePid);
+        Int32 checkPid = Elite.getPID(elitePid);
 
         string currentSystem = "";
         Utility.writeDebug("start");
@@ -120,5 +117,32 @@ class Elite
         return Tuple.Create(false, string.Empty, string.Empty, seekPos, elitePid);
 
     }
-}
 
+
+    public static Int32 getPID(Int32 checkPid = -1)
+    {
+        Utility.writeDebug("Checking PID - last value" + checkPid.ToString());
+        if (checkPid >= 0)
+        {
+            try
+            {
+                Process localById = Process.GetProcessById(checkPid);
+                return checkPid;
+            }
+            catch //The process is not running, fall through to below
+            { }
+        }
+
+        Process[] processByName = Process.GetProcessesByName("EliteDangerous64");
+        if (processByName.Length == 0)
+        {
+            Utility.writeDebug("Elite stopped");
+            return -1; // Elite isn't running
+        }
+        else
+        {
+            checkPid = processByName[0].Id;
+            return checkPid;
+        }
+    }
+}
