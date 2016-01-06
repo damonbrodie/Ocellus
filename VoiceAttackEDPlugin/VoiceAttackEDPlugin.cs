@@ -13,28 +13,23 @@ namespace VoiceAttackEDPlugin
 {   
     public class VoiceAttackPlugin
     {
-
         private const string pluginVersion = "0.1";
-
 
         public static string VA_DisplayName()
         {
             return "Voice Attack EDPlugin " + pluginVersion;  
         }
 
-
         public static string VA_DisplayInfo()
         {
             return "VoiceAttackPlugin\r\n\r\nTo be used with Elite: Dangerous\r\n\r";  
         } 
-
 
         public static Guid VA_Id()
         {
 
             return new Guid("{A818A69A-D6A9-4CC8-943C-E6ABBAF4C76C}");  
         }
-
 
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
@@ -151,13 +146,11 @@ namespace VoiceAttackEDPlugin
             }
         }
 
-
         public static void VA_Exit1(ref Dictionary<string, object> state)
         {
             //this function gets called when VoiceAttack is closing (normally).  You would put your cleanup code in here, but be aware that your code must be robust enough to not absolutely depend on this function being called
 
         }
-
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
