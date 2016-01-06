@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Collections;
 using System.Web.Script.Serialization;
 
+
 // *****************************
 // *  Voice Attack functions   *
 // *****************************
@@ -33,6 +34,7 @@ namespace VoiceAttackEDPlugin
 
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
+            // Setup plugin storage directory - used for cookies and debug logs
             string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Voice Attack ED Plugin");
             string debugFile = Path.Combine(appPath, "debug.log");
 
@@ -41,6 +43,17 @@ namespace VoiceAttackEDPlugin
                 File.Delete(debugFile);
             }
 
+            try
+            {
+                Directory.CreateDirectory(appPath);
+            }
+            catch
+            {
+                // XXX Catch this and con't let the Invoke code run
+            }
+
+
+            // Determing Elite Dangerous game directory
             string gamePath = PluginRegistry.getStringValue("GamePath");
             int isSteam = (int) PluginRegistry.getIntegerValue("isSteamGame");
 
@@ -61,18 +74,34 @@ namespace VoiceAttackEDPlugin
             state.Add("VAEDlogPath", logPath);
             state.Add("VAEDnetLogFile", String.Empty);
 
-            string configPath = Path.Combine(gamePath, "Products", "elite-dangerous-64");
+            string gameConfigPath = Path.Combine(gamePath, "Products", "elite-dangerous-64");
 
-            //verboseEnabled:  0 - not enabled, 1 - was already enabled, 2 - just enabled now
-            int verboseEnabled = Elite.enableVerboseLogging(configPath);
+            // verboseEnabled:  0 - not enabled, 1 - was already enabled, 2 - just enabled now
+            int verboseEnabled = Elite.enableVerboseLogging(gameConfigPath);
             state.Add("VAEDverboseLoggingEnabled", verboseEnabled);
 
+
+            // Determine if ED is currently running
             Int32 processId = Elite.getPID();
             state.Add("VAEDelitePid", processId);
 
+
+            // Reset current location in netLog reading to the top
             long pos = 0;
             state.Add("VAEDcurrentLogPosition", pos);
 
+
+            //Set the cooldown timer to the past so it can be run right away.
+            state.Add("VAEDcooldown", DateTime.Now.AddHours(-6));
+
+
+            // Frontier's companion API URLs
+            // XXX Make these CONST? refactor API functions
+            state.Add("VAEDconfirmURL", "https://companion.orerve.net/user/confirm");
+            state.Add("VAEDprofileURL", "https://companion.orerve.net/profile");
+
+
+            // Get FD credentials from registry
             Boolean haveConfig = true;
 
             string FDemail = PluginRegistry.getStringValue("email");
@@ -95,30 +124,11 @@ namespace VoiceAttackEDPlugin
                 haveConfig = false;
             }
 
-            // Frontier's companion API URLs
-            // XXX Make these CONST?
-            state.Add("VAEDconfirmURL", "https://companion.orerve.net/user/confirm");
-            state.Add("VAEDprofileURL", "https://companion.orerve.net/profile");
-
-            try
-            {
-                Directory.CreateDirectory(appPath);
-            }
-            catch
-            {
-                // XXX Catch this and con't let the Invoke code run
-            }
-
-            //Set the cooldown timer to the past so it can be run right away.
-            state.Add("VAEDcooldown", DateTime.Now.AddHours(-6));
-
             string cookieFile = Path.Combine(appPath, "cookies.txt");
             CookieContainer cookieJar = new CookieContainer();
             state.Add("VAEDcookieFile", cookieFile);
 
             state.Add("VAEDloggedIn", "no");
-
-            state.Add("VAEDdebug", false);
 
             if (haveConfig)
             {
@@ -129,8 +139,7 @@ namespace VoiceAttackEDPlugin
                     state["VAEDloggedIn"] = "yes";
                 }
                 else
-                {
-                    
+                {                   
                     Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
 
                     string loginResponse = tAuthentication.Item2;
