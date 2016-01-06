@@ -73,7 +73,6 @@ class Elite
         return Tuple.Create(currentSystem, fileLength);
     }
 
-
     public static Tuple<Boolean, string, string, long, Int32> tailNetLog(string path, string logFile, long seekPos, Int32 elitePid)
     {
 
@@ -118,7 +117,6 @@ class Elite
 
     }
 
-
     public static Int32 getPID(Int32 checkPid = -1)
     {
         Utility.writeDebug("Checking PID - last value" + checkPid.ToString());
@@ -143,6 +141,72 @@ class Elite
         {
             checkPid = processByName[0].Id;
             return checkPid;
+        }
+    }
+
+    public static int enableVerboseLogging (string path)
+    {
+        // Examine AppConfig.xml and see if VerboseLogging is already enabled.
+        if (Directory.Exists(path))
+        {
+            string configFile = Path.Combine(path, "AppConfig.xml");
+            string newConfig = Path.Combine(path, "AppConfig_Ocellus.xml");
+            string backupFile = Path.Combine(path, "AppConfig_before_Ocellus.xml");
+
+            string[] configLines = File.ReadAllLines(configFile);
+            
+            Boolean hasVerboseVar = false;
+
+            foreach (string configLine in configLines)
+            {
+                if (configLine.Contains("VerboseLogging=\"0\""))
+                {
+                    hasVerboseVar = true;
+                }
+                else if (configLine.Contains("VerboseLogging=\"1\""))
+                {
+                    return 1;
+                }
+            }
+
+            try
+            {
+                using (StreamWriter writeSR = new StreamWriter(newConfig))
+                {
+                    foreach (string currentLine in configLines)
+                    {
+                        Utility.writeDebug(currentLine);
+                        if (currentLine.Contains("<Network") && hasVerboseVar == false)
+                        {
+                            // No verbose logging line, insert it right after
+                            writeSR.WriteLine(currentLine);
+                            writeSR.WriteLine("\t  VerboseLogging=\"1\"");
+
+                        }
+                        else if (currentLine.Contains("VerboseLogging"))
+                        {
+                            writeSR.WriteLine("\t  VerboseLogging=\"1\"");
+                        }
+                        else
+                        {
+                            writeSR.WriteLine(currentLine);
+                        }
+                    }
+                }   
+            }
+            catch (Exception ex)
+            {
+                Utility.writeDebug("Error:  Unable to modify AppConfig.xml:  " + ex.ToString());
+                return 0;
+            }
+
+            File.Replace(newConfig, configFile, backupFile);
+            return 2;
+        }
+        else
+        {
+            Utility.writeDebug("Error:  Can't access Elite game directory: " + path);
+            return 0;
         }
     }
 }

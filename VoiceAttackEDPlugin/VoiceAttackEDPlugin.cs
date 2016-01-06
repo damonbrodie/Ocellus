@@ -49,8 +49,6 @@ namespace VoiceAttackEDPlugin
             string gamePath = PluginRegistry.getStringValue("GamePath");
             int isSteam = (int) PluginRegistry.getIntegerValue("isSteamGame");
 
-            Utility.writeDebug("is Steam" + isSteam.ToString());
-
             if (gamePath != null || isSteam == -1)
             {
                 Tuple<string, int> tResponse = EliteRegistry.getGameDetails();
@@ -67,6 +65,12 @@ namespace VoiceAttackEDPlugin
             state.Add("VAEDgamePath", gamePath);
             state.Add("VAEDlogPath", logPath);
             state.Add("VAEDnetLogFile", String.Empty);
+
+            string configPath = Path.Combine(gamePath, "Products", "elite-dangerous-64");
+
+            //verboseEnabled:  0 - not enabled, 1 - was already enabled, 2 - just enabled now
+            int verboseEnabled = Elite.enableVerboseLogging(configPath);
+            state.Add("VAEDverboseLoggingEnabled", verboseEnabled);
 
             Int32 processId = Elite.getPID();
             state.Add("VAEDelitePid", processId);
@@ -112,7 +116,6 @@ namespace VoiceAttackEDPlugin
 
             //Set the cooldown timer to the past so it can be run right away.
             state.Add("VAEDcooldown", DateTime.Now.AddHours(-6));
-
 
             string cookieFile = Path.Combine(appPath, "cookies.txt");
             CookieContainer cookieJar = new CookieContainer();
