@@ -191,10 +191,47 @@ class Companion
         }
     }
 
+    public static void WriteCookiesToDisk(string file, CookieContainer cookieJar)
+    {
+        if (File.Exists(file))
+        {
+            File.Delete(file);
+        }
+        using (Stream stream = File.Create(file))
+        {
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, cookieJar);
+            }
+            catch (Exception e)
+            {
+                Utility.writeDebug("Error:  Problem writing cookies to disk: " + e.GetType());
+            }
+        }
+    }
+
+    public static CookieContainer ReadCookiesFromDisk(string file)
+    {
+        try
+        {
+            using (Stream stream = File.Open(file, FileMode.Open))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                CookieContainer cookieJar = (CookieContainer)formatter.Deserialize(stream);
+
+                return cookieJar;
+            }
+        }
+        catch (Exception e)
+        {
+            Utility.writeDebug("Error:  Problem reading cookies from disk: " + e.GetType());
+            return new CookieContainer();
+        }
+    }
+
     private static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer, string referer = null, string sendData = null)
     {
-
-        Utility.writeDebug("sendRequest:  " + url);
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
         request.CookieContainer = cookieContainer;
@@ -313,46 +350,6 @@ class Companion
             }
         }
         return Tuple.Create(cookieContainer, htmldata);
-    }
-
-    public static void WriteCookiesToDisk(string file, CookieContainer cookieJar)
-    {
-        Utility.writeDebug("in writecookiestodisk");
-        if (File.Exists(file))
-        {
-            File.Delete(file);
-        }
-        using (Stream stream = File.Create(file))
-        {
-            try
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, cookieJar);
-            }
-            catch (Exception e)
-            {
-                Utility.writeDebug("Problem writing cookies to disk: " + e.GetType());
-            }
-        }
-    }
-
-    public static CookieContainer ReadCookiesFromDisk(string file)
-    {
-        try
-        {
-            using (Stream stream = File.Open(file, FileMode.Open))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                CookieContainer cookieJar = (CookieContainer)formatter.Deserialize(stream);
-
-                return cookieJar;
-            }
-        }
-        catch (Exception e)
-        {
-            Utility.writeDebug("Problem reading cookies from disk: " + e.GetType());
-            return new CookieContainer();
-        }
     }
 
     public static Tuple<CookieContainer, string> loginToAPI(string email, string password)
