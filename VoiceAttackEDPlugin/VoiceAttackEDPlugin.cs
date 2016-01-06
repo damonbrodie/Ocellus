@@ -130,12 +130,14 @@ namespace VoiceAttackEDPlugin
             {
                 if (File.Exists(cookieFile))
                 {
+                    // If we have cookies then we are likely already logged in
                     cookieJar = Companion.ReadCookiesFromDisk(cookieFile);
                     state.Add("VAEDcookieContainer", cookieJar);
                     state["VAEDloggedIn"] = "yes";
                 }
                 else
-                {                   
+                {
+                    // Log into the API
                     Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
 
                     string loginResponse = tAuthentication.Item2;
@@ -212,15 +214,12 @@ namespace VoiceAttackEDPlugin
                         {
                             if (textValues.ContainsKey("VAEDvalue"))
                             {
-                                Utility.writeDebug("in send verification code is:  " + textValues["VAEDvalue"]);
-
                                 CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
                                 
                                 Tuple<CookieContainer, string> tRespon = Companion.verifyWithAPI(cookieContainer, textValues["VAEDvalue"]);
                                 state["VAEDcookieContainer"] = tRespon.Item1;
 
                                 Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
-
 
                                 state["VAEDloggedIn"] = "yes";
                                 textValues.Add("VAEDprofileStatus", "yes");
@@ -229,23 +228,23 @@ namespace VoiceAttackEDPlugin
                         }
                         else if (state["VAEDloggedIn"].ToString() == "no")
                         {
-                            Utility.writeDebug("in send verification - state says we are not logged in");
+                            Utility.writeDebug("Not logged in - can't verify");
                             textValues.Add("VAEDprofileStatus", "no");
                             break;
                         }
-                        Utility.writeDebug("in send verification - fall through");
+                        Utility.writeDebug("Error:  Unknown verification problem");
                         break;
 
                     case "profile":
                         if (state["VAEDloggedIn"].ToString() == "verification")
                         {
                             textValues.Add("VAEDprofileStatus", "verification");
-                            Utility.writeDebug("In profile, request verification");
+                            Utility.writeDebug("Verification needed before we can get the profile");
                             break;
                         }
                         else if ((!state.ContainsKey("VAEDcookieContainer") && state["VAEDloggedIn"].ToString() == "yes") || state["VAEDloggedIn"].ToString() == "no" || state["VAEDloggedIn"].ToString() == "error")
                         {
-                            Utility.writeDebug("Need to get logged in"); 
+                            Utility.writeDebug("Login needed before we can get the profile"); 
                             // If we're not logged in, attempt to do so
                             if (state.ContainsKey("VAEDemail") && state.ContainsKey("VAEDpassword"))
                             {
@@ -283,10 +282,7 @@ namespace VoiceAttackEDPlugin
                         }
                         if (state["VAEDloggedIn"].ToString() == "yes" && state.ContainsKey("VAEDcookieContainer"))
                         {
-                            Utility.writeDebug("in profile - have credentials");
-
                             DateTime lastRun = (DateTime)state["VAEDcooldown"];
-
                             DateTime oneMinuteAgo = DateTime.Now.AddMinutes(-1);
 
                             if (lastRun.CompareTo(oneMinuteAgo) > 0)
@@ -294,22 +290,23 @@ namespace VoiceAttackEDPlugin
                                 Utility.writeDebug("COOLDOWN IN Progress");
                                 break;
                             }
+                            state["VAEDcooldown"] = DateTime.Now;
 
                             textValues.Add("VAEDprofileStatus", "yes");
 
                             CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
 
-                            state["VAEDcooldown"] = DateTime.Now;
-
                             Tuple<CookieContainer, string> tRespon = Companion.getProfile(cookieContainer);
+
                             state["VAEDcookieContainer"] = tRespon.Item1;
                             Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
 
-                            Utility.writeDebug("in profile: getProfilePage returned: " + tRespon.Item2);
                             JavaScriptSerializer serializer = new JavaScriptSerializer();
-                            var result = serializer.Deserialize<Dictionary<string, dynamic>>(tRespon.Item2);
 
+                            var result = serializer.Deserialize<Dictionary<string, dynamic>>(tRespon.Item2);
                             Boolean currentlyDocked = false;
+                            string lastDockedSystem = "";
+                            string lastDockedStarport = "";
                             
                             try
                             {
@@ -328,8 +325,8 @@ namespace VoiceAttackEDPlugin
 
                                 string powerPlayRank = RankMapping.powerPlayRankToString(result["commander"]["rank"]["power"]);
 
-                                string lastDockedSystem = result["lastSystem"]["name"];
-                                string lastDockedStarport = result["lastStarport"]["name"];
+                                lastDockedSystem = result["lastSystem"]["name"];
+                                lastDockedStarport = result["lastStarport"]["name"];
 
 
                                 int cargoCapacity = result["ship"]["cargo"]["capacity"];
@@ -340,24 +337,6 @@ namespace VoiceAttackEDPlugin
                                 int howManyShips = allShips.Count;
 
                                 string currentShip = result["ships"][currentShipId]["name"];
-
-                                Utility.writeDebug("CMDR: " + cmdr);
-                                Utility.writeDebug("Credits: " + credits.ToString());
-                                Utility.writeDebug("Loan: " + debt.ToString());
-                                Utility.writeDebug("Are Currently Docked: " + currentlyDocked.ToString());
-                                Utility.writeDebug("Combat Rank: " + combatRank);
-                                Utility.writeDebug("Explorer Rank: " + exploreRank);
-                                Utility.writeDebug("Trader Rank: " + tradeRank);
-                                Utility.writeDebug("CQC Rank: " + cqcRank);
-                                Utility.writeDebug("Federation Rank: " + federationRank);
-                                Utility.writeDebug("Empire Rank: " + empireRank);
-                                Utility.writeDebug("Power Play Rank: " + powerPlayRank);
-                                Utility.writeDebug("Last Docked System: " + lastDockedSystem);
-                                Utility.writeDebug("Last Docked Starport: " + lastDockedStarport);
-                                Utility.writeDebug("Current Ship: " + currentShip);
-                                Utility.writeDebug("How Many Ships: " + howManyShips.ToString());
-                                Utility.writeDebug("Total Cargo Capacity: " + cargoCapacity.ToString());
-                                Utility.writeDebug("Quantity In Cargo: " + quantityInCargo.ToString());
 
                                 textValues["VAEDcmdr"] = cmdr;
                                 intValues["VAEDcredits"] = credits;
@@ -372,19 +351,18 @@ namespace VoiceAttackEDPlugin
                                 textValues["VAEDcurrentShip"] = currentShip;
                                 intValues["VAEDcargoCapacity"] = cargoCapacity;
                                 intValues["VAEDquantityInCargo"] = quantityInCargo;
-
-
-                                //Current sincee we are docked
-                                textValues["VAEDcurrentSystem"] = lastDockedSystem;
-                                textValues["VAEDcurrentStarport"] = lastDockedStarport;
-
                             }
                             catch (Exception ex)
                             {
-                                Utility.writeDebug("Error - unable to parse output " + ex.ToString());
+                                Utility.writeDebug("Error: Unable to parse output " + ex.ToString());
                             }
 
-                            if (! currentlyDocked)
+                            if (currentlyDocked)
+                            {
+                                textValues["VAEDcurrentSystem"] = lastDockedSystem;
+                                textValues["VAEDcurrentStarport"] = lastDockedStarport;
+                            }
+                            else
                             { 
                                 // If not docked, then we get the System information from the log file
                                 long currentPosition = (long)state["VAEDcurrentLogPosition"];
@@ -420,11 +398,10 @@ namespace VoiceAttackEDPlugin
                             }
                             
                         }          
-
                         break;
 
                     default:
-                        Utility.writeDebug("ERROR: Unexpected condition");
+                        Utility.writeDebug("Error: unknown command");
                         break;
                 }
             }          
