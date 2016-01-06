@@ -189,7 +189,6 @@ namespace VoiceAttackEDPlugin
                         {
                             state.Add("VAEDemail", textValues["VAEDvalue"]);
                         }
-
                         break;
 
                     case "save password":
@@ -206,7 +205,6 @@ namespace VoiceAttackEDPlugin
                         {
                             state.Add("VAEDpassword", textValues["VAEDvalue"]);
                         }
-                            
                         break;
 
                     case "send verification":
@@ -354,7 +352,7 @@ namespace VoiceAttackEDPlugin
                             }
                             catch (Exception ex)
                             {
-                                Utility.writeDebug("Error: Unable to parse output " + ex.ToString());
+                                Utility.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
                             }
 
                             if (currentlyDocked)
