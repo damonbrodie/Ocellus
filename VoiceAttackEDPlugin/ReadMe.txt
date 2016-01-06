@@ -1,4 +1,4 @@
-﻿README file for Voice Attack - Elite Dangerous plugin
+﻿README file for Ocellus Voice Attack - Elite Dangerous plugin
 				 
 				    
 					    
