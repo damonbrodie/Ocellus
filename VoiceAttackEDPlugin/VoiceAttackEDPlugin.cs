@@ -159,13 +159,9 @@ namespace VoiceAttackEDPlugin
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-
-            // Accept FD's certificate
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => { return true; };
-
             if (textValues.ContainsKey("VAEDcommand"))
             {
-                Utility.writeDebug("Found a VAEDcommand:  " + textValues["VAEDcommand"]);
+                Utility.writeDebug("COMMAND:  " + textValues["VAEDcommand"]);
                 switch (textValues["VAEDcommand"])
                 {
 
