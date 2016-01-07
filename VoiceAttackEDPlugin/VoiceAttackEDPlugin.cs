@@ -302,7 +302,7 @@ namespace VoiceAttackEDPlugin
 
                             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-                            //Utility.writeDebug(tRespon.Item2);
+                            Utility.writeDebug(tRespon.Item2);
 
                             var result = serializer.Deserialize<Dictionary<string, dynamic>>(tRespon.Item2);
                             Boolean currentlyDocked = false;
@@ -317,15 +317,15 @@ namespace VoiceAttackEDPlugin
                                 int shipId = result["commander"]["currentShipId"];
                                 string currentShipId = shipId.ToString();
                                 currentlyDocked = result["commander"]["docked"];
-                                string combatRank = RankMapping.combatRankToString(result["commander"]["rank"]["combat"]);
-                                string tradeRank = RankMapping.tradeRankToString(result["commander"]["rank"]["trade"]);
-                                string exploreRank = RankMapping.exploreRankToString(result["commander"]["rank"]["explore"]);
-                                string cqcRank = RankMapping.cqcRankToString(result["commander"]["rank"]["cqc"]);
+                                string combatRank = Elite.combatRankToString(result["commander"]["rank"]["combat"]);
+                                string tradeRank = Elite.tradeRankToString(result["commander"]["rank"]["trade"]);
+                                string exploreRank = Elite.exploreRankToString(result["commander"]["rank"]["explore"]);
+                                string cqcRank = Elite.cqcRankToString(result["commander"]["rank"]["cqc"]);
 
-                                string federationRank = RankMapping.federationRankToString(result["commander"]["rank"]["federation"]);
-                                string empireRank = RankMapping.empireRankToString(result["commander"]["rank"]["empire"]);
+                                string federationRank = Elite.federationRankToString(result["commander"]["rank"]["federation"]);
+                                string empireRank = Elite.empireRankToString(result["commander"]["rank"]["empire"]);
 
-                                string powerPlayRank = RankMapping.powerPlayRankToString(result["commander"]["rank"]["power"]);
+                                string powerPlayRank = Elite.powerPlayRankToString(result["commander"]["rank"]["power"]);
 
                                 Dictionary<string, object> allShips = result["ships"];
                                 int howManyShips = allShips.Count;
@@ -335,11 +335,23 @@ namespace VoiceAttackEDPlugin
 
                                 List<string> keys = new List <string> (allShips.Keys);
                                 int counter = 1;
+
+                                // Cancel out ship locations
+
+                                string[] listOfShips = Elite.listofShipsShortNames();
+                                foreach (string ship in listOfShips)
+                                {
+                                    textValues["VAEDship-" + ship] = null;
+                                }
+
                                 foreach (string key in keys)
                                 {
                                     string counterString = counter.ToString();
-                                    textValues["VAEDship" + counterString] = result["ships"][key]["name"];
-                                    textValues["VAEDshipLocation" + counterString] = result["ships"][key]["starsystem"]["name"];
+                                    string tempShip = result["ships"][key]["name"];
+                                    string tempSystem = result["ships"][key]["starsystem"]["name"];
+                                    textValues["VAEDship" + counterString] = currentShip;
+                                    textValues["VAEDshipLocation" + counterString] = tempSystem;
+                                    textValues["VAEDship-" + tempShip] = tempSystem;
 
                                     counter++;
                                 }
@@ -378,7 +390,6 @@ namespace VoiceAttackEDPlugin
                                 string filename = state["VAEDnetLogFile"].ToString();
 
                                 Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(logPath, filename, currentPosition, elitePid);
-                                //string newTimestamp = tLogReturn.Item1;
 
                                 Boolean success = tLogReturn.Item1;
                                 string currentSystem = tLogReturn.Item2.ToString();
@@ -391,7 +402,6 @@ namespace VoiceAttackEDPlugin
                                 state["VAEDelitePid"] = elitePid;
 
                                 textValues["VAEDcurrentStartport"] = null;
-
                                 if (success)
                                 {
                                     textValues["VAEDcurrentSystem"] = currentSystem;
@@ -400,9 +410,7 @@ namespace VoiceAttackEDPlugin
                                 {
                                     textValues["VAEDcurrentSystem"] = null;
                                 }
-
                             }
-                            
                         }          
                         break;
 

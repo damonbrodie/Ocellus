@@ -215,4 +215,87 @@ class Elite
             return 0;
         }
     }
+
+    public static string combatRankToString(int rank)
+    {
+        string[] rankings = new string[] { "Harmless", "Mostly Harmless", "Novice",
+            "Competent", "Expert", "Master", "Dangerous", "Deadly", "Elite" };
+
+        return rankings[rank];
+    }
+
+    public static string tradeRankToString(int rank)
+    {
+        string[] rankings = new string[] { "Penniless", "Mostly Penniless", "Pedlar",
+            "Dealer", "Merchant", "Broker", "Entrepreneur", "Tycoon", "Elite" };
+
+        return rankings[rank];
+    }
+
+    public static string exploreRankToString(int rank)
+    {
+        string[] rankings = new string[] { "Aimless", "Mostly Aimless", "Scout",
+            "Surveyor", "Trailblazer", "Pathfinder", "Ranger", "Pioneer", "Elite" };
+
+        return rankings[rank];
+    }
+
+    public static string cqcRankToString(int rank)
+    {
+        string[] rankings = new string[] { "Helpless", "Mostly Helpless", "Amateur",
+            "Semi Professional", "Professional", "Champion", "Hero", "Gladiator", "Elite" };
+
+        return rankings[rank];
+    }
+
+    public static string federationRankToString(int rank)
+    {
+        string[] rankings = new string[] { "None", "Recruit", "Cadet",
+            "Midshipman", "Petty Officer", "Chief Petty Officer", "Warrant Officer",
+            "Ensign", "Lieutenant", "Lieutenant Commander", "Post Commander",
+            "Post Captain", "Rear Admiral", "Vice Admiral", "Admiral" };
+
+        return rankings[rank];
+    }
+
+    public static string empireRankToString(int rank)
+    {
+        string[] rankings = new string[] { "None", "Outsider", "Serf",
+            "Master", "Squire", "Knight", "Lord",
+            "Baron", "Viscount", "Count", "Earl",
+            "Marquis", "Duke", "Prince", "King" };
+
+        return rankings[rank];
+    }
+
+    public static string powerPlayRankToString(int rank)
+    {
+        string[] rankings = new string[] { "None", "Rating 1", "Rating 2",
+            "Rating 3", "Rating 4", "Rating 5" };
+
+        return rankings[rank];
+    }
+
+    public static string[] listOfShipsLongNames()
+    {
+        // Ship names "official" names
+        string[] ships = {"Adder", "Anaconda", "Asp Explorer", "Asp Scout", "Cobra MkIII", "Cobra MkIV",
+                "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Assault Ship", "Federal Corvette",
+                "Federal Gunship", "Fer-de-Lance", "Hauler", "Imperial Clipper", "Imperial Courier",
+                "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca", "Python", "Sidewinder MkI",
+                "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy", "Viper MkIII", "ViperMkIV" };
+        return ships;
+    }
+
+    public static string[] listofShipsShortNames()
+    {
+        // Ship names as refered to in the API
+        // XXX needs to be verified.
+        string[] ships = {"Adder", "Anaconda", "Asp", "Asp_Scout", "Cobra", "Cobra MkIV",
+                "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Assault Ship", "Federal Corvette",
+                "Federal Gunship", "Fer-de-Lance", "Hauler", "Imperial Clipper", "Imperial Courier",
+                "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca", "Python", "Sidewinder MkI",
+                "Type6", "Type7", "Type9", "Viper", "ViperMkIV" };
+        return ships;
+    }
 }
