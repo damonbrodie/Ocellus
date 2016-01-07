@@ -334,15 +334,16 @@ namespace VoiceAttackEDPlugin
                                 string currentShip = result["ships"][currentShipId]["name"];
 
                                 List<string> keys = new List <string> (allShips.Keys);
-                                
 
-                                // Cancel out ship locations
-
+                                // Null out ship locations
                                 string[] listOfShips = Elite.listofShipsShortNames();
                                 foreach (string ship in listOfShips)
                                 {
                                     textValues["VAEDship-" + ship] = null;
+                                    intValues["VAEDshipCounter-" + ship] = 0;
                                 }
+
+
                                 int counter = 1;
                                 foreach (string key in keys)
                                 {
@@ -350,13 +351,16 @@ namespace VoiceAttackEDPlugin
                                     string tempShip = result["ships"][key]["name"];
                                     string tempSystem = result["ships"][key]["starsystem"]["name"];
                                     string shipKey = "VAEDship" + counterString;
-                                    string shipLocationKey = "VAEDshipLocation" + counterString;                             
+                                    string shipLocationKey = "VAEDshipLocation" + counterString;
                                     textValues[shipKey] = tempShip;
                                     textValues[shipLocationKey] = tempSystem;
                                     textValues["VAEDship-" + tempShip] = tempSystem;
+                                    Utility.writeDebug("tempSHIP: " + tempShip);
+                                    intValues["VAEDshipCounter-" + tempShip]++;
 
                                     counter++;
                                 }
+
                                 intValues["VAEDnumberOfShips"] = howManyShips;
                                 textValues["VAEDcmdr"] = cmdr;
                                 intValues["VAEDcredits"] = credits;
@@ -384,7 +388,7 @@ namespace VoiceAttackEDPlugin
                             }
                             else
                             { 
-                                // If not docked, then we get the System information from the log file
+                                // If not docked, then we get the System information from the netLog file
                                 long currentPosition = (long)state["VAEDcurrentLogPosition"];
                                 Int32 elitePid = (Int32)state["VAEDelitePid"];
 
@@ -412,6 +416,37 @@ namespace VoiceAttackEDPlugin
                                 {
                                     textValues["VAEDcurrentSystem"] = null;
                                 }
+                            }
+                            if (1 == 1)
+                            {
+                                Utility.writeDebug("TEXT VALUES");
+                                foreach(string key in textValues.Keys)
+                                {
+                                    if (textValues[key] != null)
+                                    {
+                                        Utility.writeDebug(key + ":  " + textValues[key]);
+                                    }
+                                    
+                                }
+
+                                Utility.writeDebug("INTEGER VALUES");
+                                foreach (string key in intValues.Keys)
+                                {
+                                    if (intValues[key] != null)
+                                    {
+                                        Utility.writeDebug(key + ":  " + intValues[key].ToString());
+                                    }
+                                }
+
+                                Utility.writeDebug("BOOLEAN VALUES");
+                                foreach (string key in booleanValues.Keys)
+                                {
+                                    if (booleanValues[key] != null)
+                                    {
+                                        Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
+                                    }
+                                }
+
                             }
                         }          
                         break;
