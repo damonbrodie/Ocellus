@@ -327,23 +327,13 @@ namespace VoiceAttackEDPlugin
 
                                 string powerPlayRank = RankMapping.powerPlayRankToString(result["commander"]["rank"]["power"]);
 
-                                lastDockedSystem = result["lastSystem"]["name"];
-                                lastDockedStarport = result["lastStarport"]["name"];
-
-
+                                Dictionary<string, object> allShips = result["ships"];
+                                int howManyShips = allShips.Count;
                                 int cargoCapacity = result["ship"]["cargo"]["capacity"];
                                 int quantityInCargo = result["ship"]["cargo"]["qty"];
-
-                                Dictionary<string, object> allShips = result["ships"];
-                                
-                                int howManyShips = allShips.Count;
-                                Utility.writeDebug("num ships  " + howManyShips.ToString());
-                                intValues["VAEDnumberOfShips"] = howManyShips;
-
                                 string currentShip = result["ships"][currentShipId]["name"];
 
                                 List<string> keys = new List <string> (allShips.Keys);
-
                                 int counter = 1;
                                 foreach (string key in keys)
                                 {
@@ -353,11 +343,10 @@ namespace VoiceAttackEDPlugin
 
                                     counter++;
                                 }
-
+                                intValues["VAEDnumberOfShips"] = howManyShips;
                                 textValues["VAEDcmdr"] = cmdr;
                                 intValues["VAEDcredits"] = credits;
                                 intValues["VAEDloan"] = debt;
-                                
                                 booleanValues["VAEDcurrentlyDocked"] = currentlyDocked;
                                 textValues["VAEDcombatRank"] = combatRank;
                                 textValues["VAEDexploreRank"] = exploreRank;
