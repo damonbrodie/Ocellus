@@ -10,6 +10,7 @@ using System.Web.Script.Serialization;
 // *****************************
 // *  Voice Attack functions   *
 // *****************************
+
 namespace VoiceAttackEDPlugin
 {   
     public class VoiceAttackPlugin
@@ -301,6 +302,8 @@ namespace VoiceAttackEDPlugin
 
                             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
+                            //Utility.writeDebug(tRespon.Item2);
+
                             var result = serializer.Deserialize<Dictionary<string, dynamic>>(tRespon.Item2);
                             Boolean currentlyDocked = false;
                             string lastDockedSystem = "";
@@ -311,7 +314,8 @@ namespace VoiceAttackEDPlugin
                                 string cmdr = result["commander"]["name"];
                                 int credits = result["commander"]["credits"];
                                 int debt = result["commander"]["debt"];
-                                int currentShipId = result["commander"]["currentShipId"];
+                                int shipId = result["commander"]["currentShipId"];
+                                string currentShipId = shipId.ToString();
                                 currentlyDocked = result["commander"]["docked"];
                                 string combatRank = RankMapping.combatRankToString(result["commander"]["rank"]["combat"]);
                                 string tradeRank = RankMapping.tradeRankToString(result["commander"]["rank"]["trade"]);
@@ -330,15 +334,30 @@ namespace VoiceAttackEDPlugin
                                 int cargoCapacity = result["ship"]["cargo"]["capacity"];
                                 int quantityInCargo = result["ship"]["cargo"]["qty"];
 
-                                ArrayList allShips = result["ships"];
-
+                                Dictionary<string, object> allShips = result["ships"];
+                                
                                 int howManyShips = allShips.Count;
+                                Utility.writeDebug("num ships  " + howManyShips.ToString());
+                                intValues["VAEDnumberOfShips"] = howManyShips;
 
                                 string currentShip = result["ships"][currentShipId]["name"];
+
+                                List<string> keys = new List <string> (allShips.Keys);
+
+                                int counter = 1;
+                                foreach (string key in keys)
+                                {
+                                    string counterString = counter.ToString();
+                                    textValues["VAEDship" + counterString] = result["ships"][key]["name"];
+                                    textValues["VAEDshipLocation" + counterString] = result["ships"][key]["starsystem"]["name"];
+
+                                    counter++;
+                                }
 
                                 textValues["VAEDcmdr"] = cmdr;
                                 intValues["VAEDcredits"] = credits;
                                 intValues["VAEDloan"] = debt;
+                                
                                 booleanValues["VAEDcurrentlyDocked"] = currentlyDocked;
                                 textValues["VAEDcombatRank"] = combatRank;
                                 textValues["VAEDexploreRank"] = exploreRank;
