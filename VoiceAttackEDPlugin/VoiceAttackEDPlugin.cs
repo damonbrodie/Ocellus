@@ -19,7 +19,7 @@ namespace VoiceAttackEDPlugin
 
         public static string VA_DisplayName()
         {
-            return "Voice Attack EDPlugin " + pluginVersion;  
+            return "Ocellus - Elite Dangerous Assistant " + pluginVersion;  
         }
 
         public static string VA_DisplayInfo()

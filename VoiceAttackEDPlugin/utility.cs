@@ -25,6 +25,7 @@ class Utility
             { }
         }
     }
+
     public static string numberToString(int number)
     {
         switch (number)

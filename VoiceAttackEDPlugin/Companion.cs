@@ -396,8 +396,6 @@ class Companion
     {
         string sendData = "code=" + verificationCode;
         Tuple<CookieContainer, string> tRespon = Companion.sendRequest(confirmURL, cookieContainer, confirmURL, sendData);
-        //XXX this is broken for now - verification returns a 404 error - why?
-
         // XXX Handle wrong verification code case
         // Currently we just assume we're logged in.
         return Tuple.Create(tRespon.Item1, "yes");
