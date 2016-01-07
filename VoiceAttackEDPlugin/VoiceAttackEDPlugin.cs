@@ -334,7 +334,7 @@ namespace VoiceAttackEDPlugin
                                 string currentShip = result["ships"][currentShipId]["name"];
 
                                 List<string> keys = new List <string> (allShips.Keys);
-                                int counter = 1;
+                                
 
                                 // Cancel out ship locations
 
@@ -343,14 +343,16 @@ namespace VoiceAttackEDPlugin
                                 {
                                     textValues["VAEDship-" + ship] = null;
                                 }
-
+                                int counter = 1;
                                 foreach (string key in keys)
                                 {
-                                    string counterString = counter.ToString();
+                                    string counterString = Utility.numberToString(counter);
                                     string tempShip = result["ships"][key]["name"];
                                     string tempSystem = result["ships"][key]["starsystem"]["name"];
-                                    textValues["VAEDship" + counterString] = currentShip;
-                                    textValues["VAEDshipLocation" + counterString] = tempSystem;
+                                    string shipKey = "VAEDship" + counterString;
+                                    string shipLocationKey = "VAEDshipLocation" + counterString;                             
+                                    textValues[shipKey] = tempShip;
+                                    textValues[shipLocationKey] = tempSystem;
                                     textValues["VAEDship-" + tempShip] = tempSystem;
 
                                     counter++;
