@@ -41,7 +41,7 @@ namespace VoiceAttackEDPlugin
 
             if (File.Exists(debugFile))
             {
-                File.Delete(debugFile);
+                //File.Delete(debugFile);
             }
 
             try
@@ -343,23 +343,63 @@ namespace VoiceAttackEDPlugin
                                     intValues["VAEDshipCounter-" + ship] = 0;
                                 }
 
-
-                                int counter = 1;
                                 foreach (string key in keys)
                                 {
-                                    string counterString = Utility.numberToString(counter);
                                     string tempShip = result["ships"][key]["name"];
                                     string tempSystem = result["ships"][key]["starsystem"]["name"];
-                                    string shipKey = "VAEDship" + counterString;
-                                    string shipLocationKey = "VAEDshipLocation" + counterString;
-                                    textValues[shipKey] = tempShip;
-                                    textValues[shipLocationKey] = tempSystem;
-                                    textValues["VAEDship-" + tempShip] = tempSystem;
+                                    string shipCounterString = "VAEDshipCounter-" + tempShip;
+                                    intValues[shipCounterString]++;
+                                    textValues["VAEDship-" + tempShip + "-" + shipCounterString] = tempSystem;
                                     Utility.writeDebug("tempSHIP: " + tempShip);
-                                    intValues["VAEDshipCounter-" + tempShip]++;
-
-                                    counter++;
                                 }
+
+                                //Setup ambiguous ship variables
+
+                                if (intValues["VAEDshipCounter-Viper"] == 1 && intValues["VAEDshipCounter-ViperMkIV"] == 1)
+                                {
+                                    booleanValues["VAEDambiguousViper"] = true;
+                                }
+                                else
+                                {
+                                    booleanValues["VAEDambiguousViper"] = false;
+                                }
+
+                                if (intValues["VAEDshipCounter-Cobra"] == 1 && intValues["VAEDshipCounter-CobraMkIV"] == 1)
+                                {
+                                    booleanValues["VAEDambiguousCobra"] = true;
+                                }
+                                else
+                                {
+                                    booleanValues["VAEDambiguousCobra"] = false;
+                                }
+
+                                if (intValues["VAEDshipCounter-Diamondback Scout"] == 1 && intValues["VAEDshipCounter-Diamondback Explorer"] == 1)
+                                {
+                                    booleanValues["VAEDambiguousDiamondback"] = true;
+                                }
+                                else
+                                {
+                                    booleanValues["VAEDambiguousDiamondback"] = false;
+                                }
+
+                                if (intValues["VAEDshipCounter-Asp"] == 1 && intValues["VAEDshipCounter-Asp_Scout"] == 1)
+                                {
+                                    booleanValues["VAEDambiguousAsp"] = true;
+                                }
+                                else
+                                {
+                                    booleanValues["VAEDambiguousAsp"] = false;
+                                }
+
+                                if (intValues["VAEDshipCounter-Eagle"] == 1 && intValues["VAEDshipCounter-Imperial Eagle"] == 1)
+                                {
+                                    booleanValues["VAEDambiguousEagle"] = true;
+                                }
+                                else
+                                {
+                                    booleanValues["VAEDambiguousEagle"] = false;
+                                }
+
 
                                 intValues["VAEDnumberOfShips"] = howManyShips;
                                 textValues["VAEDcmdr"] = cmdr;
