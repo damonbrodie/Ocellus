@@ -305,10 +305,10 @@ namespace VoiceAttackEDPlugin
                             Utility.writeDebug(tRespon.Item2);
 
                             var result = serializer.Deserialize<Dictionary<string, dynamic>>(tRespon.Item2);
+                            string currentSystem = "";
+                            string currentStarport = "";
                             Boolean currentlyDocked = false;
-                            string lastDockedSystem = "";
-                            string lastDockedStarport = "";
-                            
+
                             try
                             {
                                 string cmdr = result["commander"]["name"];
@@ -345,8 +345,30 @@ namespace VoiceAttackEDPlugin
 
                                 foreach (string key in keys)
                                 {
+
                                     string tempShip = result["ships"][key]["name"];
-                                    string tempSystem = result["ships"][key]["starsystem"]["name"];
+                                    Utility.writeDebug("Key:  " + key);
+
+                                    string tempSystem = null;
+                                    if (result["ships"][key].ContainsKey("starsystem"))
+                                    {
+                                        tempSystem = result["ships"][key]["starsystem"]["name"];
+                                        if (key == currentShipId)
+                                        {
+                                            currentSystem = tempSystem;
+                                        }
+                                    }
+                                    string tempStation = null;
+                                    if (result["ships"][key].ContainsKey("station"))
+                                    {
+                                        tempStation = result["ships"][key]["station"]["name"];
+                                        if (key == currentShipId)
+                                        {
+                                            currentStarport = tempStation;
+                                        }
+                                    }
+
+
                                     string shipCounterString = "VAEDshipCounter-" + tempShip;
                                     intValues[shipCounterString]++;
                                     textValues["VAEDship-" + tempShip + "-" + shipCounterString] = tempSystem;
@@ -423,8 +445,8 @@ namespace VoiceAttackEDPlugin
 
                             if (currentlyDocked)
                             {
-                                textValues["VAEDcurrentSystem"] = lastDockedSystem;
-                                textValues["VAEDcurrentStarport"] = lastDockedStarport;
+                                textValues["VAEDcurrentSystem"] = currentSystem;
+                                textValues["VAEDcurrentStarport"] = currentStarport;
                             }
                             else
                             { 
@@ -438,7 +460,7 @@ namespace VoiceAttackEDPlugin
                                 Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(logPath, filename, currentPosition, elitePid);
 
                                 Boolean success = tLogReturn.Item1;
-                                string currentSystem = tLogReturn.Item2.ToString();
+                                currentSystem = tLogReturn.Item2.ToString();
                                 filename = tLogReturn.Item3.ToString();
                                 currentPosition = tLogReturn.Item4;
                                 elitePid = tLogReturn.Item5;
