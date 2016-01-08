@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoiceAttackEDPlugin", "Voic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Voice Attack Profiles", "Voice Attack Profiles", "{1CE9266A-27CB-4DEE-AA82-3DD058EFA07F}"
 	ProjectSection(SolutionItems) = preProject
-		Voice Attack Profiles\ED Plugin Example-Profile.vap = Voice Attack Profiles\ED Plugin Example-Profile.vap
+		Voice Attack Profiles\Ocellus - Elite Dangerous-Profile.vap = Voice Attack Profiles\Ocellus - Elite Dangerous-Profile.vap
 		VoiceAttackFO4Plugin\ReadMe.txt = VoiceAttackFO4Plugin\ReadMe.txt
 	EndProjectSection
 EndProject

@@ -370,9 +370,13 @@ namespace VoiceAttackEDPlugin
 
 
                                     string shipCounterString = "VAEDshipCounter-" + tempShip;
+                                    Utility.writeDebug("SHIP COUNTER STRING:  " + shipCounterString);
                                     intValues[shipCounterString]++;
-                                    textValues["VAEDship-" + tempShip + "-" + shipCounterString] = tempSystem;
-                                    Utility.writeDebug("tempSHIP: " + tempShip);
+                                    Utility.writeDebug("Current ship counter:  " + intValues[shipCounterString].ToString());
+                                    int counterInt = (int)intValues[shipCounterString];
+                                    string counterStr = counterInt.ToString();
+                                    textValues["VAEDship-" + tempShip + "-" + counterStr] = tempSystem;
+                                    Utility.writeDebug("VAEDship-" + tempShip + "-" + counterStr+": " + textValues["VAEDship-" + tempShip + "-" + counterStr]);
                                 }
 
                                 //Setup ambiguous ship variables
