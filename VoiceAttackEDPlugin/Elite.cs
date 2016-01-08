@@ -284,7 +284,7 @@ class Elite
                 "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer-de-Lance", "Hauler",
                 "Imperial Clipper", "Imperial Courier", "Cutter", "Imperial Eagle", "Keelback", "Orca",
                 "Python", "Sidewinder MkI", "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy",
-                "Viper MkIII", "ViperMkIV" };
+                "Viper MkIII", "ViperMkIV", "Vulture" };
         return ships;
     }
 
@@ -297,7 +297,7 @@ class Elite
                 "Federation_Dropship_MkII", "Federal Corvette", "Federation_Gunship", "FerDeLance",
                 "Hauler", "Empire_Trader", "Empire_Courier", "Imperial Cutter", "Empire_Eagle",
                 "Independant_Trader", "Orca", "Python", "SideWinder", "Type6", "Type7", "Type9",
-                "Viper", "Viper_MkIV" };
+                "Viper", "Viper_MkIV", "Vulture" };
         return ships;
     }
 }
