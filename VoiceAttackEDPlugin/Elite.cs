@@ -280,10 +280,11 @@ class Elite
     {
         // Ship names "official" names
         string[] ships = {"Adder", "Anaconda", "Asp Explorer", "Asp Scout", "Cobra MkIII", "Cobra MkIV",
-                "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Assault Ship", "Federal Corvette",
-                "Federal Gunship", "Fer-de-Lance", "Hauler", "Imperial Clipper", "Imperial Courier",
-                "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca", "Python", "Sidewinder MkI",
-                "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy", "Viper MkIII", "ViperMkIV" };
+                "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Dropship",
+                "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer-de-Lance", "Hauler",
+                "Imperial Clipper", "Imperial Courier", "Cutter", "Imperial Eagle", "Keelback", "Orca",
+                "Python", "Sidewinder MkI", "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy",
+                "Viper MkIII", "ViperMkIV" };
         return ships;
     }
 
@@ -291,11 +292,12 @@ class Elite
     {
         // Ship names as refered to in the API
         // XXX needs to be verified.
-        string[] ships = {"Adder", "Anaconda", "Asp", "Asp_Scout", "Cobra", "Cobra MkIV",
-                "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Assault Ship", "Federal Corvette",
-                "Federal Gunship", "Fer-de-Lance", "Hauler", "Imperial Clipper", "Imperial Courier",
-                "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca", "Python", "SideWinder",
-                "Type6", "Type7", "Type9", "Viper", "ViperMkIV" };
+        string[] ships = {"Adder", "Anaconda", "Asp", "Asp_Scout", "CobraMkIII", "CobraMkIV",
+                "DiamondBackXL", "DiamondBack", "Eagle", "Federation_Dropship",
+                "Federation_Dropship_MkII", "Federal Corvette", "Federation_Gunship", "FerDeLance",
+                "Hauler", "Empire_Trader", "Empire_Courier", "Imperial Cutter", "Empire_Eagle",
+                "Independant_Trader", "Orca", "Python", "SideWinder", "Type6", "Type7", "Type9",
+                "Viper", "Viper_MkIV" };
         return ships;
     }
 }
