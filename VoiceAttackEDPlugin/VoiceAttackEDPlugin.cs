@@ -172,16 +172,11 @@ namespace VoiceAttackEDPlugin
                         if (Clipboard.ContainsText(TextDataFormat.Text))
                         {
                             textValues.Add("VAEDclipboard", Clipboard.GetText());
-
                         }
                         break;
 
                     case "save email":
-                        if(!PluginRegistry.setStringValue("email", textValues["VAEDvalue"]))
-                        {
-                            textValues["VAEDerror"] = "registry";
-                        }                        
-
+                        PluginRegistry.setStringValue("email", textValues["VAEDvalue"]);
                         if (state.ContainsKey("VAEDemail"))
                         {
                             state["VAEDemail"] = textValues["VAEDvalue"];
@@ -193,11 +188,7 @@ namespace VoiceAttackEDPlugin
                         break;
 
                     case "save password":
-                        if(!PluginRegistry.setStringValue("password", textValues["VAEDvalue"]))
-                        {
-                            textValues["VAEDerror"] = "registry";
-                        }
-
+                        PluginRegistry.setStringValue("password", textValues["VAEDvalue"]);
                         if (state.ContainsKey("VAEDpassword"))
                         {
                             state["VAEDpassword"] = textValues["VAEDvalue"];
