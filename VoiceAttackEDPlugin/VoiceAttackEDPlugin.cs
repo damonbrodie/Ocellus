@@ -290,7 +290,6 @@ namespace VoiceAttackEDPlugin
                                 break;
                             }
                             state["VAEDcooldown"] = DateTime.Now;
-
                             textValues.Add("VAEDprofileStatus", "yes");
 
                             CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
@@ -301,8 +300,6 @@ namespace VoiceAttackEDPlugin
                             Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
 
                             JavaScriptSerializer serializer = new JavaScriptSerializer();
-
-                            Utility.writeDebug(tRespon.Item2);
 
                             var result = serializer.Deserialize<Dictionary<string, dynamic>>(tRespon.Item2);
                             string currentSystem = "";
@@ -347,7 +344,6 @@ namespace VoiceAttackEDPlugin
                                 {
 
                                     string tempShip = result["ships"][key]["name"];
-                                    Utility.writeDebug("Key:  " + key);
 
                                     string tempSystem = null;
                                     if (result["ships"][key].ContainsKey("starsystem"))
@@ -368,11 +364,8 @@ namespace VoiceAttackEDPlugin
                                         }
                                     }
 
-
                                     string shipCounterString = "VAEDshipCounter-" + tempShip;
-                                    Utility.writeDebug("SHIP COUNTER STRING:  " + shipCounterString);
                                     intValues[shipCounterString]++;
-                                    Utility.writeDebug("Current ship counter:  " + intValues[shipCounterString].ToString());
                                     int counterInt = (int)intValues[shipCounterString];
                                     string counterStr = counterInt.ToString();
                                     textValues["VAEDship-" + tempShip + "-" + counterStr] = tempSystem;
@@ -380,52 +373,32 @@ namespace VoiceAttackEDPlugin
                                 }
 
                                 //Setup ambiguous ship variables
+                                booleanValues["VAEDambiguousViper"] = false;
+                                booleanValues["VAEDambiguousCobra"] = false;
+                                booleanValues["VAEDambiguousDiamondback"] = false;
+                                booleanValues["VAEDambiguousAsp"] = false;
+                                booleanValues["VAEDambiguousEagle"] = false;
 
-                                if (intValues["VAEDshipCounter-Viper"] == 1 && intValues["VAEDshipCounter-ViperMkIV"] == 1)
+                                if (intValues["VAEDshipCounter-Viper"] == 1 && intValues["VAEDshipCounter-Viper_MkIV"] == 1)
                                 {
                                     booleanValues["VAEDambiguousViper"] = true;
                                 }
-                                else
-                                {
-                                    booleanValues["VAEDambiguousViper"] = false;
-                                }
-
-                                if (intValues["VAEDshipCounter-Cobra"] == 1 && intValues["VAEDshipCounter-CobraMkIV"] == 1)
+                                if (intValues["VAEDshipCounter-CobraMkIII"] == 1 && intValues["VAEDshipCounter-CobraMkIV"] == 1)
                                 {
                                     booleanValues["VAEDambiguousCobra"] = true;
                                 }
-                                else
-                                {
-                                    booleanValues["VAEDambiguousCobra"] = false;
-                                }
-
-                                if (intValues["VAEDshipCounter-Diamondback Scout"] == 1 && intValues["VAEDshipCounter-Diamondback Explorer"] == 1)
+                                if (intValues["VAEDshipCounter-DiamondBack"] == 1 && intValues["VAEDshipCounter-DiamondBackXL"] == 1)
                                 {
                                     booleanValues["VAEDambiguousDiamondback"] = true;
                                 }
-                                else
-                                {
-                                    booleanValues["VAEDambiguousDiamondback"] = false;
-                                }
-
                                 if (intValues["VAEDshipCounter-Asp"] == 1 && intValues["VAEDshipCounter-Asp_Scout"] == 1)
                                 {
                                     booleanValues["VAEDambiguousAsp"] = true;
                                 }
-                                else
-                                {
-                                    booleanValues["VAEDambiguousAsp"] = false;
-                                }
-
-                                if (intValues["VAEDshipCounter-Eagle"] == 1 && intValues["VAEDshipCounter-Imperial Eagle"] == 1)
+                                if (intValues["VAEDshipCounter-Eagle"] == 1 && intValues["VAEDshipCounter-Empire_Eagle"] == 1)
                                 {
                                     booleanValues["VAEDambiguousEagle"] = true;
                                 }
-                                else
-                                {
-                                    booleanValues["VAEDambiguousEagle"] = false;
-                                }
-
 
                                 intValues["VAEDnumberOfShips"] = howManyShips;
                                 textValues["VAEDcmdr"] = cmdr;
@@ -445,12 +418,32 @@ namespace VoiceAttackEDPlugin
                             catch (Exception ex)
                             {
                                 Utility.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
+                                textValues.Add("VAEDprofileStatus", "error");
                             }
 
                             if (currentlyDocked)
                             {
                                 textValues["VAEDcurrentSystem"] = currentSystem;
                                 textValues["VAEDcurrentStarport"] = currentStarport;
+
+                                //Set Station Services
+                            
+                                booleanValues["VAEDstarportCommodities"] = false;
+                                booleanValues["VAEDstarportShipyard"] = false;
+                                booleanValues["VAEDstarportOutfitting"] = false;
+                                if (result["lastStarport"].ContainsKey("commodities"))
+                                {
+                                    booleanValues["VAEDstarportCommodities"] = true;
+                                }
+                                if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"]["ships"].ContainsKey("shipyard_list"))
+                                {
+                                    booleanValues["VAEDstarportShipyard"] = true;
+                                }
+                                if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"].ContainsKey("modules"))
+                                {
+                                    booleanValues["VAEDstarportOutfitting"] = true;
+                                }
+
                             }
                             else
                             { 
@@ -483,8 +476,11 @@ namespace VoiceAttackEDPlugin
                                     textValues["VAEDcurrentSystem"] = null;
                                 }
                             }
-                            if (1 == 1)
+                            if (1 == 1) // Debug
                             {
+                                // Write out JSON
+                                Utility.writeDebug(tRespon.Item2);
+
                                 Utility.writeDebug("TEXT VALUES");
                                 foreach(string key in textValues.Keys)
                                 {
