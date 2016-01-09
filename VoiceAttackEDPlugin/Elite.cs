@@ -214,6 +214,16 @@ class Elite
         }
     }
 
+    public static Boolean isEliteRunning()
+    {
+        Int32 gamePid = getPID();
+        if (gamePid > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public static int enableVerboseLogging (string path)
     {
         // Examine AppConfig.xml and see if VerboseLogging is already enabled.

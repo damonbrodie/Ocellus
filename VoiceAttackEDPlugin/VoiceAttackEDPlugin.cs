@@ -84,6 +84,23 @@ namespace VoiceAttackEDPlugin
             //Set the cooldown timer to the past so it can be run right away.
             state.Add("VAEDcooldown", DateTime.Now.AddHours(-6));
 
+            Boolean isEliteRunning = Elite.isEliteRunning();
+            if (isEliteRunning)
+            {
+                booleanValues["VAEDisEliteRunning"] = true;
+            }
+            else
+            {
+                booleanValues["VAEDisEliteRunning"] = false;
+            }
+            if (verboseEnabled == 2 && isEliteRunning)
+            {
+                booleanValues["VAEDneedRestart"] = true;
+            }
+            else if (verboseEnabled == 0)
+            {
+                booleanValues["VAEDverboseProblem"] = true;
+            }
 
             // Get FD credentials from registry
             Boolean haveConfig = true;
@@ -154,18 +171,6 @@ namespace VoiceAttackEDPlugin
                 Utility.writeDebug("COMMAND:  " + textValues["VAEDcommand"]);
                 switch (textValues["VAEDcommand"])
                 {
-                    case "init":
-                        int verboseEnabled = (int)state["VAEDverboseLoggingEnabled"];
-                        Int32 elitePID = (Int32)state["VAEDelitePid"];
-                        if (verboseEnabled == 2 && elitePID >0)
-                        {
-                            booleanValues["VAEDneedRestart"] = true;
-                        }
-                        else if (verboseEnabled == 0)
-                        {
-                            booleanValues["VAEDverboseProblem"] = true;
-                        }
-                        break;
                     case "clipboard":
                         if (Clipboard.ContainsText(TextDataFormat.Text))
                         {
