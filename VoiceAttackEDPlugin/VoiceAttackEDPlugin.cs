@@ -84,16 +84,10 @@ namespace VoiceAttackEDPlugin
             //Set the cooldown timer to the past so it can be run right away.
             state.Add("VAEDcooldown", DateTime.Now.AddHours(-6));
 
-            Boolean isEliteRunning = Elite.isEliteRunning();
-            if (isEliteRunning)
-            {
-                booleanValues["VAEDisEliteRunning"] = true;
-            }
-            else
-            {
-                booleanValues["VAEDisEliteRunning"] = false;
-            }
-            if (verboseEnabled == 2 && isEliteRunning)
+
+            booleanValues["VAEDisEliteRunning"] = Elite.isEliteRunning();
+
+            if (verboseEnabled == 2 && booleanValues["VAEDEliteRunning"] == true )
             {
                 booleanValues["VAEDneedRestart"] = true;
             }
@@ -102,58 +96,18 @@ namespace VoiceAttackEDPlugin
                 booleanValues["VAEDverboseProblem"] = true;
             }
 
-            // Get FD credentials from registry
-            Boolean haveConfig = true;
-
-            string FDemail = PluginRegistry.getStringValue("email");
-            if (FDemail != "null")
-            {
-                state.Add("VAEDemail", FDemail);
-            }
-            else
-            {
-                haveConfig = false;
-            }
-
-            string FDpassword = PluginRegistry.getStringValue("password");
-            if (FDpassword != "null")
-            {
-                state.Add("VAEDpassword", FDpassword);
-            }
-            else
-            {
-                haveConfig = false;
-            }
-
             string cookieFile = Path.Combine(appPath, "cookies.txt");
             CookieContainer cookieJar = new CookieContainer();
             state.Add("VAEDcookieFile", cookieFile);
 
             state.Add("VAEDloggedIn", "no");
 
-            if (haveConfig)
+            if (File.Exists(cookieFile))
             {
-                if (File.Exists(cookieFile))
-                {
-                    // If we have cookies then we are likely already logged in
-                    cookieJar = Companion.ReadCookiesFromDisk(cookieFile);
-                    state.Add("VAEDcookieContainer", cookieJar);
-                    state["VAEDloggedIn"] = "ok";
-                }
-                else
-                {
-                    // Log into the API
-                    Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
-
-                    string loginResponse = tAuthentication.Item2;
-                    state["VAEDloggedIn"] = loginResponse;
-
-                    if (loginResponse == "ok" || loginResponse == "verification")
-                    {
-                        cookieJar = tAuthentication.Item1;
-                        state.Add("VAEDcookieContainer", cookieJar);
-                    }
-                }
+                // If we have cookies then we are likely already logged in
+                cookieJar = Companion.ReadCookiesFromDisk(cookieFile);
+                state.Add("VAEDcookieContainer", cookieJar);
+                state["VAEDloggedIn"] = "ok";
             }
         }
 
@@ -170,7 +124,14 @@ namespace VoiceAttackEDPlugin
                 Utility.writeDebug("COMMAND:  " + textValues["VAEDcommand"]);
                 switch (textValues["VAEDcommand"])
                 {
-                    case "init":
+                    case "credentials":
+                        string email = PluginRegistry.getStringValue("email");
+                        string password = PluginRegistry.getStringValue("password");
+                        booleanValues["VAEDstatusCredentials"] = false;
+                        if (email != null && email != string.Empty && password != null && password != string.Empty)
+                        {
+                            booleanValues["VAEDstatusCredentials"] = true;
+                        }
                         break;
                     case "clipboard":
                         if (Clipboard.ContainsText(TextDataFormat.Text))
@@ -181,60 +142,35 @@ namespace VoiceAttackEDPlugin
 
                     case "save email":
                         PluginRegistry.setStringValue("email", textValues["VAEDvalue"]);
-                        if (state.ContainsKey("VAEDemail"))
-                        {
-                            state["VAEDemail"] = textValues["VAEDvalue"];
-                        }
-                        else
-                        {
-                            state.Add("VAEDemail", textValues["VAEDvalue"]);
-                        }
                         break;
 
                     case "save password":
                         PluginRegistry.setStringValue("password", textValues["VAEDvalue"]);
-                        if (state.ContainsKey("VAEDpassword"))
-                        {
-                            state["VAEDpassword"] = textValues["VAEDvalue"];
-                        }
-                        else
-                        {
-                            state.Add("VAEDpassword", textValues["VAEDvalue"]);
-                        }
                         break;
 
                     case "authenticate":
-                        if (state.ContainsKey("VAEDemail") && state.ContainsKey("VAEDpassword"))
+                        CookieContainer cookieContainer = new CookieContainer();
+
+                        Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI();
+
+                        cookieContainer = tAuthentication.Item1;
+                        string loginResponse = tAuthentication.Item2;
+                        Utility.writeDebug("loginResponse:  " + loginResponse);
+                        state["VAEDloggedIn"] = loginResponse;
+                        textValues["VAEDauthenticationStatus"] = loginResponse;
+                        if (loginResponse == "verification" || loginResponse == "ok")
                         {
-                            string FDemail = state["VAEDemail"].ToString();
-                            string FDpassword = state["VAEDpassword"].ToString();
-
-                            CookieContainer cookieContainer = new CookieContainer();
-
-                            Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
-
-                            CookieContainer cookieJar = tAuthentication.Item1;
-                            string loginResponse = tAuthentication.Item2;
-                            Utility.writeDebug("loginResponse:  " + loginResponse);
-                            state["VAEDloggedIn"] = loginResponse;
-                            textValues["VAEDauthenticationStatus"] = loginResponse;
-                            if (loginResponse == "verification" || loginResponse == "ok")
+                            if (state.ContainsKey("VAEDcookieContainer"))
                             {
-                                if (state.ContainsKey("VAEDcookieContainer"))
-                                {
-                                    state["VAEDcookieContainer"] = cookieJar;
-                                }
-                                else
-                                {
-                                    state.Add("VAEDcookieContainer", cookieJar);
-                                }
-
+                                state["VAEDcookieContainer"] = cookieContainer;
                             }
-                            break;
+                            else
+                            {
+                                state.Add("VAEDcookieContainer", cookieContainer);
+                            }
                         }
                         else
                         {
-                            textValues["VAEDauthenticationStatus"] = "credentials";
                             state["VAEDloggedIn"] = "no";
                         }
                         break;
@@ -244,17 +180,17 @@ namespace VoiceAttackEDPlugin
                         {
                             if (textValues.ContainsKey("VAEDvalue"))
                             {
-                                CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
+                                CookieContainer verifyCookies = (CookieContainer)state["VAEDcookieContainer"];
 
-                                Tuple<CookieContainer, string> tVerify = Companion.verifyWithAPI(cookieContainer, textValues["VAEDvalue"]);
-                                CookieContainer cookieJar = tVerify.Item1;
+                                Tuple<CookieContainer, string> tVerify = Companion.verifyWithAPI(verifyCookies, textValues["VAEDvalue"]);
+                                verifyCookies = tVerify.Item1;
                                 string verifyResponse = tVerify.Item2;
                                 state["VAEDloggedIn"] = verifyResponse;
-                                state["VAEDcookieContainer"] = cookieJar;
+                                state["VAEDcookieContainer"] = verifyCookies;
                                 textValues["VAEDverificationStatus"] = verifyResponse;
                                 if (verifyResponse == "ok")
                                 {
-                                    Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), cookieJar);
+                                    Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), verifyCookies);
                                 }
                                 break;
                             }
@@ -282,9 +218,9 @@ namespace VoiceAttackEDPlugin
                             state["VAEDcooldown"] = DateTime.Now;
                             textValues["VAEDprofileStatus"] = "ok";
 
-                            CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
+                            CookieContainer profileCookies = (CookieContainer)state["VAEDcookieContainer"];
 
-                            Tuple<CookieContainer, string> tRespon = Companion.getProfile(cookieContainer);
+                            Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
 
                             state["VAEDcookieContainer"] = tRespon.Item1;
                             Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
@@ -502,7 +438,7 @@ namespace VoiceAttackEDPlugin
                         }
                         else // Not logged in
                         {
-                            textValues["profileStatus"] = state["VAEDloggedIn"].ToString();
+                            textValues["VAEDprofileStatus"] = "credentials";
                         }
                         break;
 

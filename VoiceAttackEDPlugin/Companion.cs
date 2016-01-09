@@ -352,12 +352,16 @@ class Companion
         return Tuple.Create(cookieContainer, htmldata);
     }
 
-    public static Tuple<CookieContainer, string> loginToAPI(string email, string password)
+    public static Tuple<CookieContainer, string> loginToAPI()
     {
-
-        string returnString;
         CookieContainer cookieContainer = new CookieContainer();
-
+        string email = PluginRegistry.getStringValue("email");
+        string password = PluginRegistry.getStringValue("password");
+        if (email == null || email == string.Empty || password == null || password == string.Empty)
+        {
+            return Tuple.Create(cookieContainer, "credentials");
+        }
+        string returnString;
 
         Tuple<CookieContainer, string> tInitialGet = sendRequest(loginURL, cookieContainer);
 

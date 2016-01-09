@@ -136,10 +136,7 @@ class Elite
                         return gameLocation;
                     }
                 }
-                catch (Exception ex) // XXX delete me
-                {
-                    Utility.writeDebug("NOO" + ex.ToString());
-                } // No publisher - definietely not Frontier
+                catch {} // No publisher - definietely not Frontier
             }
             return string.Empty;
         }
