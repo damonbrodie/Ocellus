@@ -155,36 +155,6 @@ namespace VoiceAttackEDPlugin
                     }
                 }
             }
-            if (1 == 1) // Debug
-            {
-                Utility.writeDebug("TEXT VALUES");
-                foreach (string key in textValues.Keys)
-                {
-                    if (textValues[key] != null)
-                    {
-                        Utility.writeDebug(key + ":  " + textValues[key]);
-                    }
-
-                }
-
-                Utility.writeDebug("INTEGER VALUES");
-                foreach (string key in intValues.Keys)
-                {
-                    if (intValues[key] != null)
-                    {
-                        Utility.writeDebug(key + ":  " + intValues[key].ToString());
-                    }
-                }
-
-                Utility.writeDebug("BOOLEAN VALUES");
-                foreach (string key in booleanValues.Keys)
-                {
-                    if (booleanValues[key] != null)
-                    {
-                        Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
-                    }
-                }
-            }
         }
 
         public static void VA_Exit1(ref Dictionary<string, object> state)
@@ -236,36 +206,29 @@ namespace VoiceAttackEDPlugin
                     case "authenticate":
                         if (state.ContainsKey("VAEDemail") && state.ContainsKey("VAEDpassword"))
                         {
-                            try
+                            string FDemail = state["VAEDemail"].ToString();
+                            string FDpassword = state["VAEDpassword"].ToString();
+
+                            CookieContainer cookieContainer = new CookieContainer();
+
+                            Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
+
+                            CookieContainer cookieJar = tAuthentication.Item1;
+                            string loginResponse = tAuthentication.Item2;
+                            Utility.writeDebug("loginResponse:  " + loginResponse);
+                            state["VAEDloggedIn"] = loginResponse;
+                            textValues["VAEDauthenticationStatus"] = loginResponse;
+                            if (loginResponse == "verification" || loginResponse == "ok")
                             {
-                                string FDemail = state["VAEDemail"].ToString();
-                                string FDpassword = state["VAEDpassword"].ToString();
-
-                                CookieContainer cookieContainer = new CookieContainer();
-
-                                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
-
-                                CookieContainer cookieJar = tAuthentication.Item1;
-                                string loginResponse = tAuthentication.Item2;
-                                Utility.writeDebug("loginResponse:  " + loginResponse);
-                                state["VAEDloggedIn"] = loginResponse;
-                                textValues["VAEDauthenticationStatus"] = loginResponse;
-                                if (loginResponse == "verification" || loginResponse == "ok")
+                                if (state.ContainsKey("VAEDcookieContainer"))
                                 {
-                                    if (state.ContainsKey("VAEDcookieContainer"))
-                                    {
-                                        state["VAEDcookieContainer"] = cookieJar;
-                                    }
-                                    else
-                                    {
-                                        state.Add("VAEDcookieContainer", cookieJar);
-                                    }
-
+                                    state["VAEDcookieContainer"] = cookieJar;
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                Utility.writeDebug("authentuication problem " + ex.ToString());
+                                else
+                                {
+                                    state.Add("VAEDcookieContainer", cookieJar);
+                                }
+
                             }
                             break;
                         }
