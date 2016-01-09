@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Companion.cs" />
-    <Compile Include="EliteRegistry.cs" />
     <Compile Include="PluginRegistry.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +62,12 @@
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "C:\Program Files (x86)\VoiceAttack\Apps\VoiceAttackEDPlugin\VoiceAttackEDPlugin.dll" "c:\users\Damon\Documents\Visual Studio 2015\Projects\VoiceAttackEDPlugin\"
+
+"C:\Program Files (x86)\VoiceAttack\VoiceAttack.exe"
+</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

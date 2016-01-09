@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using Microsoft.Win32;
 
 
 // **********************************************
@@ -11,6 +12,8 @@ using System.Diagnostics;
 
 class Elite
 {
+    const string uninstallRegistryPath64bit = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall";
+
     private static string getLogFile(string path)
     {
         Utility.writeDebug("game log path " + path);
@@ -71,6 +74,75 @@ class Elite
             }
         }
         return Tuple.Create(currentSystem, fileLength);
+    }
+
+    public static string getGameLogPath(string gamePath)
+    {
+        // XXX make this work for Season 1, 64 and 32 bit.
+        if (gamePath != null)
+        {
+            return Path.Combine(gamePath, "Products", "elite-dangerous-64", "Logs");
+        }
+        return null;
+    }
+
+    public static string getGamePath()
+    {
+        string gamePath = PluginRegistry.getStringValue("GamePath");
+        if (gamePath != string.Empty)
+        {
+            return gamePath;
+        }
+        else
+        {
+            RegistryKey localMachine = Registry.LocalMachine;
+            RegistryKey uninstallKey = null;
+            if (Environment.Is64BitOperatingSystem)
+            {
+                uninstallKey = localMachine.OpenSubKey(uninstallRegistryPath64bit);
+            }
+            else
+            {
+                // XXX need the location for 32 bit Windows
+            }
+            foreach (string child in uninstallKey.GetSubKeyNames())
+            {
+                RegistryKey programKey = uninstallKey.OpenSubKey(child);
+                try
+                {
+                    string publisher = programKey.GetValue("Publisher", string.Empty).ToString();
+                    string displayName = programKey.GetValue("Display Name", string.Empty).ToString();
+                    string uninstallString = programKey.GetValue("UninstallString", string.Empty).ToString();
+                    string startString = "";
+
+                    if (publisher == "Frontier Developments")
+                    {
+                        string gameLocation = programKey.GetValue("InstallLocation").ToString();
+                        PluginRegistry.setStringValue("GamePath", gameLocation);
+
+                        int endPos = uninstallString.IndexOf("steam.exe");
+                        if (endPos > 0)
+                        {
+                            endPos += 10;
+                            startString = uninstallString.Substring(0, endPos);
+                            PluginRegistry.setStringValue("StartPath", startString);
+                            PluginRegistry.setStringValue("StartParams", "steam://rungameid/419270");
+                        }
+                        else
+                        {
+                            // XXX what if it isn't steam?
+                        }
+
+                        return gameLocation;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Utility.writeDebug("NOO" + ex.ToString());
+                } // No publisher - definietely not Frontier
+            }
+            return string.Empty;
+        }
     }
 
     public static Tuple<Boolean, string, string, long, Int32> tailNetLog(string path, string logFile, long seekPos, Int32 elitePid)

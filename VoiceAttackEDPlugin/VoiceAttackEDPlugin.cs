@@ -53,28 +53,15 @@ namespace VoiceAttackEDPlugin
                 // XXX Catch this and con't let the Invoke code run
             }
 
-
-            // Determing Elite Dangerous game directory
-            string gamePath = PluginRegistry.getStringValue("GamePath");
-            int isSteam = (int) PluginRegistry.getIntegerValue("isSteamGame");
-
-            if (gamePath != null || isSteam == -1)
-            {
-                Tuple<string, int> tResponse = EliteRegistry.getGameDetails();
-                gamePath = tResponse.Item1;
-                isSteam = tResponse.Item2;
-            }
-
-
-            // XXX need to make this work for Season 1 of ED - both 32 and 64 bit versions
-            string logPath = string.Empty;
-            if (gamePath != string.Empty)
-            {
-                logPath = Path.Combine(gamePath, "Products", "elite-dangerous-64", "Logs");
-            }
-
+            // Determine Elite Dangerous directories
+            string gamePath = Elite.getGamePath();
+            string logPath = Elite.getGameLogPath(gamePath);
+            string gameStartString = PluginRegistry.getStringValue("StartPath");
+            string gameStartParams = PluginRegistry.getStringValue("StartParams");
             state.Add("VAEDgamePath", gamePath);
             state.Add("VAEDlogPath", logPath);
+            textValues["VAEDgameStartString"] = gameStartString;
+            textValues["VAEDgameStartParams"] = gameStartParams;
             state.Add("VAEDnetLogFile", String.Empty);
 
 
@@ -167,7 +154,18 @@ namespace VoiceAttackEDPlugin
                 Utility.writeDebug("COMMAND:  " + textValues["VAEDcommand"]);
                 switch (textValues["VAEDcommand"])
                 {
-
+                    case "init":
+                        int verboseEnabled = (int)state["VAEDverboseLoggingEnabled"];
+                        Int32 elitePID = (Int32)state["VAEDelitePid"];
+                        if (verboseEnabled == 2 && elitePID >0)
+                        {
+                            booleanValues["VAEDneedRestart"] = true;
+                        }
+                        else if (verboseEnabled == 0)
+                        {
+                            booleanValues["VAEDverboseProblem"] = true;
+                        }
+                        break;
                     case "clipboard":
                         if (Clipboard.ContainsText(TextDataFormat.Text))
                         {
