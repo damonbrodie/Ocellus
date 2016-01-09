@@ -13,7 +13,7 @@ class PluginRegistry
     { 
         try
         {
-            RegistryKey VAEDregistryKey = Registry.CurrentUser.OpenSubKey(pluginRegistryPath, true);
+            RegistryKey VAEDregistryKey = Registry.CurrentUser.CreateSubKey(pluginRegistryPath);
             VAEDregistryKey.SetValue(attribute, value);
             VAEDregistryKey.Close();
         }
@@ -33,8 +33,7 @@ class PluginRegistry
         }
         catch
         {
-            Utility.writeDebug("Error:  Unable to read from Windows Registry.");
-            return null;
+            return string.Empty;
         }
     }
 }

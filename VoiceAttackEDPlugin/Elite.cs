@@ -136,7 +136,7 @@ class Elite
                         return gameLocation;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception ex) // XXX delete me
                 {
                     Utility.writeDebug("NOO" + ex.ToString());
                 } // No publisher - definietely not Frontier
@@ -255,7 +255,6 @@ class Elite
                 {
                     foreach (string currentLine in configLines)
                     {
-                        Utility.writeDebug(currentLine);
                         if (currentLine.Contains("<Network") && hasVerboseVar == false)
                         {
                             // No verbose logging line, insert it right after

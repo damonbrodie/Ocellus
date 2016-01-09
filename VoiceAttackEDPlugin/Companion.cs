@@ -371,16 +371,19 @@ class Companion
 
             cookieContainer = tLoginResponse.Item1;
             string postPageHTML = tLoginResponse.Item2;
-
-
+            Utility.writeDebug("Auth response:  " + postPageHTML);
             if (postPageHTML.Contains("Verification"))
             {
                 returnString = "verification";
             }
+            else if (postPageHTML.Contains("password"))
+            {
+                returnString = "credentials";
+            }
             else
             {
                 // When verification works it doesn't return content, assume we are logged in
-                returnString = "yes";
+                returnString = "ok";
             }
         }
         else
@@ -395,11 +398,18 @@ class Companion
     public static Tuple<CookieContainer, string> verifyWithAPI(CookieContainer cookieContainer, string verificationCode)
     {
         string sendData = "code=" + verificationCode;
-        Tuple<CookieContainer, string> tRespon = Companion.sendRequest(confirmURL, cookieContainer, confirmURL, sendData);
-        // XXX Handle wrong verification code case
-        // Currently we just assume we're logged in.
-        return Tuple.Create(tRespon.Item1, "yes");
+        Tuple<CookieContainer, string> tResponse = Companion.sendRequest(confirmURL, cookieContainer, confirmURL, sendData);
+        string postVerifyHTML = tResponse.Item2;
+        Utility.writeDebug("In verifyWithAPI:  " + postVerifyHTML);
 
+        if (postVerifyHTML.Contains("Verification Code") )
+        {
+            return Tuple.Create(tResponse.Item1, "verification");
+        }
+        else
+        {
+            return Tuple.Create(tResponse.Item1, "ok");
+        }
     }
 
     public static Tuple<CookieContainer, string> getProfile(CookieContainer cookieContainer)

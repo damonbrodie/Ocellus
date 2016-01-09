@@ -138,7 +138,7 @@ namespace VoiceAttackEDPlugin
                     // If we have cookies then we are likely already logged in
                     cookieJar = Companion.ReadCookiesFromDisk(cookieFile);
                     state.Add("VAEDcookieContainer", cookieJar);
-                    state["VAEDloggedIn"] = "yes";
+                    state["VAEDloggedIn"] = "ok";
                 }
                 else
                 {
@@ -148,12 +148,41 @@ namespace VoiceAttackEDPlugin
                     string loginResponse = tAuthentication.Item2;
                     state["VAEDloggedIn"] = loginResponse;
 
-                    if (loginResponse == "yes" || loginResponse == "verification")
+                    if (loginResponse == "ok" || loginResponse == "verification")
                     {
                         cookieJar = tAuthentication.Item1;
                         state.Add("VAEDcookieContainer", cookieJar);
                     }
+                }
+            }
+            if (1 == 1) // Debug
+            {
+                Utility.writeDebug("TEXT VALUES");
+                foreach (string key in textValues.Keys)
+                {
+                    if (textValues[key] != null)
+                    {
+                        Utility.writeDebug(key + ":  " + textValues[key]);
+                    }
 
+                }
+
+                Utility.writeDebug("INTEGER VALUES");
+                foreach (string key in intValues.Keys)
+                {
+                    if (intValues[key] != null)
+                    {
+                        Utility.writeDebug(key + ":  " + intValues[key].ToString());
+                    }
+                }
+
+                Utility.writeDebug("BOOLEAN VALUES");
+                foreach (string key in booleanValues.Keys)
+                {
+                    if (booleanValues[key] != null)
+                    {
+                        Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
+                    }
                 }
             }
         }
@@ -166,11 +195,44 @@ namespace VoiceAttackEDPlugin
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
+            if (1 == 1) // Debug
+            {
+                Utility.writeDebug("TEXT VALUES");
+                foreach (string key in textValues.Keys)
+                {
+                    if (textValues[key] != null)
+                    {
+                        Utility.writeDebug(key + ":  " + textValues[key]);
+                    }
+
+                }
+
+                Utility.writeDebug("INTEGER VALUES");
+                foreach (string key in intValues.Keys)
+                {
+                    if (intValues[key] != null)
+                    {
+                        Utility.writeDebug(key + ":  " + intValues[key].ToString());
+                    }
+                }
+
+                Utility.writeDebug("BOOLEAN VALUES");
+                foreach (string key in booleanValues.Keys)
+                {
+                    if (booleanValues[key] != null)
+                    {
+                        Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
+                    }
+                }
+            }
+
             if (textValues.ContainsKey("VAEDcommand"))
             {
                 Utility.writeDebug("COMMAND:  " + textValues["VAEDcommand"]);
                 switch (textValues["VAEDcommand"])
                 {
+                    case "init":
+                        break;
                     case "clipboard":
                         if (Clipboard.ContainsText(TextDataFormat.Text))
                         {
@@ -202,20 +264,66 @@ namespace VoiceAttackEDPlugin
                         }
                         break;
 
+                    case "authenticate":
+                        if (state.ContainsKey("VAEDemail") && state.ContainsKey("VAEDpassword"))
+                        {
+                            try
+                            {
+                                string FDemail = state["VAEDemail"].ToString();
+                                string FDpassword = state["VAEDpassword"].ToString();
+
+                                CookieContainer cookieContainer = new CookieContainer();
+
+                                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
+
+                                CookieContainer cookieJar = tAuthentication.Item1;
+                                string loginResponse = tAuthentication.Item2;
+                                Utility.writeDebug("loginResponse:  " + loginResponse);
+                                state["VAEDloggedIn"] = loginResponse;
+                                textValues["VAEDauthenticationStatus"] = loginResponse;
+                                if (loginResponse == "verification" || loginResponse == "ok")
+                                {
+                                    if (state.ContainsKey("VAEDcookieContainer"))
+                                    {
+                                        state["VAEDcookieContainer"] = cookieJar;
+                                    }
+                                    else
+                                    {
+                                        state.Add("VAEDcookieContainer", cookieJar);
+                                    }
+
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Utility.writeDebug("authentuication problem " + ex.ToString());
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            textValues["VAEDauthenticationStatus"] = "credentials";
+                            state["VAEDloggedIn"] = "no";
+                        }
+                        break;
+
                     case "send verification":
                         if (state["VAEDloggedIn"].ToString() == "verification")
                         {
                             if (textValues.ContainsKey("VAEDvalue"))
                             {
                                 CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
-                                
-                                Tuple<CookieContainer, string> tRespon = Companion.verifyWithAPI(cookieContainer, textValues["VAEDvalue"]);
-                                state["VAEDcookieContainer"] = tRespon.Item1;
 
-                                Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
-
-                                state["VAEDloggedIn"] = "yes";
-                                textValues.Add("VAEDprofileStatus", "yes");
+                                Tuple<CookieContainer, string> tVerify = Companion.verifyWithAPI(cookieContainer, textValues["VAEDvalue"]);
+                                CookieContainer cookieJar = tVerify.Item1;
+                                string verifyResponse = tVerify.Item2;
+                                state["VAEDloggedIn"] = verifyResponse;
+                                state["VAEDcookieContainer"] = cookieJar;
+                                textValues["VAEDverificationStatus"] = verifyResponse;
+                                if (verifyResponse == "ok")
+                                {
+                                    Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), cookieJar);
+                                }
                                 break;
                             }
                         }
@@ -229,51 +337,7 @@ namespace VoiceAttackEDPlugin
                         break;
 
                     case "profile":
-                        if (state["VAEDloggedIn"].ToString() == "verification")
-                        {
-                            textValues.Add("VAEDprofileStatus", "verification");
-                            Utility.writeDebug("Verification needed before we can get the profile");
-                            break;
-                        }
-                        else if ((!state.ContainsKey("VAEDcookieContainer") && state["VAEDloggedIn"].ToString() == "yes") || state["VAEDloggedIn"].ToString() == "no" || state["VAEDloggedIn"].ToString() == "error")
-                        {
-                            Utility.writeDebug("Login needed before we can get the profile"); 
-                            // If we're not logged in, attempt to do so
-                            if (state.ContainsKey("VAEDemail") && state.ContainsKey("VAEDpassword"))
-                            {
-                                string FDemail = state["VAEDemail"].ToString();
-                                string FDpassword = state["VAEDpassword"].ToString();
-
-                                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(FDemail, FDpassword);
-
-                                string loginResponse = tAuthentication.Item2;
-                                state["VAEDloggedIn"] = loginResponse;
-
-                                if (loginResponse == "verification")
-                                {
-                                    textValues.Add("VAEDprofileStatus", "verification");
-                                    CookieContainer cookieJar = tAuthentication.Item1;
-                                    state.Add("VAEDcookieContainer", cookieJar);
-                                    break;
-                                }
-                                if (loginResponse == "yes")
-                                {
-                                    CookieContainer cookieJar = tAuthentication.Item1;
-                                    state.Add("VAEDcookieContainer", cookieJar);
-                                    // We think we're logged in fall through and see if we can get the profile
-                                }
-                            }
-                            else
-                            {
-                                // No credentials in registry
-                                state["VAEDloggedIn"] = "no";
-                                state.Remove("VAEDcookieContainer");
-                                textValues.Add("VAEDprofileStatus", "credentials");
-                                break;
-                            }
-
-                        }
-                        if (state["VAEDloggedIn"].ToString() == "yes" && state.ContainsKey("VAEDcookieContainer"))
+                        if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                         {
                             DateTime lastRun = (DateTime)state["VAEDcooldown"];
                             DateTime oneMinuteAgo = DateTime.Now.AddMinutes(-1);
@@ -284,7 +348,7 @@ namespace VoiceAttackEDPlugin
                                 break;
                             }
                             state["VAEDcooldown"] = DateTime.Now;
-                            textValues.Add("VAEDprofileStatus", "yes");
+                            textValues["VAEDprofileStatus"] = "ok";
 
                             CookieContainer cookieContainer = (CookieContainer)state["VAEDcookieContainer"];
 
@@ -292,10 +356,11 @@ namespace VoiceAttackEDPlugin
 
                             state["VAEDcookieContainer"] = tRespon.Item1;
                             Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
+                            string htmlData = tRespon.Item2;
 
                             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-                            var result = serializer.Deserialize<Dictionary<string, dynamic>>(tRespon.Item2);
+                            var result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
                             string currentSystem = "";
                             string currentStarport = "";
                             Boolean currentlyDocked = false;
@@ -324,7 +389,7 @@ namespace VoiceAttackEDPlugin
                                 int quantityInCargo = result["ship"]["cargo"]["qty"];
                                 string currentShip = result["ships"][currentShipId]["name"];
 
-                                List<string> keys = new List <string> (allShips.Keys);
+                                List<string> keys = new List<string>(allShips.Keys);
 
                                 // Null out ship locations
                                 string[] listOfShips = Elite.listofShipsShortNames();
@@ -363,7 +428,7 @@ namespace VoiceAttackEDPlugin
                                     int counterInt = (int)intValues[shipCounterString];
                                     string counterStr = counterInt.ToString();
                                     textValues["VAEDship-" + tempShip + "-" + counterStr] = tempSystem;
-                                    Utility.writeDebug("VAEDship-" + tempShip + "-" + counterStr+": " + textValues["VAEDship-" + tempShip + "-" + counterStr]);
+                                    Utility.writeDebug("VAEDship-" + tempShip + "-" + counterStr + ": " + textValues["VAEDship-" + tempShip + "-" + counterStr]);
                                 }
 
                                 //Setup ambiguous ship variables
@@ -412,7 +477,41 @@ namespace VoiceAttackEDPlugin
                             catch (Exception ex)
                             {
                                 Utility.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
-                                textValues.Add("VAEDprofileStatus", "error");
+                                if (1 == 1) // Debug
+                                {
+                                    // Write out JSON
+                                    Utility.writeDebug("----------------HTMLDATA FOLLOWS------------------------------");
+                                    Utility.writeDebug(htmlData);
+
+                                    Utility.writeDebug("TEXT VALUES");
+                                    foreach (string key in textValues.Keys)
+                                    {
+                                        if (textValues[key] != null)
+                                        {
+                                            Utility.writeDebug(key + ":  " + textValues[key]);
+                                        }
+
+                                    }
+
+                                    Utility.writeDebug("INTEGER VALUES");
+                                    foreach (string key in intValues.Keys)
+                                    {
+                                        if (intValues[key] != null)
+                                        {
+                                            Utility.writeDebug(key + ":  " + intValues[key].ToString());
+                                        }
+                                    }
+
+                                    Utility.writeDebug("BOOLEAN VALUES");
+                                    foreach (string key in booleanValues.Keys)
+                                    {
+                                        if (booleanValues[key] != null)
+                                        {
+                                            Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
+                                        }
+                                    }
+                                }
+                                textValues["VAEDprofileStatus"] = "error";
                             }
 
                             if (currentlyDocked)
@@ -421,7 +520,6 @@ namespace VoiceAttackEDPlugin
                                 textValues["VAEDcurrentStarport"] = currentStarport;
 
                                 //Set Station Services
-                            
                                 booleanValues["VAEDstarportCommodities"] = false;
                                 booleanValues["VAEDstarportShipyard"] = false;
                                 booleanValues["VAEDstarportOutfitting"] = false;
@@ -437,10 +535,9 @@ namespace VoiceAttackEDPlugin
                                 {
                                     booleanValues["VAEDstarportOutfitting"] = true;
                                 }
-
                             }
                             else
-                            { 
+                            {
                                 // If not docked, then we get the System information from the netLog file
                                 long currentPosition = (long)state["VAEDcurrentLogPosition"];
                                 Int32 elitePid = (Int32)state["VAEDelitePid"];
@@ -473,16 +570,17 @@ namespace VoiceAttackEDPlugin
                             if (1 == 1) // Debug
                             {
                                 // Write out JSON
-                                Utility.writeDebug(tRespon.Item2);
+                                Utility.writeDebug("----------------HTMLDATA FOLLOWS------------------------------");
+                                Utility.writeDebug(htmlData);
 
                                 Utility.writeDebug("TEXT VALUES");
-                                foreach(string key in textValues.Keys)
+                                foreach (string key in textValues.Keys)
                                 {
                                     if (textValues[key] != null)
                                     {
                                         Utility.writeDebug(key + ":  " + textValues[key]);
                                     }
-                                    
+
                                 }
 
                                 Utility.writeDebug("INTEGER VALUES");
@@ -502,9 +600,12 @@ namespace VoiceAttackEDPlugin
                                         Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
                                     }
                                 }
-
                             }
-                        }          
+                        }
+                        else // Not logged in
+                        {
+                            textValues["profileStatus"] = state["VAEDloggedIn"].ToString();
+                        }
                         break;
 
                     default:
