@@ -195,37 +195,6 @@ namespace VoiceAttackEDPlugin
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-            if (1 == 1) // Debug
-            {
-                Utility.writeDebug("TEXT VALUES");
-                foreach (string key in textValues.Keys)
-                {
-                    if (textValues[key] != null)
-                    {
-                        Utility.writeDebug(key + ":  " + textValues[key]);
-                    }
-
-                }
-
-                Utility.writeDebug("INTEGER VALUES");
-                foreach (string key in intValues.Keys)
-                {
-                    if (intValues[key] != null)
-                    {
-                        Utility.writeDebug(key + ":  " + intValues[key].ToString());
-                    }
-                }
-
-                Utility.writeDebug("BOOLEAN VALUES");
-                foreach (string key in booleanValues.Keys)
-                {
-                    if (booleanValues[key] != null)
-                    {
-                        Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
-                    }
-                }
-            }
-
             if (textValues.ContainsKey("VAEDcommand"))
             {
                 Utility.writeDebug("COMMAND:  " + textValues["VAEDcommand"]);
@@ -307,7 +276,7 @@ namespace VoiceAttackEDPlugin
                         }
                         break;
 
-                    case "send verification":
+                    case "verification":
                         if (state["VAEDloggedIn"].ToString() == "verification")
                         {
                             if (textValues.ContainsKey("VAEDvalue"))
@@ -477,40 +446,6 @@ namespace VoiceAttackEDPlugin
                             catch (Exception ex)
                             {
                                 Utility.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
-                                if (1 == 1) // Debug
-                                {
-                                    // Write out JSON
-                                    Utility.writeDebug("----------------HTMLDATA FOLLOWS------------------------------");
-                                    Utility.writeDebug(htmlData);
-
-                                    Utility.writeDebug("TEXT VALUES");
-                                    foreach (string key in textValues.Keys)
-                                    {
-                                        if (textValues[key] != null)
-                                        {
-                                            Utility.writeDebug(key + ":  " + textValues[key]);
-                                        }
-
-                                    }
-
-                                    Utility.writeDebug("INTEGER VALUES");
-                                    foreach (string key in intValues.Keys)
-                                    {
-                                        if (intValues[key] != null)
-                                        {
-                                            Utility.writeDebug(key + ":  " + intValues[key].ToString());
-                                        }
-                                    }
-
-                                    Utility.writeDebug("BOOLEAN VALUES");
-                                    foreach (string key in booleanValues.Keys)
-                                    {
-                                        if (booleanValues[key] != null)
-                                        {
-                                            Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
-                                        }
-                                    }
-                                }
                                 textValues["VAEDprofileStatus"] = "error";
                             }
 

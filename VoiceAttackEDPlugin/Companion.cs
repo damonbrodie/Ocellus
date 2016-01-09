@@ -371,7 +371,6 @@ class Companion
 
             cookieContainer = tLoginResponse.Item1;
             string postPageHTML = tLoginResponse.Item2;
-            Utility.writeDebug("Auth response:  " + postPageHTML);
             if (postPageHTML.Contains("Verification"))
             {
                 returnString = "verification";
@@ -400,8 +399,6 @@ class Companion
         string sendData = "code=" + verificationCode;
         Tuple<CookieContainer, string> tResponse = Companion.sendRequest(confirmURL, cookieContainer, confirmURL, sendData);
         string postVerifyHTML = tResponse.Item2;
-        Utility.writeDebug("In verifyWithAPI:  " + postVerifyHTML);
-
         if (postVerifyHTML.Contains("Verification Code") )
         {
             return Tuple.Create(tResponse.Item1, "verification");
