@@ -35,21 +35,13 @@ namespace VoiceAttackEDPlugin
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
             // Setup plugin storage directory - used for cookies and debug logs
-            string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Voice Attack ED Plugin");
+            string appPath = Config.getConfigPath();
+            string cookieFile = Config.getCookiePath();
             string debugFile = Path.Combine(appPath, "debug.log");
 
             if (File.Exists(debugFile))
             {
                 //File.Delete(debugFile);
-            }
-
-            try
-            {
-                Directory.CreateDirectory(appPath);
-            }
-            catch
-            {
-                // XXX Catch this and con't let the Invoke code run
             }
 
             // Determine Elite Dangerous directories
@@ -95,9 +87,8 @@ namespace VoiceAttackEDPlugin
                 booleanValues["VAEDverboseProblem"] = true;
             }
 
-            string cookieFile = Path.Combine(appPath, "cookies.txt");
+            
             CookieContainer cookieJar = new CookieContainer();
-            state.Add("VAEDcookieFile", cookieFile);
 
             state.Add("VAEDloggedIn", "no");
 
@@ -121,6 +112,12 @@ namespace VoiceAttackEDPlugin
             Utility.writeDebug("COMMAND:  " + context);
             switch (context)
             {
+                case "edit web variables":
+                    textValues["VAEDvalue"] = WebVar.getWebVarFilename(Config.getConfigPath());
+                    break;
+                case "edit file variables":
+                    textValues["VAEDvalue"] = FileVar.getFileVarFilename(Config.getConfigPath());
+                    break;
                 case "credentials":
                     string email = PluginRegistry.getStringValue("email");
                     string password = PluginRegistry.getStringValue("password");
@@ -187,7 +184,7 @@ namespace VoiceAttackEDPlugin
                             textValues["VAEDverificationStatus"] = verifyResponse;
                             if (verifyResponse == "ok")
                             {
-                                Web.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), verifyCookies);
+                                Web.WriteCookiesToDisk(Config.getCookiePath(), verifyCookies);
                             }
                             break;
                         }
@@ -220,7 +217,7 @@ namespace VoiceAttackEDPlugin
                         Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
 
                         state["VAEDcookieContainer"] = tRespon.Item1;
-                        Web.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
+                        Web.WriteCookiesToDisk(Config.getCookiePath(), tRespon.Item1);
                         string htmlData = tRespon.Item2;
 
                         JavaScriptSerializer serializer = new JavaScriptSerializer();
