@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Windows.Forms;
-using System.Collections;
 using System.Web.Script.Serialization;
 
 
@@ -263,7 +262,7 @@ namespace VoiceAttackEDPlugin
                                 string[] listOfShips = Elite.listofShipsShortNames();
                                 foreach (string ship in listOfShips)
                                 {
-                                    textValues["VAEDship-" + ship] = null;
+                                    textValues["VAEDship-" + ship + "-1"] = null;
                                     intValues["VAEDshipCounter-" + ship] = 0;
                                 }
 
@@ -300,31 +299,67 @@ namespace VoiceAttackEDPlugin
                                 }
 
                                 //Setup ambiguous ship variables
-                                booleanValues["VAEDambiguousViper"] = false;
-                                booleanValues["VAEDambiguousCobra"] = false;
-                                booleanValues["VAEDambiguousDiamondback"] = false;
-                                booleanValues["VAEDambiguousAsp"] = false;
-                                booleanValues["VAEDambiguousEagle"] = false;
-
-                                if (intValues["VAEDshipCounter-Viper"] == 1 && intValues["VAEDshipCounter-Viper_MkIV"] == 1)
+                                textValues["VAEDambiguousViper"] = null;
+                                textValues["VAEDambiguousCobra"] = null;
+                                textValues["VAEDambiguousDiamondback"] = null;
+                                textValues["VAEDambiguousAsp"] = null;
+                                textValues["VAEDambiguousEagle"] = null;
+                                
+                                if ((intValues["VAEDshipCounter-Viper"] + intValues["VAEDshipCounter-Viper_MkIV"]) == 1)
                                 {
-                                    booleanValues["VAEDambiguousViper"] = true;
+                                    if (textValues["VAEDship-Viper-1"] != null)
+                                    {
+                                        textValues["VAEDambiguousViper"] = textValues["VAEDship-Viper-1"];
+                                    }
+                                    else
+                                    {
+                                        textValues["VAEDambiguousViper"] = textValues["VAEDship-Viper_MkIV-1"];
+                                    }
+                                    
                                 }
-                                if (intValues["VAEDshipCounter-CobraMkIII"] == 1 && intValues["VAEDshipCounter-CobraMkIV"] == 1)
+                                if ((intValues["VAEDshipCounter-CobraMkIII"] + intValues["VAEDshipCounter-CobraMkIV"]) == 1)
                                 {
-                                    booleanValues["VAEDambiguousCobra"] = true;
+                                    if (textValues["VAEDship-CobraMkIII-1"] != null)
+                                    {
+                                        textValues["VAEDambiguousCobra"] = textValues["VAEDship-CobraMkIII-1"];
+                                    }
+                                    else
+                                    {
+                                        textValues["VAEDambiguousCobra"] = textValues["VAEDship-CobraMkIV-1"];
+                                    }
                                 }
-                                if (intValues["VAEDshipCounter-DiamondBack"] == 1 && intValues["VAEDshipCounter-DiamondBackXL"] == 1)
+                                if ((intValues["VAEDshipCounter-DiamondBack"] + intValues["VAEDshipCounter-DiamondBackXL"]) == 1)
                                 {
-                                    booleanValues["VAEDambiguousDiamondback"] = true;
+                                    if (textValues["VAEDship-DiamondBack-1"] != null)
+                                    {
+                                        textValues["VAEDambiguousDiamondBack"] = textValues["VAEDship-DiamondBack-1"];
+                                    }
+                                    else
+                                    {
+                                        textValues["VAEDambiguousDiamondBack"] = textValues["VAEDship-DiamondBackXL-1"];
+                                    }
                                 }
-                                if (intValues["VAEDshipCounter-Asp"] == 1 && intValues["VAEDshipCounter-Asp_Scout"] == 1)
+                                if ((intValues["VAEDshipCounter-Asp"] + intValues["VAEDshipCounter-Asp_Scout"]) == 1)
                                 {
-                                    booleanValues["VAEDambiguousAsp"] = true;
+                                    if (textValues["VAEDship-Asp-1"] != null)
+                                    {
+                                        textValues["VAEDambiguousAsp"] = textValues["VAEDship-Asp-1"];
+                                    }
+                                    else
+                                    {
+                                        textValues["VAEDambiguousAsp"] = textValues["VAEDship-Asp_Scout-1"];
+                                    }
                                 }
-                                if (intValues["VAEDshipCounter-Eagle"] == 1 && intValues["VAEDshipCounter-Empire_Eagle"] == 1)
+                                if ((intValues["VAEDshipCounter-Eagle"] + intValues["VAEDshipCounter-Empire_Eagle"]) == 1)
                                 {
-                                    booleanValues["VAEDambiguousEagle"] = true;
+                                    if (textValues["VAEDship-Eagle-1"] != null)
+                                    {
+                                        textValues["VAEDambiguousEagle"] = textValues["VAEDship-Eagle-1"];
+                                    }
+                                    else
+                                    {
+                                        textValues["VAEDambiguousEagle"] = textValues["VAEDship-Empire_Eagle-1"];
+                                    }
                                 }
 
                                 intValues["VAEDnumberOfShips"] = howManyShips;
@@ -391,7 +426,7 @@ namespace VoiceAttackEDPlugin
                                 state["VAEDcurrentLogPosition"] = currentPosition;
                                 state["VAEDelitePid"] = elitePid;
 
-                                textValues["VAEDcurrentStartport"] = null;
+                                textValues["VAEDcurrentStarport"] = null;
                                 if (success)
                                 {
                                     textValues["VAEDcurrentSystem"] = currentSystem;
