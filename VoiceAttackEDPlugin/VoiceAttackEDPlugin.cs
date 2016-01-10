@@ -104,7 +104,7 @@ namespace VoiceAttackEDPlugin
             if (File.Exists(cookieFile))
             {
                 // If we have cookies then we are likely already logged in
-                cookieJar = Companion.ReadCookiesFromDisk(cookieFile);
+                cookieJar = Web.ReadCookiesFromDisk(cookieFile);
                 state.Add("VAEDcookieContainer", cookieJar);
                 state["VAEDloggedIn"] = "ok";
             }
@@ -187,7 +187,7 @@ namespace VoiceAttackEDPlugin
                             textValues["VAEDverificationStatus"] = verifyResponse;
                             if (verifyResponse == "ok")
                             {
-                                Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), verifyCookies);
+                                Web.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), verifyCookies);
                             }
                             break;
                         }
@@ -220,7 +220,7 @@ namespace VoiceAttackEDPlugin
                         Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
 
                         state["VAEDcookieContainer"] = tRespon.Item1;
-                        Companion.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
+                        Web.WriteCookiesToDisk(state["VAEDcookieFile"].ToString(), tRespon.Item1);
                         string htmlData = tRespon.Item2;
 
                         JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -409,20 +409,13 @@ namespace VoiceAttackEDPlugin
                             long currentPosition = (long)state["VAEDcurrentLogPosition"];
                             Int32 elitePid = (Int32)state["VAEDelitePid"];
 
-                            string logPath = state["VAEDlogPath"].ToString();
-                            string filename = state["VAEDnetLogFile"].ToString();
-
-                            Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(logPath, filename, currentPosition, elitePid);
+                            Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(state["VAEDlogPath"].ToString(), state["VAEDnetLogFile"].ToString(), currentPosition, elitePid);
 
                             Boolean success = tLogReturn.Item1;
                             currentSystem = tLogReturn.Item2.ToString();
-                            filename = tLogReturn.Item3.ToString();
-                            currentPosition = tLogReturn.Item4;
-                            elitePid = tLogReturn.Item5;
-
-                            state["VAEDnetLogFile"] = filename;
-                            state["VAEDcurrentLogPosition"] = currentPosition;
-                            state["VAEDelitePid"] = elitePid;
+                            state["VAEDnetLogFile"] = tLogReturn.Item3.ToString();
+                            state["VAEDcurrentLogPosition"] = tLogReturn.Item4;
+                            state["VAEDelitePid"] = tLogReturn.Item5;
 
                             textValues["VAEDcurrentStarport"] = null;
                             if (success)
