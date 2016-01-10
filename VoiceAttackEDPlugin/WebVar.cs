@@ -34,7 +34,7 @@ class WebVar
                 "# The JSON must return a dictionary of attribute/value pairs, and the variables must",
                 "# have the prefix VAEDwebVar-",
                 "#",
-                "# example JSON: {\"webVar\":{\"VAEDwebVar-bookmark\": \"Robigo\",\"VAEDwebVar-quantity\": 50,\"VAEDwebVar-myBoolean\": true}}",
+                "# example JSON: {\"webVar\":{\"VAEDwebVar-bookmark\": \"Robigo\",\"VAEDwebVar-quantity\": 50,\"VAEDwebVar-communityGoalActive\": true}}",
                 "#",
                 "# You may have multiple lines for JSON and/or individual variables.  They will be processed in order,",
                 "# and duplicate variable names will be overwritten by the latest source of the variable.",
