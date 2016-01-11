@@ -68,7 +68,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "C:\Program Files (x86)\VoiceAttack\Apps\VoiceAttackEDPlugin\VoiceAttackEDPlugin.dll" "c:\users\Damon\Documents\Visual Studio 2015\Projects\VoiceAttackEDPlugin\"
-
+copy "C:\Program Files (x86)\VoiceAttack\Apps\VoiceAttackEDPlugin\VoiceAttackEDPlugin.dll" "C:\Users\damon\Documents\VAED - Virtual Image Access"
+copy "C:\Users\damon\Documents\Visual Studio 2015\Projects\VoiceAttackEDPlugin\Voice Attack Profiles"  "C:\Users\damon\Documents\VAED - Virtual Image Access"
 "C:\Program Files (x86)\VoiceAttack\VoiceAttack.exe"
 </PostBuildEvent>
   </PropertyGroup>

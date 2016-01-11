@@ -121,6 +121,9 @@ namespace VoiceAttackEDPlugin
                 case "update web vars":
                     WebVar.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
                     break;
+                case "update file vars":
+                    FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
+                    break;
                 case "credentials":
                     string email = PluginRegistry.getStringValue("email");
                     string password = PluginRegistry.getStringValue("password");

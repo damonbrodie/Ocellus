@@ -14,7 +14,6 @@ class WebVar
 {
     private static void removeWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
     {
-
         string pattern = @"^VAEDwebVar-.*$";
         Regex regexWebVar = new Regex(pattern);
         if (state.ContainsKey("VAEDwebTextVariableNames"))
