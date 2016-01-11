@@ -221,13 +221,15 @@ namespace VoiceAttackEDPlugin
 
                         JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-                        var result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
+                            
                         string currentSystem = "";
                         string currentStarport = "";
                         Boolean currentlyDocked = false;
 
+                        var result = new Dictionary<string, dynamic>();
                         try
                         {
+                            result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
                             string cmdr = result["commander"]["name"];
                             int credits = result["commander"]["credits"];
                             int debt = result["commander"]["debt"];

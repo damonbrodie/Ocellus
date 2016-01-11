@@ -103,6 +103,12 @@ class WebVar
 
     public static void readWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
     {
+        int webVarCooldown = Utility.isCoolingDown(ref state, "VAEDwebVarCooldown");
+        if (webVarCooldown > 0)
+        {
+            Utility.writeDebug("Web Variable request is cooling down: " + webVarCooldown.ToString() + " seconds remain.");
+            return;
+        }
         removeWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
         string webConfigFile = getWebVarFilename();
         string pattern = @"^JSON\s*=\s*(.*)$";
@@ -121,6 +127,8 @@ class WebVar
                 string url = matchJsonVar.Groups[1].Value;
                 Tuple<CookieContainer, string> tResponse = Web.sendRequest(url);
                 string htmlData = tResponse.Item2;
+
+                Utility.writeDebug("htmlData: " + htmlData);
 
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
 
@@ -176,6 +184,7 @@ class WebVar
                     Utility.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
                 }
             }
-        } 
+        }
+
     }
 }
