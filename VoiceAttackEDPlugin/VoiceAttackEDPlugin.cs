@@ -119,7 +119,7 @@ namespace VoiceAttackEDPlugin
                     textValues["VAEDvalue"] = FileVar.getFileVarFilename();
                     break;
                 case "update web vars":
-                    string webData = WebVar.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
+                    WebVar.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
                     break;
                 case "credentials":
                     string email = PluginRegistry.getStringValue("email");
