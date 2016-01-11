@@ -10,8 +10,8 @@ class Utility
 {
     public static void writeDebug(string line)
     {
-        string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Voice Attack ED Plugin");
-        string file = Path.Combine(appPath, "debug.log");
+        
+        string file = Path.Combine(Config.getConfigPath(), "debug.log");
         using (StreamWriter writer = File.AppendText(file))
         {
             try
@@ -20,7 +20,6 @@ class Utility
                 writer.WriteLine(line);
                 writer.Close();
             }
-
             catch
             { }
         }

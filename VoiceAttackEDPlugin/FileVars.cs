@@ -8,19 +8,6 @@ using System.IO;
 
 class FileVar
 {
-    public static string getFileVarFilename(string path)
-    {
-        string fileConfigFile = Path.Combine(path, "FileVariables.txt");
-        if (!File.Exists(fileConfigFile))
-        {
-            Boolean worked = createWebConfig(fileConfigFile);
-            if (!worked)
-            {
-                return null;
-            }
-        }
-        return fileConfigFile;
-    }
     private static Boolean createWebConfig(string configfile)
     {
         if (!File.Exists(configfile))
@@ -47,4 +34,19 @@ class FileVar
         }
         return true;
     }
+
+    public static string getFileVarFilename()
+    {
+        string fileConfigFile = Path.Combine(Config.getConfigPath(), "FileVariables.txt");
+        if (!File.Exists(fileConfigFile))
+        {
+            Boolean worked = createWebConfig(fileConfigFile);
+            if (!worked)
+            {
+                return null;
+            }
+        }
+        return fileConfigFile;
+    }
+
 }

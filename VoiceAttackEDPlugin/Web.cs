@@ -225,11 +225,20 @@ class Web
             return new CookieContainer();
         }
     }
-    public static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer, string referer = null, string sendData = null)
+    public static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer = null, string referer = null, string sendData = null)
     {
+        url = url.Replace("\n", "");
+        url = url.Replace("\r", "");
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
-        request.CookieContainer = cookieContainer;
+        if (cookieContainer != null)
+        {
+            request.CookieContainer = cookieContainer;
+        }
+        else
+        {
+            request.CookieContainer = new CookieContainer();
+        }
 
         // Frontier's companion API currently requires an Apple User-Agent
         request.UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4";
@@ -244,7 +253,6 @@ class Web
         request.Headers["Upgrade-Insecure-Requests"] = "1";
         request.Headers["Accept-Language"] = "en-US,en;q=0.8";
         request.Headers["Cache-Control"] = "max-age=0";
-        request.Host = "companion.orerve.net";
         request.Timeout = 30000; // 30 seconds
         if (referer != null)
         {

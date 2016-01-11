@@ -113,10 +113,14 @@ namespace VoiceAttackEDPlugin
             switch (context)
             {
                 case "edit web variables":
-                    textValues["VAEDvalue"] = WebVar.getWebVarFilename(Config.getConfigPath());
+                    textValues["VAEDvalue"] = WebVar.getWebVarFilename();
                     break;
                 case "edit file variables":
-                    textValues["VAEDvalue"] = FileVar.getFileVarFilename(Config.getConfigPath());
+                    textValues["VAEDvalue"] = FileVar.getFileVarFilename();
+                    break;
+                case "update web vars":
+                    string webData = WebVar.readWebVars();
+                    Utility.writeDebug(webData);
                     break;
                 case "credentials":
                     string email = PluginRegistry.getStringValue("email");
