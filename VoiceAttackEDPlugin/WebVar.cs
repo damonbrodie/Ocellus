@@ -127,61 +127,68 @@ class WebVar
                 string url = matchJsonVar.Groups[1].Value;
                 Tuple<CookieContainer, string> tResponse = Web.sendRequest(url);
                 string htmlData = tResponse.Item2;
-
+                            
                 Utility.writeDebug("htmlData: " + htmlData);
-
+            
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-                var result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
-
-                if (result.ContainsKey("webVar"))
+                try
                 {
-                    List<string> textVariableNames = new List<string>();
-                    List<string> intVariableNames = new List<string>();
-                    List<string> boolVariableNames = new List<string>();
-                    foreach (string variableName in result["webVar"].Keys)
+                    var result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
+
+                    if (result.ContainsKey("webVar"))
                     {
-                        Match matchWebVar = regexWebVar.Match(variableName);
-                        if (matchWebVar.Success)
+                        List<string> textVariableNames = new List<string>();
+                        List<string> intVariableNames = new List<string>();
+                        List<string> boolVariableNames = new List<string>();
+                        foreach (string variableName in result["webVar"].Keys)
                         {
-                            var variableValue = result["webVar"][variableName];
-                            if (variableValue.GetType() == typeof(Boolean))
+                            Match matchWebVar = regexWebVar.Match(variableName);
+                            if (matchWebVar.Success)
                             {
-                                booleanValues[variableName] = variableValue;
-                                boolVariableNames.Add(variableName);
+                                var variableValue = result["webVar"][variableName];
+                                if (variableValue.GetType() == typeof(Boolean))
+                                {
+                                    booleanValues[variableName] = variableValue;
+                                    boolVariableNames.Add(variableName);
+                                }
+                                else if (variableValue.GetType() == typeof(int))
+                                {
+                                    intValues[variableName] = variableValue;
+                                    intVariableNames.Add(variableName);
+                                }
+                                else if (variableValue.GetType() == typeof(string))
+                                {
+                                    textValues[variableName] = variableValue;
+                                    textVariableNames.Add(variableName);
+                                }
                             }
-                            else if (variableValue.GetType() == typeof(int))
+                            else
                             {
-                                intValues[variableName] = variableValue;
-                                intVariableNames.Add(variableName);
-                            }
-                            else if (variableValue.GetType() == typeof(string))
-                            {
-                                textValues[variableName] = variableValue;
-                                textVariableNames.Add(variableName);
+                                Utility.writeDebug("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
                             }
                         }
-                        else
+                        if (textVariableNames.Count > 0)
                         {
-                            Utility.writeDebug("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
+                            state.Add("VAEDwebTextVariableNames", textVariableNames);
+                        }
+                        if (intVariableNames.Count > 0)
+                        {
+                            state.Add("VAEDwebIntVariableNames", intVariableNames);
+                        }
+                        if (boolVariableNames.Count > 0)
+                        {
+                            state.Add("VAEDwebBooleanVariableNames", boolVariableNames);
                         }
                     }
-                    if (textVariableNames.Count > 0)
+                    else
                     {
-                        state.Add("VAEDwebTextVariableNames", textVariableNames);
-                    }
-                    if (intVariableNames.Count > 0)
-                    {
-                        state.Add("VAEDwebIntVariableNames", intVariableNames);
-                    }
-                    if (boolVariableNames.Count > 0)
-                    {
-                        state.Add("VAEDwebBooleanVariableNames", boolVariableNames);
+                        Utility.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Utility.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
+                    Utility.writeDebug("Error:  unable to read JSON:  " + htmlData);
                 }
             }
         }
