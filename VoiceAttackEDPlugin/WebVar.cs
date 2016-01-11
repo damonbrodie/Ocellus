@@ -12,36 +12,54 @@ using System.Web.Script.Serialization;
 
 class WebVar
 {
-    private static void removeWebVars(ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
+    private static void removeWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
     {
+
         string pattern = @"^VAEDwebVar-.*$";
         Regex regexWebVar = new Regex(pattern);
-        foreach (string textVar in textValues.Keys)
+        if (state.ContainsKey("VAEDwebTextVariableNames"))
         {
-            Utility.writeDebug("textVar" + textVar);
-            Match matchWebVar = regexWebVar.Match(textVar);
-            if (matchWebVar.Success)
+            List <string> textVariables = (List<string>)state["VAEDwebTextVariableNames"];
+            foreach (string textVar in textVariables)
             {
-                textValues[textVar] = null;
+                Match matchWebVar = regexWebVar.Match(textVar);
+                if (matchWebVar.Success)
+                {
+                    textValues[textVar] = null;
+                }
             }
+            state.Remove("VAEDwebTextVariableNames");
         }
-        foreach (string intVar in intValues.Keys)
+        if (state.ContainsKey("VAEDwebIntVariableNames"))
         {
-            Match matchWebVar = regexWebVar.Match(intVar);
-            if (matchWebVar.Success)
+            List<string> intVariables = (List<string>)state["VAEDwebIntVariableNames"];
+            foreach (string intVar in intVariables)
             {
-                intValues[intVar] = null;
+                
+                Match matchWebVar = regexWebVar.Match(intVar);
+                if (matchWebVar.Success)
+                {
+                    intValues[intVar] = null;
+                }
             }
+            state.Remove("VAEDwebIntVariableNames");
         }
-        foreach (string boolVar in booleanValues.Keys)
+        if (state.ContainsKey("VAEDwebBooleanVariableNames"))
         {
-            Match matchWebVar = regexWebVar.Match(boolVar);
-            if (matchWebVar.Success)
+            List<string> boolVariables = (List<string>)state["VAEDwebBooleanVariableNames"];
+            foreach (string boolVar in boolVariables)
             {
-                booleanValues[boolVar] = null;
+                
+                Match matchWebVar = regexWebVar.Match(boolVar);
+                if (matchWebVar.Success)
+                {
+                    booleanValues[boolVar] = null;
+                }
             }
+            state.Remove("VAEDwebBooleanVariableNames");
         }
     }
+
     private static Boolean createWebConfig(string configfile)
     {
         if (! File.Exists(configfile))
@@ -60,7 +78,7 @@ class WebVar
                 "# and duplicate variable names will be overwritten by the latest source of the variable.",
                 "#",
                 "# There are three variable types available: string, integer and boolean, and these will be placed in the corresponsing",
-                "# type inside of Voice Attack.",
+                "# variable types inside of Voice Attack.",
                 "#",
                 "JSON=http://ocellus.io/example/json"
             };
@@ -84,13 +102,11 @@ class WebVar
         return webConfigFile;
     }
 
-    public static string readWebVars(ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
+    public static string readWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
     {
         try
         {
-
-            // XXX this doesn't work yet - requires feature request in VA
-            removeWebVars(ref textValues, ref intValues, ref booleanValues);
+            removeWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
             string webConfigFile = getWebVarFilename();
             string pattern = @"^JSON\s*=\s*(.*)$";
             Regex regexJsonVar = new Regex(pattern);
@@ -115,6 +131,9 @@ class WebVar
 
                     if (result.ContainsKey("webVar"))
                     {
+                        List<string> textVariableNames = new List<string>();
+                        List<string> intVariableNames = new List<string>();
+                        List<string> boolVariableNames = new List<string>();
                         foreach (string variableName in result["webVar"].Keys)
                         {
                             Match matchWebVar = regexWebVar.Match(variableName);
@@ -124,21 +143,35 @@ class WebVar
                                 if (variableValue.GetType() == typeof(Boolean))
                                 {
                                     booleanValues[variableName] = variableValue;
+                                    boolVariableNames.Add(variableName);
                                 }
                                 else if (variableValue.GetType() == typeof(int))
                                 {
                                     intValues[variableName] = variableValue;
+                                    intVariableNames.Add(variableName);
                                 }
                                 else if (variableValue.GetType() == typeof(string))
                                 {
                                     textValues[variableName] = variableValue;
+                                    textVariableNames.Add(variableName);
                                 }
                             }
                             else
                             {
                                 Utility.writeDebug("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
                             }
-                            
+                        }
+                        if (textVariableNames.Count > 0)
+                        {
+                            state.Add("VAEDwebTextVariableNames", textVariableNames);
+                        }
+                        if (intVariableNames.Count > 0)
+                        {
+                            state.Add("VAEDwebIntVariableNames", intVariableNames);
+                        }
+                        if (boolVariableNames.Count > 0)
+                        {
+                            state.Add("VAEDwebBooleanVariableNames", boolVariableNames);
                         }
                     }
                     else
