@@ -71,11 +71,6 @@ namespace VoiceAttackEDPlugin
             long pos = 0;
             state.Add("VAEDcurrentLogPosition", pos);
 
-
-            //Set the cooldown timer to the past so it can be run right away.
-            state.Add("VAEDcooldown", DateTime.Now.AddHours(-6));
-
-
             booleanValues["VAEDisEliteRunning"] = Elite.isEliteRunning();
 
             if (verboseEnabled == 2 && booleanValues["VAEDEliteRunning"] == true )
@@ -207,15 +202,13 @@ namespace VoiceAttackEDPlugin
                 case "profile":
                     if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                     {
-                        DateTime lastRun = (DateTime)state["VAEDcooldown"];
-                        DateTime oneMinuteAgo = DateTime.Now.AddMinutes(-1);
-
-                        if (lastRun.CompareTo(oneMinuteAgo) > 0)
+                        int profileCooldown = Utility.isCoolingDown(ref state, "VAEDprofileCooldown");
+                        if (profileCooldown > 0)
                         {
-                            Utility.writeDebug("COOLDOWN IN Progress");
+                            Utility.writeDebug("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
                             break;
                         }
-                        state["VAEDcooldown"] = DateTime.Now;
+
                         textValues["VAEDprofileStatus"] = "ok";
 
                         CookieContainer profileCookies = (CookieContainer)state["VAEDcookieContainer"];

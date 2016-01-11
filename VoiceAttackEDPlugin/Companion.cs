@@ -12,8 +12,6 @@ class Companion
     private const string confirmURL = "https://companion.orerve.net/user/confirm";
     private const string profileURL = "https://companion.orerve.net/profile";
 
-
-
     public static Tuple<CookieContainer, string> loginToAPI()
     {
         CookieContainer cookieContainer = new CookieContainer();

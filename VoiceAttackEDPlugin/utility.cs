@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 
 
 // ***********************
@@ -23,5 +24,33 @@ class Utility
             catch
             { }
         }
+    }
+
+    public static int isCoolingDown(ref Dictionary<string, object> state, string cooldownName, int minutes = 1)
+    {
+        if (! state.ContainsKey(cooldownName))
+        {
+            state.Add(cooldownName, DateTime.Now);
+            return 0;
+        }
+
+        int minutesAgo = -1;
+        if (minutes > 1)
+        {
+            minutesAgo = minutes * -1;
+        }
+        
+        DateTime lastRun = (DateTime)state[cooldownName];
+        DateTime compareTime = DateTime.Now.AddMinutes(minutesAgo);
+
+        double diffSeconds = (lastRun - compareTime).TotalSeconds;
+
+        if (diffSeconds > 0)
+        {
+            return (int) diffSeconds;
+        }
+        state[cooldownName] = DateTime.Now;
+        return 0;
+            
     }
 }
