@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Web.Script.Serialization;
 
 
 // **********************************
@@ -10,6 +12,36 @@ using System.Text.RegularExpressions;
 
 class WebVar
 {
+    private static void removeWebVars(ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
+    {
+        string pattern = @"^VAEDwebVar-.*$";
+        Regex regexWebVar = new Regex(pattern);
+        foreach (string textVar in textValues.Keys)
+        {
+            Utility.writeDebug("textVar" + textVar);
+            Match matchWebVar = regexWebVar.Match(textVar);
+            if (matchWebVar.Success)
+            {
+                textValues[textVar] = null;
+            }
+        }
+        foreach (string intVar in intValues.Keys)
+        {
+            Match matchWebVar = regexWebVar.Match(intVar);
+            if (matchWebVar.Success)
+            {
+                intValues[intVar] = null;
+            }
+        }
+        foreach (string boolVar in booleanValues.Keys)
+        {
+            Match matchWebVar = regexWebVar.Match(boolVar);
+            if (matchWebVar.Success)
+            {
+                booleanValues[boolVar] = null;
+            }
+        }
+    }
     private static Boolean createWebConfig(string configfile)
     {
         if (! File.Exists(configfile))
@@ -52,24 +84,75 @@ class WebVar
         return webConfigFile;
     }
 
-    public static string readWebVars()
+    public static string readWebVars(ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
     {
-        string webConfigFile = getWebVarFilename();
-        string pattern = @"^JSON\s*=\s*(.*)$";
-        Regex regex = new Regex(pattern);
-
-        string[] lines = File.ReadAllLines(webConfigFile);
-        foreach (string line in lines)
+        try
         {
-            
-            Match match = regex.Match(line);
-            if (match.Success)
+
+            // XXX this doesn't work yet - requires feature request in VA
+            removeWebVars(ref textValues, ref intValues, ref booleanValues);
+            string webConfigFile = getWebVarFilename();
+            string pattern = @"^JSON\s*=\s*(.*)$";
+            Regex regexJsonVar = new Regex(pattern);
+
+            pattern = @"^VAEDwebVar-.*$";
+            Regex regexWebVar = new Regex(pattern);
+
+            string[] lines = File.ReadAllLines(webConfigFile);
+            foreach (string line in lines)
             {
-                string url = match.Groups[1].Value;
-                Tuple<CookieContainer, string> tResponse = Web.sendRequest(url);
-                string htmlData = tResponse.Item2;
-                return htmlData;
+
+                Match matchJsonVar = regexJsonVar.Match(line);
+                if (matchJsonVar.Success)
+                {
+                    string url = matchJsonVar.Groups[1].Value;
+                    Tuple<CookieContainer, string> tResponse = Web.sendRequest(url);
+                    string htmlData = tResponse.Item2;
+
+                    JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+                    var result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
+
+                    if (result.ContainsKey("webVar"))
+                    {
+                        foreach (string variableName in result["webVar"].Keys)
+                        {
+                            Match matchWebVar = regexWebVar.Match(variableName);
+                            if (matchWebVar.Success)
+                            {
+                                var variableValue = result["webVar"][variableName];
+                                if (variableValue.GetType() == typeof(Boolean))
+                                {
+                                    booleanValues[variableName] = variableValue;
+                                }
+                                else if (variableValue.GetType() == typeof(int))
+                                {
+                                    intValues[variableName] = variableValue;
+                                }
+                                else if (variableValue.GetType() == typeof(string))
+                                {
+                                    textValues[variableName] = variableValue;
+                                }
+                            }
+                            else
+                            {
+                                Utility.writeDebug("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
+                            }
+                            
+                        }
+                    }
+                    else
+                    {
+                        Utility.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
+                    }
+                    return htmlData;
+                }
             }
+            
+        }
+        catch (Exception ex)
+        {
+            Utility.writeDebug("error:  " + ex.ToString());
         }
         return null;
     }
