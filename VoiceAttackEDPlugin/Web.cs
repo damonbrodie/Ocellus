@@ -225,6 +225,33 @@ class Web
             return new CookieContainer();
         }
     }
+
+    public static Boolean downloadFile(string url, string filename)
+    {
+        try
+        {
+            Stream response = WebRequest.Create(url).GetResponse().GetResponseStream();
+
+            FileStream fs = File.Create(filename);
+            Byte[] buffer = new Byte[32 * 1024];
+            int read = response.Read(buffer, 0, buffer.Length);
+            while (read > 0)
+            {
+                fs.Write(buffer, 0, read);
+                read = response.Read(buffer, 0, buffer.Length);
+            }
+            fs.Close();
+            response.Close();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Utility.writeDebug(ex.ToString());
+            return false;
+        }
+        
+    }
+    
     public static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer = null, string referer = null, string sendData = null)
     {
         url = url.Replace("\n", "");

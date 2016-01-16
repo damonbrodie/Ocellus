@@ -186,7 +186,7 @@ class WebVar
                         Utility.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     Utility.writeDebug("Error:  unable to read JSON:  " + htmlData);
                 }

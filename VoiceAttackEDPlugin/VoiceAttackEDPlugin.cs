@@ -82,7 +82,10 @@ namespace VoiceAttackEDPlugin
                 booleanValues["VAEDverboseProblem"] = true;
             }
 
-            
+
+            // Load EDDB Index into memory
+            Eddb.loadEddbIndex(ref state);
+
             CookieContainer cookieJar = new CookieContainer();
 
             state.Add("VAEDloggedIn", "no");
@@ -107,6 +110,9 @@ namespace VoiceAttackEDPlugin
             Utility.writeDebug("COMMAND:  " + context);
             switch (context)
             {
+                case "download eddb":
+                    Eddb.loadEddbIndex(ref state);
+                    break;
                 case "edit web variables":
                     textValues["VAEDvalue"] = WebVar.getWebVarFilename();
                     break;
@@ -199,6 +205,9 @@ namespace VoiceAttackEDPlugin
                     Utility.writeDebug("Error:  Unknown verification problem");
                     break;
 
+                case "update eddn":
+                    break;
+
                 case "profile":
                     if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                     {
@@ -225,11 +234,11 @@ namespace VoiceAttackEDPlugin
                         string currentSystem = "";
                         string currentStarport = "";
                         Boolean currentlyDocked = false;
-
                         var result = new Dictionary<string, dynamic>();
                         try
                         {
                             result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
+                            state["VAEDcompanionResult"] = result;
                             string cmdr = result["commander"]["name"];
                             int credits = result["commander"]["credits"];
                             int debt = result["commander"]["debt"];
@@ -291,7 +300,6 @@ namespace VoiceAttackEDPlugin
                                 int counterInt = (int)intValues[shipCounterString];
                                 string counterStr = counterInt.ToString();
                                 textValues["VAEDship-" + tempShip + "-" + counterStr] = tempSystem;
-                                Utility.writeDebug("VAEDship-" + tempShip + "-" + counterStr + ": " + textValues["VAEDship-" + tempShip + "-" + counterStr]);
                             }
 
                             //Setup ambiguous ship variables
@@ -376,8 +384,14 @@ namespace VoiceAttackEDPlugin
                         catch (Exception ex)
                         {
                             Utility.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
+                            Utility.writeDebug(htmlData);
                             textValues["VAEDprofileStatus"] = "error";
                         }
+
+                        textValues["VAEDeddbStarportId"] = null;
+                        textValues["VAEDcurrentStarport"] = null;
+                        textValues["VAEDeddbSystemId"] = null;
+                        textValues["VAEDcurrentSystem"] = null;
 
                         if (currentlyDocked)
                         {
@@ -415,15 +429,25 @@ namespace VoiceAttackEDPlugin
                             state["VAEDcurrentLogPosition"] = tLogReturn.Item4;
                             state["VAEDelitePid"] = tLogReturn.Item5;
 
-                            textValues["VAEDcurrentStarport"] = null;
                             if (success)
                             {
                                 textValues["VAEDcurrentSystem"] = currentSystem;
                             }
-                            else
+                        }
+
+                        if (state.ContainsKey("VAEDeddbIndex"))
+                        {
+                            Dictionary<string, dynamic> tempEddb = (Dictionary<string, dynamic>)state["VAEDeddbIndex"];
+
+                            if (textValues["VAEDcurrentSystem"] != null && tempEddb.ContainsKey(textValues["VAEDcurrentSystem"]))
                             {
-                                textValues["VAEDcurrentSystem"] = null;
+                                textValues["VAEDeddbSystemId"] = tempEddb[textValues["VAEDcurrentSystem"]]["id"].ToString();
+                                if (textValues["VAEDcurrentStarport"] != null && tempEddb[textValues["VAEDcurrentSystem"]]["stations"].ContainsKey(textValues["VAEDcurrentStarport"]))
+                                {
+                                    textValues["VAEDeddbStarportId"] = tempEddb[textValues["VAEDcurrentSystem"]]["stations"][textValues["VAEDcurrentStarport"]].ToString();
+                                }
                             }
+
                         }
                         if (1 == 1) // Debug
                         {
