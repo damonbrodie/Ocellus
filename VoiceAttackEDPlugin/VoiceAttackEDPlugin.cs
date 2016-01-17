@@ -269,6 +269,7 @@ namespace VoiceAttackEDPlugin
                             int cargoCapacity = result["ship"]["cargo"]["capacity"];
                             int quantityInCargo = result["ship"]["cargo"]["qty"];
                             string currentShip = result["ships"][currentShipId]["name"];
+                            result["commander"]["currentShip"] = currentShip;
 
                             List<string> keys = new List<string>(allShips.Keys);
 
