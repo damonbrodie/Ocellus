@@ -14,11 +14,11 @@ namespace VoiceAttackEDPlugin
 {   
     public class VoiceAttackPlugin
     {
-        private const string pluginVersion = "0.1";
+        
 
         public static string VA_DisplayName()
         {
-            return "Ocellus - Elite Dangerous Assistant " + pluginVersion;  
+            return "Ocellus - Elite Dangerous Assistant " + Upgrade.pluginVersion;  
         }
 
         public static string VA_DisplayInfo()
@@ -82,7 +82,6 @@ namespace VoiceAttackEDPlugin
                 booleanValues["VAEDverboseProblem"] = true;
             }
 
-
             // Load EDDB Index into memory
             Eddb.loadEddbIndex(ref state);
 
@@ -110,8 +109,18 @@ namespace VoiceAttackEDPlugin
             Utility.writeDebug("COMMAND:  " + context);
             switch (context)
             {
-                case "download eddb":
-                    Eddb.loadEddbIndex(ref state);
+                case "check upgrade":
+                    if (Upgrade.needUpgrade())
+                    {
+                        booleanValues["VAEDneedUpgrade"] = true;
+                    }
+                    else
+                    {
+                        booleanValues["VAEDneedUpgrade"] = false;
+                    }
+                    break;
+                case "coriolis":
+                    Coriolis.createCoriolisJson(ref state);
                     break;
                 case "edit web variables":
                     textValues["VAEDvalue"] = WebVar.getWebVarFilename();
@@ -238,7 +247,7 @@ namespace VoiceAttackEDPlugin
                         try
                         {
                             result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
-                            state["VAEDcompanionResult"] = result;
+                            state["VAEDcompanionDict"] = result;
                             string cmdr = result["commander"]["name"];
                             int credits = result["commander"]["credits"];
                             int debt = result["commander"]["debt"];

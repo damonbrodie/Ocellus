@@ -54,10 +54,12 @@
   <ItemGroup>
     <Compile Include="Companion.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Coriolis.cs" />
     <Compile Include="Eddb.cs" />
     <Compile Include="Eddn.cs" />
     <Compile Include="FileVars.cs" />
     <Compile Include="PluginRegistry.cs" />
+    <Compile Include="Upgrade.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Elite.cs" />

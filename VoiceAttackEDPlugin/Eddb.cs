@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 
-// **************************************************************
-// *  Functions for displaying current Station on EDDB website  *
-// **************************************************************
+// *************************************************************
+// *  Functions for displaying System/Station on EDDB website  *
+// *************************************************************
 
 class Eddb
 {
