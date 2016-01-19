@@ -52,7 +52,7 @@ class Eddb
         }
         catch (Exception ex)
         {
-            Utility.writeDebug(ex.ToString());
+            Utilities.writeDebug(ex.ToString());
         }   
     }
 }

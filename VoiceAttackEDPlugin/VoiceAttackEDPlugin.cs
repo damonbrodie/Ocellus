@@ -106,7 +106,7 @@ namespace VoiceAttackEDPlugin
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-            Utility.writeDebug("COMMAND:  " + context);
+            Utilities.writeDebug("COMMAND:  " + context);
             switch (context)
             {
                 case "check upgrade":
@@ -165,7 +165,7 @@ namespace VoiceAttackEDPlugin
 
                     cookieContainer = tAuthentication.Item1;
                     string loginResponse = tAuthentication.Item2;
-                    Utility.writeDebug("loginResponse:  " + loginResponse);
+                    Utilities.writeDebug("loginResponse:  " + loginResponse);
                     state["VAEDloggedIn"] = loginResponse;
                     textValues["VAEDauthenticationStatus"] = loginResponse;
                     if (loginResponse == "verification" || loginResponse == "ok")
@@ -207,11 +207,11 @@ namespace VoiceAttackEDPlugin
                     }
                     else if (state["VAEDloggedIn"].ToString() == "no")
                     {
-                        Utility.writeDebug("Not logged in - can't verify");
+                        Utilities.writeDebug("Not logged in - can't verify");
                         textValues.Add("VAEDprofileStatus", "no");
                         break;
                     }
-                    Utility.writeDebug("Error:  Unknown verification problem");
+                    Utilities.writeDebug("Error:  Unknown verification problem");
                     break;
 
                 case "update eddn":
@@ -220,10 +220,10 @@ namespace VoiceAttackEDPlugin
                 case "profile":
                     if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                     {
-                        int profileCooldown = Utility.isCoolingDown(ref state, "VAEDprofileCooldown");
+                        int profileCooldown = Utilities.isCoolingDown(ref state, "VAEDprofileCooldown");
                         if (profileCooldown > 0)
                         {
-                            Utility.writeDebug("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
+                            Utilities.writeDebug("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
                             break;
                         }
 
@@ -393,8 +393,8 @@ namespace VoiceAttackEDPlugin
                         }
                         catch (Exception ex)
                         {
-                            Utility.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
-                            Utility.writeDebug(htmlData);
+                            Utilities.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
+                            Utilities.writeDebug(htmlData);
                             textValues["VAEDprofileStatus"] = "error";
                         }
 
@@ -462,34 +462,34 @@ namespace VoiceAttackEDPlugin
                         if (1 == 1) // Debug
                         {
                             // Write out JSON
-                            Utility.writeDebug("----------------HTMLDATA FOLLOWS------------------------------");
-                            Utility.writeDebug(htmlData);
+                            Utilities.writeDebug("----------------HTMLDATA FOLLOWS------------------------------");
+                            Utilities.writeDebug(htmlData);
 
-                            Utility.writeDebug("TEXT VALUES");
+                            Utilities.writeDebug("TEXT VALUES");
                             foreach (string key in textValues.Keys)
                             {
                                 if (textValues[key] != null)
                                 {
-                                    Utility.writeDebug(key + ":  " + textValues[key]);
+                                    Utilities.writeDebug(key + ":  " + textValues[key]);
                                 }
 
                             }
 
-                            Utility.writeDebug("INTEGER VALUES");
+                            Utilities.writeDebug("INTEGER VALUES");
                             foreach (string key in intValues.Keys)
                             {
                                 if (intValues[key] != null)
                                 {
-                                    Utility.writeDebug(key + ":  " + intValues[key].ToString());
+                                    Utilities.writeDebug(key + ":  " + intValues[key].ToString());
                                 }
                             }
 
-                            Utility.writeDebug("BOOLEAN VALUES");
+                            Utilities.writeDebug("BOOLEAN VALUES");
                             foreach (string key in booleanValues.Keys)
                             {
                                 if (booleanValues[key] != null)
                                 {
-                                    Utility.writeDebug(key + ":  " + booleanValues[key].ToString());
+                                    Utilities.writeDebug(key + ":  " + booleanValues[key].ToString());
                                 }
                             }
                         }
@@ -501,7 +501,7 @@ namespace VoiceAttackEDPlugin
                     break;
 
                 default:
-                    Utility.writeDebug("Error: unknown command");
+                    Utilities.writeDebug("Error: unknown command");
                     break;
                 
             }          

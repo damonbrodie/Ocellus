@@ -30,7 +30,7 @@ class Upgrade
         }
         catch
         {
-            Utility.writeDebug("Error:  Unable to parse version check resposne");
+            Utilities.writeDebug("Error:  Unable to parse version check resposne");
         }
         return false;
     }

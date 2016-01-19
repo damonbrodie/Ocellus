@@ -19,7 +19,7 @@ class PluginRegistry
         }
         catch
         {
-            Utility.writeDebug("ERROR:  Unable to write value to Windows Registry.");
+            Utilities.writeDebug("ERROR:  Unable to write value to Windows Registry.");
             return false;
         }
         return true;

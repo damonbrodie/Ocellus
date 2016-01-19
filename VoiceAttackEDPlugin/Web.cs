@@ -202,7 +202,7 @@ class Web
             }
             catch (Exception e)
             {
-                Utility.writeDebug("Error:  Problem writing cookies to disk: " + e.GetType());
+                Utilities.writeDebug("Error:  Problem writing cookies to disk: " + e.GetType());
             }
         }
     }
@@ -221,7 +221,7 @@ class Web
         }
         catch (Exception e)
         {
-            Utility.writeDebug("Error:  Problem reading cookies from disk: " + e.GetType());
+            Utilities.writeDebug("Error:  Problem reading cookies from disk: " + e.GetType());
             return new CookieContainer();
         }
     }
@@ -246,7 +246,7 @@ class Web
         }
         catch (Exception ex)
         {
-            Utility.writeDebug(ex.ToString());
+            Utilities.writeDebug(ex.ToString());
             return false;
         }
         
@@ -313,7 +313,7 @@ class Web
 
         catch (WebException ex)
         {
-            Utility.writeDebug("Exception Caught:  " + ex.ToString());
+            Utilities.writeDebug("Exception Caught:  " + ex.ToString());
             return Tuple.Create(cookieContainer, "ERROR");
 
         }
@@ -356,7 +356,7 @@ class Web
 
                     catch (Exception ex)
                     {
-                        Utility.writeDebug("ERROR:  " + ex.ToString());
+                        Utilities.writeDebug("ERROR:  " + ex.ToString());
                     }
 
                 }

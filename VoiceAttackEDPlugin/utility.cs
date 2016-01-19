@@ -7,7 +7,7 @@ using System.Collections.Generic;
 // *  Utility functions  *
 // ***********************
 
-class Utility
+class Utilities
 {
     public static void writeDebug(string line)
     {

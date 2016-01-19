@@ -17,16 +17,13 @@ class Elite
 
     private static string getLogFile(string path)
     {
-        Utility.writeDebug("game log path " + path);
         try
         {
             string file = Directory.GetFiles(path, "netLog*.log").OrderByDescending(f => f).First();
-            Utility.writeDebug("Current netLog is  " + file);
             return file;
         }
         catch
         {
-            Utility.writeDebug("No NetLogs found");
             return string.Empty;
         }
     }
@@ -70,7 +67,7 @@ class Elite
             }
             catch (Exception ex)
             {
-                Utility.writeDebug("Error reading file " + ex.ToString());
+                Utilities.writeDebug("Error reading file " + ex.ToString());
 
             }
         }
@@ -171,7 +168,6 @@ class Elite
         Int32 checkPid = Elite.getPID(elitePid);
 
         string currentSystem = "";
-        Utility.writeDebug("start");
         if (logFile == string.Empty || (checkPid != elitePid && checkPid >= 0))
         {
             // If we don't have a logFile already being tracked, or if Elite is restarted
@@ -182,7 +178,6 @@ class Elite
             {
                 return Tuple.Create(false, string.Empty, string.Empty, seekPos, checkPid);
             }
-            Utility.writeDebug("found logFile " + logFile);
         }
 
         if (elitePid == checkPid)
@@ -198,7 +193,6 @@ class Elite
                 flag = true;
             }
 
-            Utility.writeDebug("Current System from netLog: " + currentSystem);
             return Tuple.Create(flag, currentSystem, logFile, seekPos, checkPid);
         }
 
@@ -295,7 +289,7 @@ class Elite
             }
             catch (Exception ex)
             {
-                Utility.writeDebug("Error:  Unable to create temporary AppConfig.xml:  " + ex.ToString());
+                Utilities.writeDebug("Error:  Unable to create temporary AppConfig.xml:  " + ex.ToString());
                 return 0;
             }
 
@@ -306,13 +300,13 @@ class Elite
             }
             catch (Exception ex)
             {
-                Utility.writeDebug("Error:  Unable to replace AppConfig.xml:  " + ex.ToString());
+                Utilities.writeDebug("Error:  Unable to replace AppConfig.xml:  " + ex.ToString());
                 return 0;
             }
         }
         else
         {
-            Utility.writeDebug("Error:  Can't access Elite game directory: " + path);
+            Utilities.writeDebug("Error:  Can't access Elite game directory: " + path);
             return 0;
         }
     }

@@ -103,10 +103,10 @@ class WebVar
 
     public static void readWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
     {
-        int webVarCooldown = Utility.isCoolingDown(ref state, "VAEDwebVarCooldown");
+        int webVarCooldown = Utilities.isCoolingDown(ref state, "VAEDwebVarCooldown");
         if (webVarCooldown > 0)
         {
-            Utility.writeDebug("Web Variable request is cooling down: " + webVarCooldown.ToString() + " seconds remain.");
+            Utilities.writeDebug("Web Variable request is cooling down: " + webVarCooldown.ToString() + " seconds remain.");
             return;
         }
         removeWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
@@ -128,7 +128,7 @@ class WebVar
                 Tuple<CookieContainer, string> tResponse = Web.sendRequest(url);
                 string htmlData = tResponse.Item2;
                             
-                Utility.writeDebug("htmlData: " + htmlData);
+                Utilities.writeDebug("htmlData: " + htmlData);
             
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
 
@@ -165,7 +165,7 @@ class WebVar
                             }
                             else
                             {
-                                Utility.writeDebug("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
+                                Utilities.writeDebug("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
                             }
                         }
                         if (textVariableNames.Count > 0)
@@ -183,12 +183,12 @@ class WebVar
                     }
                     else
                     {
-                        Utility.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
+                        Utilities.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
                     }
                 }
                 catch
                 {
-                    Utility.writeDebug("Error:  unable to read JSON:  " + htmlData);
+                    Utilities.writeDebug("Error:  unable to read JSON:  " + htmlData);
                 }
             }
         }
