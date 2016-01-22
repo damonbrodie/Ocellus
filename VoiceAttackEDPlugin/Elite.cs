@@ -86,7 +86,7 @@ class Elite
 
     public static string getGamePath()
     {
-        string gamePath = PluginRegistry.getStringValue("GamePath");
+        string gamePath = PluginRegistry.getStringValue("gamePath");
         if (gamePath != string.Empty)
         {
             return gamePath;
@@ -126,21 +126,21 @@ class Elite
                         if (publisher == "Frontier Developments")
                         {
                             string gameLocation = programKey.GetValue("InstallLocation").ToString();
-                            PluginRegistry.setStringValue("GamePath", gameLocation);
+                            PluginRegistry.setStringValue("gamePath", gameLocation);
 
                             int endPos = uninstallString.IndexOf("steam.exe");
                             if (endPos > 0)
                             {
                                 endPos += 10;
                                 startString = uninstallString.Substring(0, endPos);
-                                PluginRegistry.setStringValue("StartPath", startString);
+                                PluginRegistry.setStringValue("startPath", startString);
                                 if (uninstallString.Contains("359320"))
                                 {
-                                    PluginRegistry.setStringValue("StartParams", "steam://rungameid/359320");
+                                    PluginRegistry.setStringValue("startParams", "steam://rungameid/359320");
                                 }
                                 else if (uninstallString.Contains("419270"))
                                 {
-                                    PluginRegistry.setStringValue("StartParams", "steam://rungameid/419270");
+                                    PluginRegistry.setStringValue("startParams", "steam://rungameid/419270");
                                 }
                                 
                                 

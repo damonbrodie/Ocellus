@@ -14,8 +14,6 @@ namespace VoiceAttackEDPlugin
 {   
     public class VoiceAttackPlugin
     {
-        
-
         public static string VA_DisplayName()
         {
             return "Ocellus - Elite Dangerous Assistant " + Upgrade.pluginVersion;  
@@ -47,8 +45,8 @@ namespace VoiceAttackEDPlugin
             // Determine Elite Dangerous directories
             string gamePath = Elite.getGamePath();
             string logPath = Elite.getGameLogPath(gamePath);
-            string gameStartString = PluginRegistry.getStringValue("StartPath");
-            string gameStartParams = PluginRegistry.getStringValue("StartParams");
+            string gameStartString = PluginRegistry.getStringValue("startPath");
+            string gameStartParams = PluginRegistry.getStringValue("startParams");
             state.Add("VAEDgamePath", gamePath);
             state.Add("VAEDlogPath", logPath);
             textValues["VAEDgameStartString"] = gameStartString;
@@ -109,6 +107,7 @@ namespace VoiceAttackEDPlugin
             Utilities.writeDebug("COMMAND:  " + context);
             switch (context)
             {
+
                 case "check upgrade":
                     if (Upgrade.needUpgrade())
                     {
@@ -134,6 +133,11 @@ namespace VoiceAttackEDPlugin
                 case "update file vars":
                     FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
                     break;
+                case "set credentials":
+                    var myForm = new Credentials.Login();
+                    myForm.ShowDialog();
+                    MessageBox.Show(myForm.Text);
+                    break;
                 case "credentials":
                     string email = PluginRegistry.getStringValue("email");
                     string password = PluginRegistry.getStringValue("password");
@@ -148,14 +152,6 @@ namespace VoiceAttackEDPlugin
                     {
                         textValues.Add("VAEDclipboard", Clipboard.GetText());
                     }
-                    break;
-
-                case "save email":
-                    PluginRegistry.setStringValue("email", textValues["VAEDvalue"]);
-                    break;
-
-                case "save password":
-                    PluginRegistry.setStringValue("password", textValues["VAEDvalue"]);
                     break;
 
                 case "authenticate":

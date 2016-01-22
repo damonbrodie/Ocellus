@@ -13,7 +13,7 @@ class Upgrade
     private const string versionCheckURL = "http://ocellus.io/version";
     public const string pluginVersion = "0.1";
 
-    public static Boolean needUpgrade()
+    private static Tuple<double, string, string> checkServerVersion()
     {
         Tuple<CookieContainer, string> tResponse = Web.sendRequest(versionCheckURL);
         string htmlData = tResponse.Item2;
@@ -21,17 +21,36 @@ class Upgrade
         try
         {
             var result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
-            float myVer = float.Parse(pluginVersion);
-            float serverVer = float.Parse(result["version"]);
-            if (myVer < serverVer)
-            {
-                return true;
-            }
+            
+            double serverVer = double.Parse(result["version"]);
+            string profileURL = result["profile"];
+            string pluginURL = result["plugin"];
+
+            return Tuple.Create<double, string, string>(serverVer, profileURL, pluginURL);
         }
         catch
         {
             Utilities.writeDebug("Error:  Unable to parse version check resposne");
         }
+        return Tuple.Create<double, string, string>(-1.0, null, null);
+    }
+
+    public static Boolean needUpgrade()
+    {
+        Tuple<double, string, string> tResponse = checkServerVersion();
+        double serverVer = tResponse.Item1;
+        double myVer = double.Parse(pluginVersion);
+        if (myVer < serverVer)
+        {
+            return true;
+        }
         return false;
+    }
+
+    public static Boolean downloadUpdate()
+    {
+        Tuple<double, string, string> tResponse = checkServerVersion();
+
+        return true;
     }
 }
