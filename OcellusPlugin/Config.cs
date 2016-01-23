@@ -10,7 +10,7 @@ class Config
 {
     public static string getConfigPath()
     {
-        string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Voice Attack ED Plugin");
+        string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ocellus Plugin");
         try
         {
             Directory.CreateDirectory(appPath);

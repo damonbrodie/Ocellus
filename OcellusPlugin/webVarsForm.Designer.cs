@@ -1,6 +1,6 @@
-﻿namespace ClassLibrary1
+﻿namespace WebVars
 {
-    partial class WebVarsForm
+    partial class EditWebVars
     {
         /// <summary>
         /// Required designer variable.
@@ -42,6 +42,7 @@
             this.btnTest4 = new System.Windows.Forms.Button();
             this.btnTest5 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblValidationJson = new System.Windows.Forms.Label();
             this.txt = new System.Windows.Forms.TextBox();
             this.txtTestValue4 = new System.Windows.Forms.TextBox();
             this.txtTestValue3 = new System.Windows.Forms.TextBox();
@@ -54,7 +55,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtTestAttr1 = new System.Windows.Forms.TextBox();
-            this.lblValidationJson = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -132,6 +132,7 @@
             this.btnTest1.TabIndex = 1;
             this.btnTest1.Text = "Test";
             this.btnTest1.UseVisualStyleBackColor = true;
+            this.btnTest1.Click += new System.EventHandler(this.btnTest1_Click);
             // 
             // btnTest2
             // 
@@ -195,6 +196,19 @@
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Test Area:";
+            // 
+            // lblValidationJson
+            // 
+            this.lblValidationJson.AutoSize = true;
+            this.lblValidationJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblValidationJson.ForeColor = System.Drawing.Color.DarkRed;
+            this.lblValidationJson.Location = new System.Drawing.Point(111, 27);
+            this.lblValidationJson.Name = "lblValidationJson";
+            this.lblValidationJson.Size = new System.Drawing.Size(142, 13);
+            this.lblValidationJson.TabIndex = 12;
+            this.lblValidationJson.Text = "Error - No Server Found";
+            this.lblValidationJson.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblValidationJson.Visible = false;
             // 
             // txt
             // 
@@ -316,20 +330,7 @@
             this.txtTestAttr1.TabIndex = 0;
             this.txtTestAttr1.TabStop = false;
             // 
-            // lblValidationJson
-            // 
-            this.lblValidationJson.AutoSize = true;
-            this.lblValidationJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValidationJson.ForeColor = System.Drawing.Color.DarkRed;
-            this.lblValidationJson.Location = new System.Drawing.Point(111, 27);
-            this.lblValidationJson.Name = "lblValidationJson";
-            this.lblValidationJson.Size = new System.Drawing.Size(142, 13);
-            this.lblValidationJson.TabIndex = 12;
-            this.lblValidationJson.Text = "Error - No Server Found";
-            this.lblValidationJson.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblValidationJson.Visible = false;
-            // 
-            // WebVarsForm
+            // EditWebVars
             // 
             this.AcceptButton = this.btnSubmit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -352,12 +353,12 @@
             this.Controls.Add(this.txtJson1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "WebVarsForm";
+            this.Name = "EditWebVars";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Ocellus Web Variables";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.WebVarsForm_Load);
+            this.Load += new System.EventHandler(this.EditWebVars_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

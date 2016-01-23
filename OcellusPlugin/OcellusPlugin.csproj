@@ -88,7 +88,6 @@
     </Compile>
     <Compile Include="OcellusPlugin.cs" />
     <Compile Include="Web.cs" />
-    <Compile Include="WebVar.cs" />
     <Compile Include="WebVarsForm.cs">
       <SubType>Form</SubType>
     </Compile>

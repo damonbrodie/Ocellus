@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.IO;
@@ -122,21 +122,21 @@ namespace OcellusPlugin
                     Coriolis.createCoriolisJson(ref state);
                     break;
                 case "edit web variables":
-                    textValues["VAEDvalue"] = WebVar.getWebVarFilename();
+                    var webVarsForm = new WebVars.EditWebVars();
+                    webVarsForm.ShowDialog();
                     break;
                 case "edit file variables":
                     textValues["VAEDvalue"] = FileVar.getFileVarFilename();
                     break;
                 case "update web vars":
-                    WebVar.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
+                    //WebVar.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
                     break;
                 case "update file vars":
                     FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
                     break;
                 case "set credentials":
-                    var myForm = new Credentials.Login();
-                    myForm.ShowDialog();
-                    MessageBox.Show(myForm.Text);
+                    var credentialsForm = new Credentials.Login();
+                    credentialsForm.ShowDialog();
                     break;
                 case "credentials":
                     string email = PluginRegistry.getStringValue("email");
