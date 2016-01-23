@@ -188,6 +188,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.txtTestAttr1);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(15, 309);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(386, 228);
@@ -201,7 +202,7 @@
             this.txt.Location = new System.Drawing.Point(204, 190);
             this.txt.Name = "txt";
             this.txt.ReadOnly = true;
-            this.txt.Size = new System.Drawing.Size(176, 20);
+            this.txt.Size = new System.Drawing.Size(176, 23);
             this.txt.TabIndex = 11;
             this.txt.TabStop = false;
             // 
@@ -211,7 +212,7 @@
             this.txtTestValue4.Location = new System.Drawing.Point(204, 164);
             this.txtTestValue4.Name = "txtTestValue4";
             this.txtTestValue4.ReadOnly = true;
-            this.txtTestValue4.Size = new System.Drawing.Size(176, 20);
+            this.txtTestValue4.Size = new System.Drawing.Size(176, 23);
             this.txtTestValue4.TabIndex = 10;
             this.txtTestValue4.TabStop = false;
             // 
@@ -221,7 +222,7 @@
             this.txtTestValue3.Location = new System.Drawing.Point(204, 138);
             this.txtTestValue3.Name = "txtTestValue3";
             this.txtTestValue3.ReadOnly = true;
-            this.txtTestValue3.Size = new System.Drawing.Size(176, 20);
+            this.txtTestValue3.Size = new System.Drawing.Size(176, 23);
             this.txtTestValue3.TabIndex = 9;
             this.txtTestValue3.TabStop = false;
             // 
@@ -231,7 +232,7 @@
             this.txtTestValue2.Location = new System.Drawing.Point(204, 111);
             this.txtTestValue2.Name = "txtTestValue2";
             this.txtTestValue2.ReadOnly = true;
-            this.txtTestValue2.Size = new System.Drawing.Size(176, 20);
+            this.txtTestValue2.Size = new System.Drawing.Size(176, 23);
             this.txtTestValue2.TabIndex = 8;
             this.txtTestValue2.TabStop = false;
             // 
@@ -241,7 +242,7 @@
             this.txtTestValue1.Location = new System.Drawing.Point(204, 85);
             this.txtTestValue1.Name = "txtTestValue1";
             this.txtTestValue1.ReadOnly = true;
-            this.txtTestValue1.Size = new System.Drawing.Size(176, 20);
+            this.txtTestValue1.Size = new System.Drawing.Size(176, 23);
             this.txtTestValue1.TabIndex = 7;
             this.txtTestValue1.TabStop = false;
             // 
@@ -251,7 +252,7 @@
             this.txtTestAttr5.Location = new System.Drawing.Point(6, 190);
             this.txtTestAttr5.Name = "txtTestAttr5";
             this.txtTestAttr5.ReadOnly = true;
-            this.txtTestAttr5.Size = new System.Drawing.Size(157, 20);
+            this.txtTestAttr5.Size = new System.Drawing.Size(157, 23);
             this.txtTestAttr5.TabIndex = 6;
             this.txtTestAttr5.TabStop = false;
             // 
@@ -261,7 +262,7 @@
             this.txtTestAttr4.Location = new System.Drawing.Point(6, 164);
             this.txtTestAttr4.Name = "txtTestAttr4";
             this.txtTestAttr4.ReadOnly = true;
-            this.txtTestAttr4.Size = new System.Drawing.Size(157, 20);
+            this.txtTestAttr4.Size = new System.Drawing.Size(157, 23);
             this.txtTestAttr4.TabIndex = 5;
             this.txtTestAttr4.TabStop = false;
             // 
@@ -271,7 +272,7 @@
             this.txtTestAttr3.Location = new System.Drawing.Point(6, 138);
             this.txtTestAttr3.Name = "txtTestAttr3";
             this.txtTestAttr3.ReadOnly = true;
-            this.txtTestAttr3.Size = new System.Drawing.Size(157, 20);
+            this.txtTestAttr3.Size = new System.Drawing.Size(157, 23);
             this.txtTestAttr3.TabIndex = 4;
             this.txtTestAttr3.TabStop = false;
             // 
@@ -281,7 +282,7 @@
             this.txtTestAttr2.Location = new System.Drawing.Point(6, 111);
             this.txtTestAttr2.Name = "txtTestAttr2";
             this.txtTestAttr2.ReadOnly = true;
-            this.txtTestAttr2.Size = new System.Drawing.Size(157, 20);
+            this.txtTestAttr2.Size = new System.Drawing.Size(157, 23);
             this.txtTestAttr2.TabIndex = 3;
             this.txtTestAttr2.TabStop = false;
             // 
@@ -311,7 +312,7 @@
             this.txtTestAttr1.Location = new System.Drawing.Point(6, 85);
             this.txtTestAttr1.Name = "txtTestAttr1";
             this.txtTestAttr1.ReadOnly = true;
-            this.txtTestAttr1.Size = new System.Drawing.Size(157, 20);
+            this.txtTestAttr1.Size = new System.Drawing.Size(157, 23);
             this.txtTestAttr1.TabIndex = 0;
             this.txtTestAttr1.TabStop = false;
             // 
@@ -325,6 +326,7 @@
             this.lblValidationJson.Size = new System.Drawing.Size(142, 13);
             this.lblValidationJson.TabIndex = 12;
             this.lblValidationJson.Text = "Error - No Server Found";
+            this.lblValidationJson.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblValidationJson.Visible = false;
             // 
             // WebVarsForm
@@ -353,7 +355,7 @@
             this.Name = "WebVarsForm";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Web Variables";
+            this.Text = "Ocellus Web Variables";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.WebVarsForm_Load);
             this.groupBox1.ResumeLayout(false);

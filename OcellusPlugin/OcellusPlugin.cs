@@ -10,13 +10,13 @@ using System.Web.Script.Serialization;
 // *  Voice Attack functions   *
 // *****************************
 
-namespace VoiceAttackEDPlugin
+namespace OcellusPlugin
 {   
-    public class VoiceAttackPlugin
+    public class OcellusPlugin
     {
         public static string VA_DisplayName()
         {
-            return "Ocellus - Elite Dangerous Assistant " + Upgrade.pluginVersion;  
+            return "Ocellus - Elite: Dangerous Assistant " + Upgrade.pluginVersion;  
         }
 
         public static string VA_DisplayInfo()

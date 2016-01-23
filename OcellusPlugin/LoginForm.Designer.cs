@@ -37,12 +37,14 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lbl_validation_email = new System.Windows.Forms.Label();
             this.lbl_validation_password = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 62);
+            this.label1.Location = new System.Drawing.Point(16, 118);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(76, 13);
             this.label1.TabIndex = 0;
@@ -50,14 +52,14 @@
             // 
             // txt_email
             // 
-            this.txt_email.Location = new System.Drawing.Point(15, 78);
+            this.txt_email.Location = new System.Drawing.Point(19, 134);
             this.txt_email.Name = "txt_email";
             this.txt_email.Size = new System.Drawing.Size(234, 20);
             this.txt_email.TabIndex = 1;
             // 
             // txt_password
             // 
-            this.txt_password.Location = new System.Drawing.Point(15, 154);
+            this.txt_password.Location = new System.Drawing.Point(19, 210);
             this.txt_password.Name = "txt_password";
             this.txt_password.PasswordChar = '*';
             this.txt_password.Size = new System.Drawing.Size(234, 20);
@@ -66,7 +68,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 138);
+            this.label2.Location = new System.Drawing.Point(16, 194);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 13);
             this.label2.TabIndex = 2;
@@ -74,7 +76,7 @@
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(152, 213);
+            this.btnSubmit.Location = new System.Drawing.Point(156, 269);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(80, 21);
             this.btnSubmit.TabIndex = 4;
@@ -86,7 +88,7 @@
             // 
             this.btnCancel.CausesValidation = false;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(35, 213);
+            this.btnCancel.Location = new System.Drawing.Point(39, 269);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 21);
             this.btnCancel.TabIndex = 3;
@@ -98,7 +100,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(12, 21);
+            this.label3.Location = new System.Drawing.Point(16, 85);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(245, 13);
             this.label3.TabIndex = 6;
@@ -110,11 +112,12 @@
             this.lbl_validation_email.AutoSize = true;
             this.lbl_validation_email.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_validation_email.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_validation_email.Location = new System.Drawing.Point(58, 101);
+            this.lbl_validation_email.Location = new System.Drawing.Point(62, 157);
             this.lbl_validation_email.Name = "lbl_validation_email";
             this.lbl_validation_email.Size = new System.Drawing.Size(128, 13);
             this.lbl_validation_email.TabIndex = 7;
             this.lbl_validation_email.Text = "Invalid Email Address";
+            this.lbl_validation_email.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbl_validation_email.Visible = false;
             // 
             // lbl_validation_password
@@ -122,12 +125,23 @@
             this.lbl_validation_password.AutoSize = true;
             this.lbl_validation_password.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_validation_password.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_validation_password.Location = new System.Drawing.Point(64, 177);
+            this.lbl_validation_password.Location = new System.Drawing.Point(68, 233);
             this.lbl_validation_password.Name = "lbl_validation_password";
             this.lbl_validation_password.Size = new System.Drawing.Size(122, 13);
             this.lbl_validation_password.TabIndex = 8;
             this.lbl_validation_password.Text = "Enter your password";
+            this.lbl_validation_password.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbl_validation_password.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::OcellusPlugin.Properties.Resources.ocellus_logo_tranparent;
+            this.pictureBox1.Location = new System.Drawing.Point(36, 22);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(200, 35);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
             // 
             // Login
             // 
@@ -135,7 +149,8 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(275, 254);
+            this.ClientSize = new System.Drawing.Size(275, 306);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.lbl_validation_password);
             this.Controls.Add(this.lbl_validation_email);
             this.Controls.Add(this.label3);
@@ -154,6 +169,7 @@
             this.Text = "Ocellus Assistant Settings";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Login_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -170,5 +186,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lbl_validation_email;
         private System.Windows.Forms.Label lbl_validation_password;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

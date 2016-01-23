@@ -7,8 +7,8 @@
     <ProjectGuid>{64335FAA-1DBB-4FFB-B1D4-83E6B49CBB35}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ClassLibrary1</RootNamespace>
-    <AssemblyName>VoiceAttackEDPlugin</AssemblyName>
+    <RootNamespace>OcellusPlugin</RootNamespace>
+    <AssemblyName>OcellusPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\Program Files %28x86%29\VoiceAttack\Apps\VoiceAttackEDPlugin\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\..\Program Files %28x86%29\VoiceAttack\Apps\OcellusPlugin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\..\..\..\..\Program Files %28x86%29\VoiceAttack\Apps\VoiceAttackEDPlugin\</OutputPath>
+    <OutputPath>..\..\..\..\..\..\..\Program Files %28x86%29\VoiceAttack\Apps\OcellusPlugin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -37,6 +37,10 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -67,6 +71,11 @@
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PluginRegistry.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Upgrade.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,7 +86,7 @@
     <Compile Include="ValidateForm.Designer.cs">
       <DependentUpon>ValidateForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="VoiceAttackEDPlugin.cs" />
+    <Compile Include="OcellusPlugin.cs" />
     <Compile Include="Web.cs" />
     <Compile Include="WebVar.cs" />
     <Compile Include="WebVarsForm.cs">
@@ -88,11 +97,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Images\ocellus-logo-tranparent.png" />
+    <Content Include="favicon.ico" />
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="ValidateForm.resx">
       <DependentUpon>ValidateForm.cs</DependentUpon>
@@ -103,9 +118,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "C:\Program Files (x86)\VoiceAttack\Apps\VoiceAttackEDPlugin\VoiceAttackEDPlugin.dll" "c:\users\Damon\Documents\Visual Studio 2015\Projects\VoiceAttackEDPlugin\"
-copy "C:\Program Files (x86)\VoiceAttack\Apps\VoiceAttackEDPlugin\VoiceAttackEDPlugin.dll" "C:\Users\damon\Documents\VAED - Virtual Image Access"
-copy "C:\Users\damon\Documents\Visual Studio 2015\Projects\VoiceAttackEDPlugin\Voice Attack Profiles"  "C:\Users\damon\Documents\VAED - Virtual Image Access"
+    <PostBuildEvent>copy "C:\Program Files (x86)\VoiceAttack\Apps\OcellusPlugin\OcellusPlugin.dll" "c:\users\Damon\Documents\Visual Studio 2015\Projects\Ocellus Plugin\"
+copy "C:\Program Files (x86)\VoiceAttack\Apps\OcellusPlugin\OcellusPlugin.dll" "L:\Virtual Shared Folder\"
+copy "C:\Users\damon\Documents\Visual Studio 2015\Projects\Ocellus Plugin\Ocellus Voice Attack Profile" "L:\Virtual Shared Folder\"
 "C:\Program Files (x86)\VoiceAttack\VoiceAttack.exe"
 </PostBuildEvent>
   </PropertyGroup>

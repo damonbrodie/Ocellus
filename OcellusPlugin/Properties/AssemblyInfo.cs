@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Voice Attack - Elite Dangerous Plugin")]
-[assembly: AssemblyDescription("Plugin that enhances gameplay with Elite Dangerous")]
+[assembly: AssemblyTitle("Ocellus - Elite: Dangerous Plugin")]
+[assembly: AssemblyDescription("Plugin that enhances gameplay with Elite: Dangerous")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Voice Attack - Elite Dangerous")]
