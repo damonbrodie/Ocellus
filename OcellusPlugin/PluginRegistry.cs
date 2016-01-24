@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Microsoft.Win32;
 
 
@@ -37,7 +36,7 @@ class PluginRegistry
             {
                 setStringValue("webVar1", "http://ocellus/webvars/communitygoals.json");
             }
-            return Registry.GetValue(@"HKEY_CURRENT_USER\" + pluginRegistryPath, attribute, string.Empty).ToString();
+            return Registry.GetValue(@"HKEY_CURRENT_USER\" + pluginRegistryPath, attribute, null).ToString();
         }
         catch
         {

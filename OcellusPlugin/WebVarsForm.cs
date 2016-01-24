@@ -1,13 +1,88 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace WebVars
 {
+    
     public partial class EditWebVars : Form
     {
         public EditWebVars()
         {
             InitializeComponent();
+        }
+
+        public void testJson(string url)
+        {
+            Tuple<Boolean, string, Dictionary<string, string>, Dictionary<string, int>, Dictionary<string, Boolean>, string> tResponse = RequestWebVars.requestWebVars(url);
+
+            while (dataGridTest.Rows.Count > 0)
+            {
+                dataGridTest.Rows.RemoveAt(0);
+            }
+
+            if (tResponse.Item1 == true)
+            {
+                txtServerStatus.Text = tResponse.Item2;
+                txtNumVariables.Text = "";
+                txtWarnings.Text = "";
+                txtJson.Text = "";
+                return;
+            }
+
+            txtServerStatus.Text = "Ok";
+            txtWarnings.Text = tResponse.Item2;
+            txtJson.Text = tResponse.Item6;
+            int counter = 0;
+            foreach (string key in tResponse.Item3.Keys)
+            {
+                DataGridViewRow row = (DataGridViewRow)dataGridTest.RowTemplate.Clone();
+                row.CreateCells(dataGridTest, key, tResponse.Item3[key]);
+                dataGridTest.Rows.Add(row);
+                counter++;
+
+            }
+            foreach (string key in tResponse.Item4.Keys)
+            {
+                DataGridViewRow row = (DataGridViewRow)dataGridTest.RowTemplate.Clone();
+                row.CreateCells(dataGridTest, key, tResponse.Item4[key]);
+                dataGridTest.Rows.Add(row);
+                counter++;
+            }
+            foreach (string key in tResponse.Item5.Keys)
+            {
+                DataGridViewRow row = (DataGridViewRow)dataGridTest.RowTemplate.Clone();
+                row.CreateCells(dataGridTest, key, tResponse.Item5[key]);
+                dataGridTest.Rows.Add(row);
+                counter++;
+            }
+            txtNumVariables.Text = counter.ToString();
+
+        }
+
+        private void btnTest1_Click(object sender, EventArgs e)
+        {
+            testJson(txtJson1.Text);
+        }
+
+        private void btnTest2_Click(object sender, EventArgs e)
+        {
+            testJson(txtJson2.Text);
+        }
+
+        private void btnTest3_Click(object sender, EventArgs e)
+        {
+            testJson(txtJson3.Text);
+        }
+
+        private void btnTest4_Click(object sender, EventArgs e)
+        {
+            testJson(txtJson4.Text);
+        }
+
+        private void btnTest5_Click(object sender, EventArgs e)
+        {
+            testJson(txtJson5.Text);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -44,11 +119,6 @@ namespace WebVars
                 counter++;
             }
             this.Close();
-        }
-
-        private void btnTest1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void EditWebVars_Load(object sender, EventArgs e)
@@ -93,6 +163,66 @@ namespace WebVars
                 {
                     moreVarsInRegistry = false;
                 }
+            }
+        }
+
+        private void txtJson1_TextChanged(object sender, EventArgs e)
+        {
+            if (txtJson1.Text.Length > 0)
+            {
+                btnTest1.Enabled = true;
+            }
+            else
+            {
+                btnTest1.Enabled = false;
+            }
+        }
+
+        private void txtJson2_TextChanged(object sender, EventArgs e)
+        {
+            if (txtJson2.Text.Length > 0)
+            {
+                btnTest2.Enabled = true;
+            }
+            else
+            {
+                btnTest2.Enabled = false;
+            }
+        }
+
+        private void txtJson3_TextChanged(object sender, EventArgs e)
+        {
+            if (txtJson3.Text.Length > 0)
+            {
+                btnTest3.Enabled = true;
+            }
+            else
+            {
+                btnTest3.Enabled = false;
+            }
+        }
+
+        private void txtJson4_TextChanged(object sender, EventArgs e)
+        {
+            if (txtJson4.Text.Length > 0)
+            {
+                btnTest4.Enabled = true;
+            }
+            else
+            {
+                btnTest4.Enabled = false;
+            }
+        }
+
+        private void txtJson5_TextChanged(object sender, EventArgs e)
+        {
+            if (txtJson5.Text.Length > 0)
+            {
+                btnTest5.Enabled = true;
+            }
+            else
+            {
+                btnTest5.Enabled = false;
             }
         }
     }

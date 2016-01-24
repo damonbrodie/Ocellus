@@ -41,35 +41,43 @@
             this.btnTest3 = new System.Windows.Forms.Button();
             this.btnTest4 = new System.Windows.Forms.Button();
             this.btnTest5 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblValidationJson = new System.Windows.Forms.Label();
-            this.txt = new System.Windows.Forms.TextBox();
-            this.txtTestValue4 = new System.Windows.Forms.TextBox();
-            this.txtTestValue3 = new System.Windows.Forms.TextBox();
-            this.txtTestValue2 = new System.Windows.Forms.TextBox();
-            this.txtTestValue1 = new System.Windows.Forms.TextBox();
-            this.txtTestAttr5 = new System.Windows.Forms.TextBox();
-            this.txtTestAttr4 = new System.Windows.Forms.TextBox();
-            this.txtTestAttr3 = new System.Windows.Forms.TextBox();
-            this.txtTestAttr2 = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this.dataGridTest = new System.Windows.Forms.DataGridView();
+            this.Attribute = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtTestAttr1 = new System.Windows.Forms.TextBox();
-            this.groupBox1.SuspendLayout();
+            this.txtServerStatus = new System.Windows.Forms.TextBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabVariables = new System.Windows.Forms.TabPage();
+            this.tabJson = new System.Windows.Forms.TabPage();
+            this.tabResponse = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtJson = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtWarnings = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtNumVariables = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridTest)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabVariables.SuspendLayout();
+            this.tabJson.SuspendLayout();
+            this.tabResponse.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtJson1
             // 
-            this.txtJson1.Location = new System.Drawing.Point(15, 34);
+            this.txtJson1.Location = new System.Drawing.Point(13, 174);
             this.txtJson1.Name = "txtJson1";
             this.txtJson1.Size = new System.Drawing.Size(305, 20);
             this.txtJson1.TabIndex = 0;
+            this.txtJson1.TextChanged += new System.EventHandler(this.txtJson1_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 18);
+            this.label1.Location = new System.Drawing.Point(10, 158);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(203, 13);
             this.label1.TabIndex = 1;
@@ -77,35 +85,39 @@
             // 
             // txtJson2
             // 
-            this.txtJson2.Location = new System.Drawing.Point(15, 75);
+            this.txtJson2.Location = new System.Drawing.Point(13, 226);
             this.txtJson2.Name = "txtJson2";
             this.txtJson2.Size = new System.Drawing.Size(305, 20);
             this.txtJson2.TabIndex = 2;
+            this.txtJson2.TextChanged += new System.EventHandler(this.txtJson2_TextChanged);
             // 
             // txtJson3
             // 
-            this.txtJson3.Location = new System.Drawing.Point(15, 116);
+            this.txtJson3.Location = new System.Drawing.Point(13, 276);
             this.txtJson3.Name = "txtJson3";
             this.txtJson3.Size = new System.Drawing.Size(305, 20);
             this.txtJson3.TabIndex = 4;
+            this.txtJson3.TextChanged += new System.EventHandler(this.txtJson3_TextChanged);
             // 
             // txtJson4
             // 
-            this.txtJson4.Location = new System.Drawing.Point(15, 157);
+            this.txtJson4.Location = new System.Drawing.Point(13, 327);
             this.txtJson4.Name = "txtJson4";
             this.txtJson4.Size = new System.Drawing.Size(305, 20);
             this.txtJson4.TabIndex = 6;
+            this.txtJson4.TextChanged += new System.EventHandler(this.txtJson4_TextChanged);
             // 
             // txtJson5
             // 
-            this.txtJson5.Location = new System.Drawing.Point(15, 199);
+            this.txtJson5.Location = new System.Drawing.Point(13, 383);
             this.txtJson5.Name = "txtJson5";
             this.txtJson5.Size = new System.Drawing.Size(305, 20);
             this.txtJson5.TabIndex = 8;
+            this.txtJson5.TextChanged += new System.EventHandler(this.txtJson5_TextChanged);
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(245, 245);
+            this.btnSubmit.Location = new System.Drawing.Point(243, 439);
             this.btnSubmit.Name = "btnSubmit";
             this.btnSubmit.Size = new System.Drawing.Size(75, 23);
             this.btnSubmit.TabIndex = 11;
@@ -116,7 +128,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(97, 245);
+            this.btnCancel.Location = new System.Drawing.Point(82, 439);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 10;
@@ -126,7 +138,7 @@
             // btnTest1
             // 
             this.btnTest1.Enabled = false;
-            this.btnTest1.Location = new System.Drawing.Point(326, 32);
+            this.btnTest1.Location = new System.Drawing.Point(324, 172);
             this.btnTest1.Name = "btnTest1";
             this.btnTest1.Size = new System.Drawing.Size(75, 23);
             this.btnTest1.TabIndex = 1;
@@ -137,198 +149,218 @@
             // btnTest2
             // 
             this.btnTest2.Enabled = false;
-            this.btnTest2.Location = new System.Drawing.Point(326, 73);
+            this.btnTest2.Location = new System.Drawing.Point(324, 224);
             this.btnTest2.Name = "btnTest2";
             this.btnTest2.Size = new System.Drawing.Size(75, 23);
             this.btnTest2.TabIndex = 3;
             this.btnTest2.Text = "Test";
             this.btnTest2.UseVisualStyleBackColor = true;
+            this.btnTest2.Click += new System.EventHandler(this.btnTest2_Click);
             // 
             // btnTest3
             // 
             this.btnTest3.Enabled = false;
-            this.btnTest3.Location = new System.Drawing.Point(326, 114);
+            this.btnTest3.Location = new System.Drawing.Point(324, 274);
             this.btnTest3.Name = "btnTest3";
             this.btnTest3.Size = new System.Drawing.Size(75, 23);
             this.btnTest3.TabIndex = 5;
             this.btnTest3.Text = "Test";
             this.btnTest3.UseVisualStyleBackColor = true;
+            this.btnTest3.Click += new System.EventHandler(this.btnTest3_Click);
             // 
             // btnTest4
             // 
             this.btnTest4.Enabled = false;
-            this.btnTest4.Location = new System.Drawing.Point(326, 155);
+            this.btnTest4.Location = new System.Drawing.Point(324, 325);
             this.btnTest4.Name = "btnTest4";
             this.btnTest4.Size = new System.Drawing.Size(75, 23);
             this.btnTest4.TabIndex = 7;
             this.btnTest4.Text = "Test";
             this.btnTest4.UseVisualStyleBackColor = true;
+            this.btnTest4.Click += new System.EventHandler(this.btnTest4_Click);
             // 
             // btnTest5
             // 
             this.btnTest5.Enabled = false;
-            this.btnTest5.Location = new System.Drawing.Point(326, 197);
+            this.btnTest5.Location = new System.Drawing.Point(324, 381);
             this.btnTest5.Name = "btnTest5";
             this.btnTest5.Size = new System.Drawing.Size(75, 23);
             this.btnTest5.TabIndex = 9;
             this.btnTest5.Text = "Test";
             this.btnTest5.UseVisualStyleBackColor = true;
+            this.btnTest5.Click += new System.EventHandler(this.btnTest5_Click);
             // 
-            // groupBox1
+            // dataGridTest
             // 
-            this.groupBox1.Controls.Add(this.lblValidationJson);
-            this.groupBox1.Controls.Add(this.txt);
-            this.groupBox1.Controls.Add(this.txtTestValue4);
-            this.groupBox1.Controls.Add(this.txtTestValue3);
-            this.groupBox1.Controls.Add(this.txtTestValue2);
-            this.groupBox1.Controls.Add(this.txtTestValue1);
-            this.groupBox1.Controls.Add(this.txtTestAttr5);
-            this.groupBox1.Controls.Add(this.txtTestAttr4);
-            this.groupBox1.Controls.Add(this.txtTestAttr3);
-            this.groupBox1.Controls.Add(this.txtTestAttr2);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtTestAttr1);
-            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(15, 309);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(386, 228);
-            this.groupBox1.TabIndex = 13;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Test Area:";
+            this.dataGridTest.AllowUserToAddRows = false;
+            this.dataGridTest.AllowUserToDeleteRows = false;
+            this.dataGridTest.AllowUserToResizeRows = false;
+            this.dataGridTest.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridTest.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Attribute,
+            this.Value});
+            this.dataGridTest.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataGridTest.Location = new System.Drawing.Point(0, 0);
+            this.dataGridTest.Name = "dataGridTest";
+            this.dataGridTest.RowHeadersVisible = false;
+            this.dataGridTest.Size = new System.Drawing.Size(391, 441);
+            this.dataGridTest.TabIndex = 14;
             // 
-            // lblValidationJson
+            // Attribute
             // 
-            this.lblValidationJson.AutoSize = true;
-            this.lblValidationJson.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValidationJson.ForeColor = System.Drawing.Color.DarkRed;
-            this.lblValidationJson.Location = new System.Drawing.Point(111, 27);
-            this.lblValidationJson.Name = "lblValidationJson";
-            this.lblValidationJson.Size = new System.Drawing.Size(142, 13);
-            this.lblValidationJson.TabIndex = 12;
-            this.lblValidationJson.Text = "Error - No Server Found";
-            this.lblValidationJson.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblValidationJson.Visible = false;
+            this.Attribute.HeaderText = "Attribute";
+            this.Attribute.MinimumWidth = 10;
+            this.Attribute.Name = "Attribute";
+            this.Attribute.Width = 150;
             // 
-            // txt
+            // Value
             // 
-            this.txt.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txt.Location = new System.Drawing.Point(204, 190);
-            this.txt.Name = "txt";
-            this.txt.ReadOnly = true;
-            this.txt.Size = new System.Drawing.Size(176, 23);
-            this.txt.TabIndex = 11;
-            this.txt.TabStop = false;
-            // 
-            // txtTestValue4
-            // 
-            this.txtTestValue4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestValue4.Location = new System.Drawing.Point(204, 164);
-            this.txtTestValue4.Name = "txtTestValue4";
-            this.txtTestValue4.ReadOnly = true;
-            this.txtTestValue4.Size = new System.Drawing.Size(176, 23);
-            this.txtTestValue4.TabIndex = 10;
-            this.txtTestValue4.TabStop = false;
-            // 
-            // txtTestValue3
-            // 
-            this.txtTestValue3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestValue3.Location = new System.Drawing.Point(204, 138);
-            this.txtTestValue3.Name = "txtTestValue3";
-            this.txtTestValue3.ReadOnly = true;
-            this.txtTestValue3.Size = new System.Drawing.Size(176, 23);
-            this.txtTestValue3.TabIndex = 9;
-            this.txtTestValue3.TabStop = false;
-            // 
-            // txtTestValue2
-            // 
-            this.txtTestValue2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestValue2.Location = new System.Drawing.Point(204, 111);
-            this.txtTestValue2.Name = "txtTestValue2";
-            this.txtTestValue2.ReadOnly = true;
-            this.txtTestValue2.Size = new System.Drawing.Size(176, 23);
-            this.txtTestValue2.TabIndex = 8;
-            this.txtTestValue2.TabStop = false;
-            // 
-            // txtTestValue1
-            // 
-            this.txtTestValue1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestValue1.Location = new System.Drawing.Point(204, 85);
-            this.txtTestValue1.Name = "txtTestValue1";
-            this.txtTestValue1.ReadOnly = true;
-            this.txtTestValue1.Size = new System.Drawing.Size(176, 23);
-            this.txtTestValue1.TabIndex = 7;
-            this.txtTestValue1.TabStop = false;
-            // 
-            // txtTestAttr5
-            // 
-            this.txtTestAttr5.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestAttr5.Location = new System.Drawing.Point(6, 190);
-            this.txtTestAttr5.Name = "txtTestAttr5";
-            this.txtTestAttr5.ReadOnly = true;
-            this.txtTestAttr5.Size = new System.Drawing.Size(157, 23);
-            this.txtTestAttr5.TabIndex = 6;
-            this.txtTestAttr5.TabStop = false;
-            // 
-            // txtTestAttr4
-            // 
-            this.txtTestAttr4.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestAttr4.Location = new System.Drawing.Point(6, 164);
-            this.txtTestAttr4.Name = "txtTestAttr4";
-            this.txtTestAttr4.ReadOnly = true;
-            this.txtTestAttr4.Size = new System.Drawing.Size(157, 23);
-            this.txtTestAttr4.TabIndex = 5;
-            this.txtTestAttr4.TabStop = false;
-            // 
-            // txtTestAttr3
-            // 
-            this.txtTestAttr3.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestAttr3.Location = new System.Drawing.Point(6, 138);
-            this.txtTestAttr3.Name = "txtTestAttr3";
-            this.txtTestAttr3.ReadOnly = true;
-            this.txtTestAttr3.Size = new System.Drawing.Size(157, 23);
-            this.txtTestAttr3.TabIndex = 4;
-            this.txtTestAttr3.TabStop = false;
-            // 
-            // txtTestAttr2
-            // 
-            this.txtTestAttr2.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestAttr2.Location = new System.Drawing.Point(6, 111);
-            this.txtTestAttr2.Name = "txtTestAttr2";
-            this.txtTestAttr2.ReadOnly = true;
-            this.txtTestAttr2.Size = new System.Drawing.Size(157, 23);
-            this.txtTestAttr2.TabIndex = 3;
-            this.txtTestAttr2.TabStop = false;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(201, 56);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(95, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Attribute Value:";
+            this.Value.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Value.HeaderText = "Value";
+            this.Value.MinimumWidth = 10;
+            this.Value.Name = "Value";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(14, 56);
+            this.label2.Location = new System.Drawing.Point(15, 73);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(95, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Attribute Name:";
+            this.label2.Size = new System.Drawing.Size(82, 13);
+            this.label2.TabIndex = 14;
+            this.label2.Text = " Server Status:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // txtTestAttr1
+            // txtServerStatus
             // 
-            this.txtTestAttr1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.txtTestAttr1.Location = new System.Drawing.Point(6, 85);
-            this.txtTestAttr1.Name = "txtTestAttr1";
-            this.txtTestAttr1.ReadOnly = true;
-            this.txtTestAttr1.Size = new System.Drawing.Size(157, 23);
-            this.txtTestAttr1.TabIndex = 0;
-            this.txtTestAttr1.TabStop = false;
+            this.txtServerStatus.Location = new System.Drawing.Point(103, 70);
+            this.txtServerStatus.Name = "txtServerStatus";
+            this.txtServerStatus.ReadOnly = true;
+            this.txtServerStatus.Size = new System.Drawing.Size(253, 20);
+            this.txtServerStatus.TabIndex = 15;
+            this.txtServerStatus.Text = " ";
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabResponse);
+            this.tabControl1.Controls.Add(this.tabVariables);
+            this.tabControl1.Controls.Add(this.tabJson);
+            this.tabControl1.Location = new System.Drawing.Point(415, 9);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(399, 467);
+            this.tabControl1.TabIndex = 16;
+            // 
+            // tabVariables
+            // 
+            this.tabVariables.Controls.Add(this.dataGridTest);
+            this.tabVariables.Location = new System.Drawing.Point(4, 22);
+            this.tabVariables.Name = "tabVariables";
+            this.tabVariables.Padding = new System.Windows.Forms.Padding(3);
+            this.tabVariables.Size = new System.Drawing.Size(391, 441);
+            this.tabVariables.TabIndex = 0;
+            this.tabVariables.Text = "Variables";
+            this.tabVariables.UseVisualStyleBackColor = true;
+            // 
+            // tabJson
+            // 
+            this.tabJson.Controls.Add(this.label5);
+            this.tabJson.Controls.Add(this.txtJson);
+            this.tabJson.Location = new System.Drawing.Point(4, 22);
+            this.tabJson.Name = "tabJson";
+            this.tabJson.Padding = new System.Windows.Forms.Padding(3);
+            this.tabJson.Size = new System.Drawing.Size(391, 441);
+            this.tabJson.TabIndex = 1;
+            this.tabJson.Text = "JSON";
+            this.tabJson.UseVisualStyleBackColor = true;
+            // 
+            // tabResponse
+            // 
+            this.tabResponse.Controls.Add(this.txtNumVariables);
+            this.tabResponse.Controls.Add(this.label7);
+            this.tabResponse.Controls.Add(this.txtWarnings);
+            this.tabResponse.Controls.Add(this.label6);
+            this.tabResponse.Controls.Add(this.txtServerStatus);
+            this.tabResponse.Controls.Add(this.label2);
+            this.tabResponse.Location = new System.Drawing.Point(4, 22);
+            this.tabResponse.Name = "tabResponse";
+            this.tabResponse.Size = new System.Drawing.Size(391, 441);
+            this.tabResponse.TabIndex = 2;
+            this.tabResponse.Text = "Response";
+            this.tabResponse.UseVisualStyleBackColor = true;
+            // 
+            // label3
+            // 
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(30, 31);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(358, 67);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Web Variables allow you to subscribe to different feeds from the internet that pr" +
+    "ovide dynamically changing variables that you can acces in VoiceAttack.";
+            // 
+            // label4
+            // 
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.DarkRed;
+            this.label4.Location = new System.Drawing.Point(45, 98);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(306, 40);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "Use Web Variables with caution in your VoiceAttack Profile.";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // txtJson
+            // 
+            this.txtJson.Location = new System.Drawing.Point(16, 50);
+            this.txtJson.Multiline = true;
+            this.txtJson.Name = "txtJson";
+            this.txtJson.Size = new System.Drawing.Size(358, 370);
+            this.txtJson.TabIndex = 0;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(13, 30);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(164, 17);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Source JSON Output:";
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(34, 147);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(63, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Warnings:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtWarnings
+            // 
+            this.txtWarnings.Location = new System.Drawing.Point(103, 144);
+            this.txtWarnings.Name = "txtWarnings";
+            this.txtWarnings.ReadOnly = true;
+            this.txtWarnings.Size = new System.Drawing.Size(253, 20);
+            this.txtWarnings.TabIndex = 17;
+            this.txtWarnings.Text = " ";
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(15, 225);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "# Variables:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtNumVariables
+            // 
+            this.txtNumVariables.Location = new System.Drawing.Point(103, 222);
+            this.txtNumVariables.Name = "txtNumVariables";
+            this.txtNumVariables.ReadOnly = true;
+            this.txtNumVariables.Size = new System.Drawing.Size(40, 20);
+            this.txtNumVariables.TabIndex = 19;
+            this.txtNumVariables.Text = " ";
             // 
             // EditWebVars
             // 
@@ -336,8 +368,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(419, 555);
-            this.Controls.Add(this.groupBox1);
+            this.ClientSize = new System.Drawing.Size(823, 485);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.btnTest5);
             this.Controls.Add(this.btnTest4);
             this.Controls.Add(this.btnTest3);
@@ -359,8 +393,13 @@
             this.Text = "Ocellus Web Variables";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.EditWebVars_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridTest)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabVariables.ResumeLayout(false);
+            this.tabJson.ResumeLayout(false);
+            this.tabJson.PerformLayout();
+            this.tabResponse.ResumeLayout(false);
+            this.tabResponse.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -381,19 +420,22 @@
         private System.Windows.Forms.Button btnTest3;
         private System.Windows.Forms.Button btnTest4;
         private System.Windows.Forms.Button btnTest5;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox txt;
-        private System.Windows.Forms.TextBox txtTestValue4;
-        private System.Windows.Forms.TextBox txtTestValue3;
-        private System.Windows.Forms.TextBox txtTestValue2;
-        private System.Windows.Forms.TextBox txtTestValue1;
-        private System.Windows.Forms.TextBox txtTestAttr5;
-        private System.Windows.Forms.TextBox txtTestAttr4;
-        private System.Windows.Forms.TextBox txtTestAttr3;
-        private System.Windows.Forms.TextBox txtTestAttr2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.DataGridView dataGridTest;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Attribute;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtTestAttr1;
-        private System.Windows.Forms.Label lblValidationJson;
+        private System.Windows.Forms.TextBox txtServerStatus;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabResponse;
+        private System.Windows.Forms.TabPage tabVariables;
+        private System.Windows.Forms.TabPage tabJson;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtJson;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtNumVariables;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtWarnings;
     }
 }

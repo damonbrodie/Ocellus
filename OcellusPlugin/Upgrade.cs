@@ -15,8 +15,8 @@ class Upgrade
 
     private static Tuple<double, string, string> checkServerVersion()
     {
-        Tuple<CookieContainer, string> tResponse = Web.sendRequest(versionCheckURL);
-        string htmlData = tResponse.Item2;
+        Tuple<Boolean, string, CookieContainer, string> tResponse = Web.sendRequest(versionCheckURL);
+        string htmlData = tResponse.Item4;
         JavaScriptSerializer serializer = new JavaScriptSerializer();
         try
         {

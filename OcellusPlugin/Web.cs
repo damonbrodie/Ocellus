@@ -252,11 +252,19 @@ class Web
         
     }
     
-    public static Tuple<CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer = null, string referer = null, string sendData = null)
+    public static Tuple<Boolean, string, CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer = null, string referer = null, string sendData = null)
     {
         url = url.Replace("\n", "");
         url = url.Replace("\r", "");
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+        HttpWebRequest request = null;
+        try
+        {
+            request = (HttpWebRequest)WebRequest.Create(url);
+        }
+        catch
+        {
+            return Tuple.Create(true, "Bad URL", cookieContainer, "");
+        }
 
         if (cookieContainer != null)
         {
@@ -314,7 +322,7 @@ class Web
         catch (WebException ex)
         {
             Utilities.writeDebug("Exception Caught:  " + ex.ToString());
-            return Tuple.Create(cookieContainer, "ERROR");
+            return Tuple.Create(true, "Error", cookieContainer, "");
 
         }
 
@@ -370,15 +378,15 @@ class Web
 
                 }
 
-                Tuple<CookieContainer, string> tRespon = sendRequest(redirect, newCookieJar, referer, sendData);
+                Tuple<Boolean, string, CookieContainer, string> tRespon = sendRequest(redirect, newCookieJar, referer, sendData);
 
-                CookieContainer returnedCookies = tRespon.Item1;
-                string returnedHtmldata = tRespon.Item2;
+                CookieContainer returnedCookies = tRespon.Item3;
+                string returnedHtmldata = tRespon.Item4;
 
-                return Tuple.Create(returnedCookies, returnedHtmldata);
+                return Tuple.Create(false, "", returnedCookies, returnedHtmldata);
 
             }
         }
-        return Tuple.Create(cookieContainer, htmldata);
+        return Tuple.Create(false, "", cookieContainer, htmldata);
     }
 }

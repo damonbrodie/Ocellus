@@ -23,18 +23,18 @@ class Companion
         }
         string returnString;
 
-        Tuple<CookieContainer, string> tInitialGet = Web.sendRequest(loginURL, cookieContainer);
-
-        cookieContainer = tInitialGet.Item1;
-        string loginPageHTML = tInitialGet.Item2;
+        Tuple<Boolean, string, CookieContainer, string> tInitialGet = Web.sendRequest(loginURL, cookieContainer);
+        // XXX handle returned errors
+        cookieContainer = tInitialGet.Item3;
+        string loginPageHTML = tInitialGet.Item4;
 
         if (loginPageHTML.Contains("Login"))
         {
             string sendData = "email=" + email + "&password=" + password;
-            Tuple<CookieContainer, string> tLoginResponse = Web.sendRequest(loginURL, cookieContainer, loginURL, sendData);
-
-            cookieContainer = tLoginResponse.Item1;
-            string postPageHTML = tLoginResponse.Item2;
+            Tuple<Boolean, string, CookieContainer, string> tLoginResponse = Web.sendRequest(loginURL, cookieContainer, loginURL, sendData);
+            // XXX handle returned errors
+            cookieContainer = tLoginResponse.Item3;
+            string postPageHTML = tLoginResponse.Item4;
             if (postPageHTML.Contains("Verification"))
             {
                 returnString = "verification";
@@ -61,21 +61,25 @@ class Companion
     public static Tuple<CookieContainer, string> verifyWithAPI(CookieContainer cookieContainer, string verificationCode)
     {
         string sendData = "code=" + verificationCode;
-        Tuple<CookieContainer, string> tResponse = Web.sendRequest(confirmURL, cookieContainer, confirmURL, sendData);
-        string postVerifyHTML = tResponse.Item2;
+        Tuple<Boolean, string, CookieContainer, string> tResponse = Web.sendRequest(confirmURL, cookieContainer, confirmURL, sendData);
+        
+        // XXX handle returned error code
+
+        string postVerifyHTML = tResponse.Item4;
         if (postVerifyHTML.Contains("Verification Code") )
         {
-            return Tuple.Create(tResponse.Item1, "verification");
+            return Tuple.Create(tResponse.Item3, "verification");
         }
         else
         {
-            return Tuple.Create(tResponse.Item1, "ok");
+            return Tuple.Create(tResponse.Item3, "ok");
         }
     }
 
     public static Tuple<CookieContainer, string> getProfile(CookieContainer cookieContainer)
     {
-        Tuple<CookieContainer, string> tRespon = Web.sendRequest(profileURL, cookieContainer);
-        return Tuple.Create(tRespon.Item1, tRespon.Item2);
+        Tuple<Boolean, string, CookieContainer, string> tRespon = Web.sendRequest(profileURL, cookieContainer);
+        // XXX handle error messages
+        return Tuple.Create(tRespon.Item3, tRespon.Item4);
     }
 }
