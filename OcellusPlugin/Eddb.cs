@@ -14,14 +14,32 @@ class Eddb
 
     private const string indexURL = "http://ocellus.io/data/eddb_index.zip";
 
-    private static Boolean getEddbIndex()
+    private static Boolean downloadIndex()
     {
+        
         string path = Config.Path();
+        string eddbIndexFile = Path.Combine(Config.Path(), "eddb_index.txt");
         string zipFile = Path.Combine(path, "eddb_index.zip");
+
+        if (File.Exists(eddbIndexFile))
+        {
+            // Download the index once a week
+            DateTime fileTime = File.GetLastWriteTime(eddbIndexFile);
+            DateTime weekago = DateTime.Now.AddDays(-7);
+            if (fileTime > weekago)
+            {
+                return true;
+            }
+        }
+
         if (Web.downloadFile(indexURL, zipFile))
         {
             ZipFile.ExtractToDirectory(zipFile, path);
             File.Delete(zipFile);
+        }
+        else
+        {
+            Debug.Write("Error:  Unable to download EDDB Index from Ocellus.io");
         }
         return true;
     }
@@ -29,7 +47,7 @@ class Eddb
     public static void loadEddbIndex(ref Dictionary<string, object> state)
     {
         string eddbIndexFile = Path.Combine(Config.Path(), "eddb_index.txt");
-        if (!File.Exists(eddbIndexFile) && ! getEddbIndex())
+        if (!File.Exists(eddbIndexFile) && ! downloadIndex())
         {
             return;
         }

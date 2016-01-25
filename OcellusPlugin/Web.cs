@@ -244,9 +244,8 @@ class Web
             response.Close();
             return true;
         }
-        catch (Exception ex)
+        catch
         {
-            Debug.Write(ex.ToString());
             return false;
         }
         

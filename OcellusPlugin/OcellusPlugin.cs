@@ -21,7 +21,7 @@ namespace OcellusPlugin
 
         public static string VA_DisplayInfo()
         {
-            return "VoiceAttackPlugin\r\n\r\nTo be used with Elite: Dangerous\r\n\r";  
+            return "VoiceAttack Plugin\r\n\r\nFor use with Elite: Dangerous\r\n\r";  
         } 
 
         public static Guid VA_Id()
