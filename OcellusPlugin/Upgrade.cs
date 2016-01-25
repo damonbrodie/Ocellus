@@ -50,7 +50,7 @@ class Upgrade
     public static Boolean downloadUpdate()
     {
         Tuple<double, string, string> tResponse = checkServerVersion();
-
+        // XXX download the update file
         return true;
     }
 }

@@ -65,13 +65,9 @@ class Web
                     string temp = cookieStrings[last];
                     temp = temp + ',' + piece;
                     cookieStrings[last] = temp;
-
                 }
-
-
             }
         }
-
         return cookieStrings;
     }
 
@@ -104,6 +100,7 @@ class Web
                 }
                 continue;
             }
+
             if (strEachCookParts[j].IndexOf("path", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 strPNameAndPValue = strEachCookParts[j];
@@ -159,8 +156,8 @@ class Web
                         }
                     }
                 }
-
             }
+
             if (strEachCookParts[j].ToLower().Trim() == "secure")
             {
                 cookTemp.Secure = true;
@@ -173,9 +170,7 @@ class Web
             cookTemp.Path = "/";
         }
 
-
         cookTemp.Domain = strHost;
-
 
         if (doNotAdd)
         {
@@ -248,7 +243,6 @@ class Web
         {
             return false;
         }
-        
     }
     
     public static Tuple<Boolean, string, CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer = null, string referer = null, string sendData = null)
@@ -279,8 +273,6 @@ class Web
 
         // WebRequest doesn't pick up cookies on 302 Redirects.  We have to do this manually
         request.AllowAutoRedirect = false;
-
-
         request.ProtocolVersion = HttpVersion.Version11;
         request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
         request.Headers["Cache-Control"] = "max-age=0";
@@ -321,8 +313,6 @@ class Web
         catch (WebException ex)
         {
             Debug.Write("Exception Caught:  " + ex.ToString());
-            return Tuple.Create(true, "Error", cookieContainer, "");
-
         }
 
         StreamReader sr = new StreamReader(response.GetResponseStream());
@@ -335,13 +325,11 @@ class Web
 
         if (redirect != null)
         {
-
             redirect = redirect.Replace("\r", "").Replace("\n", "");
             redirect = "https://companion.orerve.net" + redirect;
 
             if (cookieString != null)
             {
-
                 List<string> cookieList = cookieStringsFromHeader(cookieString);
                 List<string> cookieNames = new List<string>();
                 CookieContainer newCookieJar = new CookieContainer();
@@ -349,7 +337,6 @@ class Web
                 {
                     try
                     {
-
                         Cookie convertedCookie = convertCookieStringToCookie(eachCookieString, "companion.orerve.net");
                         if (convertedCookie != null)
                         {
@@ -357,15 +344,12 @@ class Web
                             string addName = convertedCookie.Name;
                             cookieNames.Add(addName);
                         }
-
-
                     }
 
                     catch (Exception ex)
                     {
                         Debug.Write("ERROR:  " + ex.ToString());
                     }
-
                 }
 
                 foreach (Cookie passedCookie in cookieContainer.GetCookies(request.RequestUri))
@@ -374,7 +358,6 @@ class Web
                     {
                         newCookieJar.Add(passedCookie);
                     }
-
                 }
 
                 Tuple<Boolean, string, CookieContainer, string> tRespon = sendRequest(redirect, newCookieJar, referer, sendData);
@@ -383,7 +366,6 @@ class Web
                 string returnedHtmldata = tRespon.Item4;
 
                 return Tuple.Create(false, "", returnedCookies, returnedHtmldata);
-
             }
         }
         return Tuple.Create(false, "", cookieContainer, htmldata);

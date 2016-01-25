@@ -70,7 +70,6 @@ class Utilities
             return (int) diffSeconds;
         }
         state[cooldownName] = DateTime.Now;
-        return 0;
-            
+        return 0;    
     }
 }
