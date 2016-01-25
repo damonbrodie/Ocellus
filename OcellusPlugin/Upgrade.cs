@@ -30,7 +30,7 @@ class Upgrade
         }
         catch
         {
-            Utilities.writeDebug("Error:  Unable to parse version check resposne");
+            Debug.Write("Error:  Unable to parse version check resposne");
         }
         return Tuple.Create<double, string, string>(-1.0, null, null);
     }

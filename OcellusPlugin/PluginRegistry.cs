@@ -20,7 +20,7 @@ class PluginRegistry
         }
         catch
         {
-            Utilities.writeDebug("ERROR:  Unable to write value to Windows Registry.");
+            Debug.Write("ERROR:  Unable to write value to Windows Registry.");
             return false;
         }
         return true;
@@ -53,7 +53,7 @@ class PluginRegistry
         }
         catch (Exception ex)
         {
-            Utilities.writeDebug("can't delete key: " + ex.ToString());
+            Debug.Write("can't delete key: " + ex.ToString());
         }
     }
 }

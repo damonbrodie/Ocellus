@@ -8,9 +8,9 @@ using System.IO;
 
 class Config
 {
-    public static string getConfigPath()
+    public static string Path()
     {
-        string appPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ocellus Plugin");
+        string appPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Ocellus Plugin");
         try
         {
             Directory.CreateDirectory(appPath);
@@ -22,9 +22,9 @@ class Config
         return appPath;
     }
 
-    public static string getCookiePath()
+    public static string CookiePath()
     {
-        return Path.Combine(getConfigPath(), "cookies.txt");
+        return System.IO.Path.Combine(Config.Path(), "cookies.txt");
     }
 }
 

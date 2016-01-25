@@ -3,16 +3,21 @@ using System.IO;
 using System.Collections.Generic;
 
 
-// ***********************
-// *  Utility functions  *
-// ***********************
+// *********************************
+// *  Utility and Debug functions  *
+// *********************************
 
-class Utilities
+
+class Debug
 {
-    public static void writeDebug(string line)
+    public static string Path()
     {
-        
-        string file = Path.Combine(Config.getConfigPath(), "debug.log");
+        return System.IO.Path.Combine(Config.Path(), "debug.log");
+    }
+
+    public static void Write(string line)
+    {
+        string file = Debug.Path();
         using (StreamWriter writer = File.AppendText(file))
         {
             try
@@ -26,6 +31,22 @@ class Utilities
         }
     }
 
+    public static void Clear()
+    {
+        string file = Debug.Path();
+        if (File.Exists(file))
+        {
+            try
+            {
+                File.Delete(file);
+            }
+            catch { }
+        }
+    }
+}
+
+class Utilities
+{
     public static int isCoolingDown(ref Dictionary<string, object> state, string cooldownName, int minutes = 1)
     {
         if (! state.ContainsKey(cooldownName))

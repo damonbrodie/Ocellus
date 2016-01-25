@@ -88,7 +88,7 @@ class RequestWebVars
         {
             htmlData = tResponse.Item4;
 
-            Utilities.writeDebug("htmlData: " + htmlData);
+            Debug.Write("htmlData: " + htmlData);
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
@@ -128,27 +128,27 @@ class RequestWebVars
                         else
                         {
                             errorMessage = "Improperly named variables found and ignored";
-                            Utilities.writeDebug("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
+                            Debug.Write("Web Vars Error:  Variable does not have VAEDwebVar- prefix.  Ignoring this variable");
                         }
                     }
                     if (maxVariables == 0)
                     {
                         errorMessage = "Maximum variable limit reached (50)";
-                        Utilities.writeDebug("Maximum variable limit (50) reached for this JSON source"); 
+                        Debug.Write("Maximum variable limit (50) reached for this JSON source"); 
                     }
                 }
                 else
                 {
                     error = true;
                     errorMessage = "Response missing top level \"webVar\" key";
-                    Utilities.writeDebug("Web Vars Error:  Response does not contain top level key \"webVar\"");
+                    Debug.Write("Web Vars Error:  Response does not contain top level key \"webVar\"");
                 }
             }
             catch
             {
                 error = true;
                 errorMessage = "Unable to parse JSON";
-                Utilities.writeDebug("Error:  unable to read JSON:  " + htmlData);
+                Debug.Write("Error:  unable to read JSON:  " + htmlData);
             }
         }
         else
@@ -164,7 +164,7 @@ class RequestWebVars
         int webVarCooldown = Utilities.isCoolingDown(ref state, "VAEDwebVarCooldown");
         if (webVarCooldown > 0)
         {
-            Utilities.writeDebug("Web Variable request is cooling down: " + webVarCooldown.ToString() + " seconds remain.");
+            Debug.Write("Web Variable request is cooling down: " + webVarCooldown.ToString() + " seconds remain.");
             return;
         }
         removeWebVars(ref state, ref textValues, ref intValues, ref booleanValues);

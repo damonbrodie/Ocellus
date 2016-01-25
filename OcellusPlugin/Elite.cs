@@ -67,7 +67,7 @@ class Elite
             }
             catch (Exception ex)
             {
-                Utilities.writeDebug("Error reading file " + ex.ToString());
+                Debug.Write("Error reading file " + ex.ToString());
 
             }
         }
@@ -289,7 +289,7 @@ class Elite
             }
             catch (Exception ex)
             {
-                Utilities.writeDebug("Error:  Unable to create temporary AppConfig.xml:  " + ex.ToString());
+                Debug.Write("Error:  Unable to create temporary AppConfig.xml:  " + ex.ToString());
                 return 0;
             }
 
@@ -300,13 +300,13 @@ class Elite
             }
             catch (Exception ex)
             {
-                Utilities.writeDebug("Error:  Unable to replace AppConfig.xml:  " + ex.ToString());
+                Debug.Write("Error:  Unable to replace AppConfig.xml:  " + ex.ToString());
                 return 0;
             }
         }
         else
         {
-            Utilities.writeDebug("Error:  Can't access Elite game directory: " + path);
+            Debug.Write("Error:  Can't access Elite game directory: " + path);
             return 0;
         }
     }

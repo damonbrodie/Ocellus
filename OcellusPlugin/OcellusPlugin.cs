@@ -33,14 +33,9 @@ namespace OcellusPlugin
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
             // Setup plugin storage directory - used for cookies and debug logs
-            string appPath = Config.getConfigPath();
-            string cookieFile = Config.getCookiePath();
+            string appPath = Config.Path();
+            string cookieFile = Config.CookiePath();
             string debugFile = Path.Combine(appPath, "debug.log");
-
-            if (File.Exists(debugFile))
-            {
-                //File.Delete(debugFile);
-            }
 
             // Determine Elite Dangerous directories
             string gamePath = Elite.getGamePath();
@@ -104,7 +99,7 @@ namespace OcellusPlugin
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-            Utilities.writeDebug("COMMAND:  " + context);
+            Debug.Write("COMMAND:  " + context);
             switch (context)
             {
 
@@ -117,6 +112,13 @@ namespace OcellusPlugin
                     {
                         booleanValues["VAEDneedUpgrade"] = false;
                     }
+                    break;
+                case "clear debug":
+                    Debug.Clear();
+                    break;
+                case "get debug":
+                    string tempDebug = Debug.Path();
+                    textValues["VAEDdebugFile"] = tempDebug;
                     break;
                 case "coriolis":
                     Coriolis.createCoriolisJson(ref state);
@@ -161,7 +163,7 @@ namespace OcellusPlugin
 
                     cookieContainer = tAuthentication.Item1;
                     string loginResponse = tAuthentication.Item2;
-                    Utilities.writeDebug("loginResponse:  " + loginResponse);
+                    Debug.Write("loginResponse:  " + loginResponse);
                     state["VAEDloggedIn"] = loginResponse;
                     textValues["VAEDauthenticationStatus"] = loginResponse;
                     if (loginResponse == "verification" || loginResponse == "ok")
@@ -196,18 +198,18 @@ namespace OcellusPlugin
                             textValues["VAEDverificationStatus"] = verifyResponse;
                             if (verifyResponse == "ok")
                             {
-                                Web.WriteCookiesToDisk(Config.getCookiePath(), verifyCookies);
+                                Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
                             }
                             break;
                         }
                     }
                     else if (state["VAEDloggedIn"].ToString() == "no")
                     {
-                        Utilities.writeDebug("Not logged in - can't verify");
+                        Debug.Write("Not logged in - can't verify");
                         textValues.Add("VAEDprofileStatus", "no");
                         break;
                     }
-                    Utilities.writeDebug("Error:  Unknown verification problem");
+                    Debug.Write("Error:  Unknown verification problem");
                     break;
 
                 case "update eddn":
@@ -219,7 +221,7 @@ namespace OcellusPlugin
                         int profileCooldown = Utilities.isCoolingDown(ref state, "VAEDprofileCooldown");
                         if (profileCooldown > 0)
                         {
-                            Utilities.writeDebug("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
+                            Debug.Write("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
                             break;
                         }
 
@@ -230,7 +232,7 @@ namespace OcellusPlugin
                         Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
 
                         state["VAEDcookieContainer"] = tRespon.Item1;
-                        Web.WriteCookiesToDisk(Config.getCookiePath(), tRespon.Item1);
+                        Web.WriteCookiesToDisk(Config.CookiePath(), tRespon.Item1);
                         string htmlData = tRespon.Item2;
 
                         JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -389,8 +391,8 @@ namespace OcellusPlugin
                         }
                         catch (Exception ex)
                         {
-                            Utilities.writeDebug("Error: Unable to parse Companion API output " + ex.ToString());
-                            Utilities.writeDebug(htmlData);
+                            Debug.Write("Error: Unable to parse Companion API output " + ex.ToString());
+                            Debug.Write(htmlData);
                             textValues["VAEDprofileStatus"] = "error";
                         }
 
@@ -458,34 +460,34 @@ namespace OcellusPlugin
                         if (1 == 1) // Debug
                         {
                             // Write out JSON
-                            Utilities.writeDebug("----------------HTMLDATA FOLLOWS------------------------------");
-                            Utilities.writeDebug(htmlData);
+                            Debug.Write("----------------HTMLDATA FOLLOWS------------------------------");
+                            Debug.Write(htmlData);
 
-                            Utilities.writeDebug("TEXT VALUES");
+                            Debug.Write("TEXT VALUES");
                             foreach (string key in textValues.Keys)
                             {
                                 if (textValues[key] != null)
                                 {
-                                    Utilities.writeDebug(key + ":  " + textValues[key]);
+                                    Debug.Write(key + ":  " + textValues[key]);
                                 }
 
                             }
 
-                            Utilities.writeDebug("INTEGER VALUES");
+                            Debug.Write("INTEGER VALUES");
                             foreach (string key in intValues.Keys)
                             {
                                 if (intValues[key] != null)
                                 {
-                                    Utilities.writeDebug(key + ":  " + intValues[key].ToString());
+                                    Debug.Write(key + ":  " + intValues[key].ToString());
                                 }
                             }
 
-                            Utilities.writeDebug("BOOLEAN VALUES");
+                            Debug.Write("BOOLEAN VALUES");
                             foreach (string key in booleanValues.Keys)
                             {
                                 if (booleanValues[key] != null)
                                 {
-                                    Utilities.writeDebug(key + ":  " + booleanValues[key].ToString());
+                                    Debug.Write(key + ":  " + booleanValues[key].ToString());
                                 }
                             }
                         }
@@ -497,7 +499,7 @@ namespace OcellusPlugin
                     break;
 
                 default:
-                    Utilities.writeDebug("Error: unknown command");
+                    Debug.Write("Error: unknown command");
                     break;
                 
             }          

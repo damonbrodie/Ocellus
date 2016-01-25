@@ -238,12 +238,12 @@ class Coriolis
             stream.Position = 0;
             StreamReader sr = new StreamReader(stream);
             string json = sr.ReadToEnd();
-            Utilities.writeDebug("json " + json);
+            Debug.Write("json " + json);
             return json;
         }
         catch (Exception ex)
         {
-            Utilities.writeDebug(ex.ToString());
+            Debug.Write(ex.ToString());
         }
         return null;
     }

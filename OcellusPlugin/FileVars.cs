@@ -85,7 +85,7 @@ class FileVar
 
     public static string getFileVarFilename()
     {
-        string fileConfigFile = Path.Combine(Config.getConfigPath(), "FileVariables.txt");
+        string fileConfigFile = Path.Combine(Config.Path(), "FileVariables.txt");
         if (!File.Exists(fileConfigFile))
         {
             Boolean worked = createFileConfig(fileConfigFile);

@@ -16,7 +16,7 @@ class Eddb
 
     private static Boolean getEddbIndex()
     {
-        string path = Config.getConfigPath();
+        string path = Config.Path();
         string zipFile = Path.Combine(path, "eddb_index.zip");
         if (Web.downloadFile(indexURL, zipFile))
         {
@@ -28,7 +28,7 @@ class Eddb
 
     public static void loadEddbIndex(ref Dictionary<string, object> state)
     {
-        string eddbIndexFile = Path.Combine(Config.getConfigPath(), "eddb_index.txt");
+        string eddbIndexFile = Path.Combine(Config.Path(), "eddb_index.txt");
         if (!File.Exists(eddbIndexFile) && ! getEddbIndex())
         {
             return;
@@ -52,7 +52,7 @@ class Eddb
         }
         catch (Exception ex)
         {
-            Utilities.writeDebug(ex.ToString());
+            Debug.Write(ex.ToString());
         }   
     }
 }

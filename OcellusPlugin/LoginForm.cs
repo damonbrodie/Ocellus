@@ -51,7 +51,7 @@ namespace Credentials
 
               //  cookieContainer = tAuthentication.Item1;
              //   string loginResponse = tAuthentication.Item2;
-             //   Utilities.writeDebug("loginResponse:  " + loginResponse);
+             //   Debug.Write("loginResponse:  " + loginResponse);
 
              //   if (loginResponse == "verification" || loginResponse == "ok")
 
