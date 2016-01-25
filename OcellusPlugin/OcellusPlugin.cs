@@ -209,7 +209,7 @@ namespace OcellusPlugin
                         textValues.Add("VAEDprofileStatus", "no");
                         break;
                     }
-                    Debug.Write("Error:  Unknown verification problem");
+                    Debug.Write("ERROR:  Unknown verification problem");
                     break;
 
                 case "update eddn":
@@ -391,7 +391,7 @@ namespace OcellusPlugin
                         }
                         catch (Exception ex)
                         {
-                            Debug.Write("Error: Unable to parse Companion API output " + ex.ToString());
+                            Debug.Write("ERROR: Unable to parse Companion API output " + ex.ToString());
                             Debug.Write(htmlData);
                             textValues["VAEDprofileStatus"] = "error";
                         }
@@ -499,7 +499,7 @@ namespace OcellusPlugin
                     break;
 
                 default:
-                    Debug.Write("Error: unknown command");
+                    Debug.Write("ERROR: unknown command");
                     break;
                 
             }          

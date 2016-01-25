@@ -37,7 +37,7 @@ class Eddb
         }
         else
         {
-            Debug.Write("Error:  Unable to download EDDB Index from Ocellus.io");
+            Debug.Write("ERROR:  Unable to download EDDB Index from Ocellus.io");
         }
         return true;
     }

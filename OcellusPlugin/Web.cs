@@ -197,7 +197,7 @@ class Web
             }
             catch (Exception e)
             {
-                Debug.Write("Error:  Problem writing cookies to disk: " + e.GetType());
+                Debug.Write("ERROR:  Problem writing cookies to disk: " + e.GetType());
             }
         }
     }
@@ -216,7 +216,7 @@ class Web
         }
         catch (Exception e)
         {
-            Debug.Write("Error:  Problem reading cookies from disk: " + e.GetType());
+            Debug.Write("ERROR:  Problem reading cookies from disk: " + e.GetType());
             return new CookieContainer();
         }
     }

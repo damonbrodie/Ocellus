@@ -289,7 +289,7 @@ class Elite
             }
             catch (Exception ex)
             {
-                Debug.Write("Error:  Unable to create temporary AppConfig.xml:  " + ex.ToString());
+                Debug.Write("ERROR:  Unable to create temporary AppConfig.xml:  " + ex.ToString());
                 return 0;
             }
 
@@ -300,13 +300,13 @@ class Elite
             }
             catch (Exception ex)
             {
-                Debug.Write("Error:  Unable to replace AppConfig.xml:  " + ex.ToString());
+                Debug.Write("ERROR:  Unable to replace AppConfig.xml:  " + ex.ToString());
                 return 0;
             }
         }
         else
         {
-            Debug.Write("Error:  Can't access Elite game directory: " + path);
+            Debug.Write("ERROR:  Can't access Elite game directory: " + path);
             return 0;
         }
     }

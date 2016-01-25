@@ -148,7 +148,7 @@ class RequestWebVars
             {
                 error = true;
                 errorMessage = "Unable to parse JSON";
-                Debug.Write("Error:  unable to read JSON:  " + htmlData);
+                Debug.Write("ERROR:  unable to read JSON:  " + htmlData);
             }
         }
         else
