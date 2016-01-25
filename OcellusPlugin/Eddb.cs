@@ -11,12 +11,10 @@ using System.Web.Script.Serialization;
 
 class Eddb
 {
-
     private const string indexURL = "http://ocellus.io/data/eddb_index.zip";
 
-    private static Boolean downloadIndex()
+    private static bool downloadIndex()
     {
-        
         string path = Config.Path();
         string eddbIndexFile = Path.Combine(Config.Path(), "eddb_index.txt");
         string zipFile = Path.Combine(path, "eddb_index.zip");

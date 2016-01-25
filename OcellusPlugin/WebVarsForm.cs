@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+
+// *************************************
+// *  Functions for Web Variable Form  *
+// *************************************
+
 namespace WebVars
 {
     

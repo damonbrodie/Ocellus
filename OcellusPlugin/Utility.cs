@@ -7,7 +7,6 @@ using System.Collections.Generic;
 // *  Utility and Debug functions  *
 // *********************************
 
-
 class Debug
 {
     public static string Path()

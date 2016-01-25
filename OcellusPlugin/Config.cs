@@ -27,4 +27,3 @@ class Config
         return System.IO.Path.Combine(Config.Path(), "cookies.txt");
     }
 }
-

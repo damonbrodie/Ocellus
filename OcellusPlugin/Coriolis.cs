@@ -215,7 +215,6 @@ class Coriolis
 
     public static string createCoriolisJson(ref Dictionary<string, object> state)
     {
-
         try
         {
             if (!state.ContainsKey("VAEDcompanionDict"))
@@ -247,5 +246,4 @@ class Coriolis
         }
         return null;
     }
-    
 }
