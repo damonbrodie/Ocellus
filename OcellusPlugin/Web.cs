@@ -313,6 +313,7 @@ class Web
         catch (WebException ex)
         {
             Debug.Write("Exception Caught:  " + ex.ToString());
+            return Tuple.Create(true, "Error", cookieContainer, "");
         }
 
         StreamReader sr = new StreamReader(response.GetResponseStream());
