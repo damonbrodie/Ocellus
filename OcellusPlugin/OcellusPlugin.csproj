@@ -99,6 +99,7 @@
   <ItemGroup>
     <None Include="Images\ocellus-logo-tranparent.png" />
     <Content Include="favicon.ico" />
+    <Content Include="OcellusPlugin.dll" />
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
