@@ -1,15 +1,26 @@
 ﻿using System;
+using System.Net;
 using System.Windows.Forms;
 
 namespace Credentials
 {
     public partial class Login : Form
     {
+
+        public CookieContainer Cookie
+        {
+            get; set;
+        }
+
+        public string LoginResponse
+        {
+            get; set;
+        }
         public Login()
         {
             InitializeComponent();
         }
-
+            
         private void Login_Load(object sender, EventArgs e)
         {
             txt_email.Text = PluginRegistry.getStringValue("email");
@@ -45,17 +56,21 @@ namespace Credentials
                 PluginRegistry.setStringValue("email", txt_email.Text);
                 PluginRegistry.setStringValue("password", txt_password.Text);
 
-              //  CookieContainer cookieContainer = new CookieContainer();
+                CookieContainer cookieContainer = new CookieContainer();
 
-              //  Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI();
+                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI();
 
-              //  cookieContainer = tAuthentication.Item1;
-             //   string loginResponse = tAuthentication.Item2;
-             //   Debug.Write("loginResponse:  " + loginResponse);
+                this.Cookie = tAuthentication.Item1;
+                string loginResponse = tAuthentication.Item2;
 
-             //   if (loginResponse == "verification" || loginResponse == "ok")
+                Debug.Write("loginResponse:  " + loginResponse);
 
+                if (loginResponse == "verification" || loginResponse == "ok")
+                {
+                    this.LoginResponse = loginResponse;
                     this.Close();
+                }
+                    
             }
         }
 

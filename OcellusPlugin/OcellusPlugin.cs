@@ -139,6 +139,17 @@ namespace OcellusPlugin
                 case "set credentials":
                     var credentialsForm = new Credentials.Login();
                     credentialsForm.ShowDialog();
+                    CookieContainer cookieJar = credentialsForm.Cookie;
+                    string loginResponse = credentialsForm.LoginResponse;
+
+                    if (loginResponse == "verification")
+                    {
+                        var verficiationForm = new VerificationCode.Validate();
+                        verficiationForm.Cookie = cookieJar;
+                        verficiationForm.ShowDialog();
+                    }
+
+
                     break;
                 case "credentials":
                     string email = PluginRegistry.getStringValue("email");
@@ -156,32 +167,7 @@ namespace OcellusPlugin
                     }
                     break;
 
-                case "authenticate":
-                    CookieContainer cookieContainer = new CookieContainer();
 
-                    Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI();
-
-                    cookieContainer = tAuthentication.Item1;
-                    string loginResponse = tAuthentication.Item2;
-                    Debug.Write("loginResponse:  " + loginResponse);
-                    state["VAEDloggedIn"] = loginResponse;
-                    textValues["VAEDauthenticationStatus"] = loginResponse;
-                    if (loginResponse == "verification" || loginResponse == "ok")
-                    {
-                        if (state.ContainsKey("VAEDcookieContainer"))
-                        {
-                            state["VAEDcookieContainer"] = cookieContainer;
-                        }
-                        else
-                        {
-                            state.Add("VAEDcookieContainer", cookieContainer);
-                        }
-                    }
-                    else
-                    {
-                        state["VAEDloggedIn"] = "no";
-                    }
-                    break;
 
                 case "verification":
                     if (state["VAEDloggedIn"].ToString() == "verification")

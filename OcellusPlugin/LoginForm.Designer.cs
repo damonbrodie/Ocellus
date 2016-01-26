@@ -76,11 +76,11 @@
             // 
             // btnSubmit
             // 
-            this.btnSubmit.Location = new System.Drawing.Point(156, 269);
+            this.btnSubmit.Location = new System.Drawing.Point(135, 269);
             this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(80, 21);
+            this.btnSubmit.Size = new System.Drawing.Size(97, 21);
             this.btnSubmit.TabIndex = 4;
-            this.btnSubmit.Text = "Submit";
+            this.btnSubmit.Text = "Save && Login";
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
@@ -88,7 +88,7 @@
             // 
             this.btnCancel.CausesValidation = false;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(39, 269);
+            this.btnCancel.Location = new System.Drawing.Point(37, 269);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(80, 21);
             this.btnCancel.TabIndex = 3;
@@ -109,12 +109,11 @@
             // 
             // lbl_validation_email
             // 
-            this.lbl_validation_email.AutoSize = true;
             this.lbl_validation_email.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_validation_email.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_validation_email.Location = new System.Drawing.Point(62, 157);
+            this.lbl_validation_email.Location = new System.Drawing.Point(19, 157);
             this.lbl_validation_email.Name = "lbl_validation_email";
-            this.lbl_validation_email.Size = new System.Drawing.Size(128, 13);
+            this.lbl_validation_email.Size = new System.Drawing.Size(234, 13);
             this.lbl_validation_email.TabIndex = 7;
             this.lbl_validation_email.Text = "Invalid Email Address";
             this.lbl_validation_email.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -122,12 +121,11 @@
             // 
             // lbl_validation_password
             // 
-            this.lbl_validation_password.AutoSize = true;
             this.lbl_validation_password.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbl_validation_password.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_validation_password.Location = new System.Drawing.Point(68, 233);
+            this.lbl_validation_password.Location = new System.Drawing.Point(19, 233);
             this.lbl_validation_password.Name = "lbl_validation_password";
-            this.lbl_validation_password.Size = new System.Drawing.Size(122, 13);
+            this.lbl_validation_password.Size = new System.Drawing.Size(234, 13);
             this.lbl_validation_password.TabIndex = 8;
             this.lbl_validation_password.Text = "Enter your password";
             this.lbl_validation_password.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

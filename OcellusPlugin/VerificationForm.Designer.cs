@@ -1,4 +1,4 @@
-﻿namespace Validate
+﻿namespace VerificationCode
 {
     partial class Validate
     {
@@ -30,10 +30,10 @@
         {
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.txt_verification = new System.Windows.Forms.TextBox();
-            this.lbl_validation_verification = new System.Windows.Forms.Label();
-            this.cancel = new System.Windows.Forms.Button();
-            this.submit = new System.Windows.Forms.Button();
+            this.txtVerification = new System.Windows.Forms.TextBox();
+            this.lblVerificationMessage = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.btnSubmit = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -54,51 +54,50 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(18, 137);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.Size = new System.Drawing.Size(90, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Verification Code";
+            this.label1.Text = "Verification Code:";
             // 
-            // txt_verification
+            // txtVerification
             // 
-            this.txt_verification.Location = new System.Drawing.Point(21, 153);
-            this.txt_verification.Name = "txt_verification";
-            this.txt_verification.Size = new System.Drawing.Size(234, 20);
-            this.txt_verification.TabIndex = 9;
+            this.txtVerification.Location = new System.Drawing.Point(21, 153);
+            this.txtVerification.Name = "txtVerification";
+            this.txtVerification.Size = new System.Drawing.Size(234, 20);
+            this.txtVerification.TabIndex = 9;
             // 
-            // lbl_validation_verification
+            // lblVerificationMessage
             // 
-            this.lbl_validation_verification.AutoSize = true;
-            this.lbl_validation_verification.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_validation_verification.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_validation_verification.Location = new System.Drawing.Point(68, 176);
-            this.lbl_validation_verification.Name = "lbl_validation_verification";
-            this.lbl_validation_verification.Size = new System.Drawing.Size(138, 13);
-            this.lbl_validation_verification.TabIndex = 10;
-            this.lbl_validation_verification.Text = "Enter Verification Code";
-            this.lbl_validation_verification.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbl_validation_verification.Visible = false;
+            this.lblVerificationMessage.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVerificationMessage.ForeColor = System.Drawing.Color.DarkRed;
+            this.lblVerificationMessage.Location = new System.Drawing.Point(21, 176);
+            this.lblVerificationMessage.Name = "lblVerificationMessage";
+            this.lblVerificationMessage.Size = new System.Drawing.Size(234, 13);
+            this.lblVerificationMessage.TabIndex = 10;
+            this.lblVerificationMessage.Text = "Enter Verification Code";
+            this.lblVerificationMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblVerificationMessage.Visible = false;
             // 
-            // cancel
+            // btnCancel
             // 
-            this.cancel.CausesValidation = false;
-            this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(37, 212);
-            this.cancel.Name = "cancel";
-            this.cancel.Size = new System.Drawing.Size(80, 21);
-            this.cancel.TabIndex = 11;
-            this.cancel.Text = "Cancel";
-            this.cancel.UseVisualStyleBackColor = true;
-            this.cancel.Click += new System.EventHandler(this.cancel_Click);
+            this.btnCancel.CausesValidation = false;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(37, 212);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(80, 21);
+            this.btnCancel.TabIndex = 11;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // submit
+            // btnSubmit
             // 
-            this.submit.Location = new System.Drawing.Point(154, 212);
-            this.submit.Name = "submit";
-            this.submit.Size = new System.Drawing.Size(80, 21);
-            this.submit.TabIndex = 12;
-            this.submit.Text = "Submit";
-            this.submit.UseVisualStyleBackColor = true;
-            this.submit.Click += new System.EventHandler(this.submit_Click);
+            this.btnSubmit.Location = new System.Drawing.Point(154, 212);
+            this.btnSubmit.Name = "btnSubmit";
+            this.btnSubmit.Size = new System.Drawing.Size(80, 21);
+            this.btnSubmit.TabIndex = 12;
+            this.btnSubmit.Text = "Verify";
+            this.btnSubmit.UseVisualStyleBackColor = true;
+            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
             // pictureBox1
             // 
@@ -112,16 +111,16 @@
             // 
             // Validate
             // 
-            this.AcceptButton = this.submit;
+            this.AcceptButton = this.btnSubmit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.cancel;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(275, 249);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.cancel);
-            this.Controls.Add(this.submit);
-            this.Controls.Add(this.lbl_validation_verification);
-            this.Controls.Add(this.txt_verification);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnSubmit);
+            this.Controls.Add(this.lblVerificationMessage);
+            this.Controls.Add(this.txtVerification);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -142,10 +141,10 @@
 
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txt_verification;
-        private System.Windows.Forms.Label lbl_validation_verification;
-        private System.Windows.Forms.Button cancel;
-        private System.Windows.Forms.Button submit;
+        private System.Windows.Forms.TextBox txtVerification;
+        private System.Windows.Forms.Label lblVerificationMessage;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnSubmit;
         private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
