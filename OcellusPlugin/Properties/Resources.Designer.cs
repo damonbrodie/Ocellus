@@ -59,15 +59,5 @@ namespace OcellusPlugin.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap ocellus_logo_tranparent {
-            get {
-                object obj = ResourceManager.GetObject("ocellus-logo-tranparent", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }

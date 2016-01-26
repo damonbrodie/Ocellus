@@ -99,16 +99,6 @@
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::OcellusPlugin.Properties.Resources.ocellus_logo_tranparent;
-            this.pictureBox1.Location = new System.Drawing.Point(34, 26);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(200, 35);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 13;
-            this.pictureBox1.TabStop = false;
-            // 
             // Validate
             // 
             this.AcceptButton = this.btnSubmit;

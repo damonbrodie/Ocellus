@@ -11,6 +11,7 @@
     <AssemblyName>OcellusPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,6 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
     <OutputPath>..\</OutputPath>
@@ -97,7 +99,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Images\ocellus-logo-tranparent.png" />
     <Content Include="favicon.ico" />
     <Content Include="OcellusPlugin.dll" />
     <Content Include="ReadMe.txt" />
@@ -121,9 +122,7 @@
   <PropertyGroup>
     <PostBuildEvent>copy "C:\Program Files (x86)\VoiceAttack\Apps\OcellusPlugin\OcellusPlugin.dll" "c:\users\Damon\Documents\Visual Studio 2015\Projects\Ocellus Plugin\"
 copy "C:\Program Files (x86)\VoiceAttack\Apps\OcellusPlugin\OcellusPlugin.dll" "L:\Virtual Shared Folder\"
-copy "C:\Users\damon\Documents\Visual Studio 2015\Projects\Ocellus Plugin\Ocellus Voice Attack Profile" "L:\Virtual Shared Folder\"
-"C:\Program Files (x86)\VoiceAttack\VoiceAttack.exe"
-</PostBuildEvent>
+copy "C:\Users\damon\Documents\Visual Studio 2015\Projects\Ocellus Plugin\Ocellus Voice Attack Profile" "L:\Virtual Shared Folder\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

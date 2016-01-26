@@ -11,7 +11,12 @@ class Debug
 {
     public static string Path()
     {
-        return System.IO.Path.Combine(Config.Path(), "debug.log");
+        string debugPath = System.IO.Path.Combine(Config.Path(), "debug.log");
+        if (!File.Exists(debugPath))
+        {
+            Debug.Write("Initializing Debug");
+        }
+        return debugPath;
     }
 
     public static void Write(string line)

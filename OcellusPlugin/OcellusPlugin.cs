@@ -127,38 +127,11 @@ namespace OcellusPlugin
                     var webVarsForm = new WebVars.EditWebVars();
                     webVarsForm.ShowDialog();
                     break;
-                case "edit file variables":
-                    textValues["VAEDvalue"] = FileVar.getFileVarFilename();
-                    break;
                 case "update web vars":
-                    //WebVar.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
+                    //RequestWebVars.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
                     break;
                 case "update file vars":
                     FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
-                    break;
-                case "set credentials":
-                    var credentialsForm = new Credentials.Login();
-                    credentialsForm.ShowDialog();
-                    CookieContainer cookieJar = credentialsForm.Cookie;
-                    string loginResponse = credentialsForm.LoginResponse;
-
-                    if (loginResponse == "verification")
-                    {
-                        var verficiationForm = new VerificationCode.Validate();
-                        verficiationForm.Cookie = cookieJar;
-                        verficiationForm.ShowDialog();
-                    }
-
-
-                    break;
-                case "credentials":
-                    string email = PluginRegistry.getStringValue("email");
-                    string password = PluginRegistry.getStringValue("password");
-                    booleanValues["VAEDstatusCredentials"] = false;
-                    if (email != null && email != string.Empty && password != null && password != string.Empty)
-                    {
-                        booleanValues["VAEDstatusCredentials"] = true;
-                    }
                     break;
                 case "clipboard":
                     if (Clipboard.ContainsText(TextDataFormat.Text))
@@ -166,41 +139,32 @@ namespace OcellusPlugin
                         textValues.Add("VAEDclipboard", Clipboard.GetText());
                     }
                     break;
-
-
-
-                case "verification":
-                    if (state["VAEDloggedIn"].ToString() == "verification")
-                    {
-                        if (textValues.ContainsKey("VAEDvalue"))
-                        {
-                            CookieContainer verifyCookies = (CookieContainer)state["VAEDcookieContainer"];
-
-                            Tuple<CookieContainer, string> tVerify = Companion.verifyWithAPI(verifyCookies, textValues["VAEDvalue"]);
-                            verifyCookies = tVerify.Item1;
-                            string verifyResponse = tVerify.Item2;
-                            state["VAEDloggedIn"] = verifyResponse;
-                            state["VAEDcookieContainer"] = verifyCookies;
-                            textValues["VAEDverificationStatus"] = verifyResponse;
-                            if (verifyResponse == "ok")
-                            {
-                                Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
-                            }
-                            break;
-                        }
-                    }
-                    else if (state["VAEDloggedIn"].ToString() == "no")
-                    {
-                        Debug.Write("Not logged in - can't verify");
-                        textValues.Add("VAEDprofileStatus", "no");
-                        break;
-                    }
-                    Debug.Write("ERROR:  Unknown verification problem");
+                case "set credentials":
+                    var credentialsForm = new Credentials.Login();
+                    credentialsForm.ShowDialog();
+                    CookieContainer loginCookies = credentialsForm.Cookie;
+                    string loginResponse = credentialsForm.LoginResponse;
+                    Debug.Write("LoginResponse: " + loginResponse);
+                    textValues["VAEDloggedIn"] = loginResponse;
                     break;
-
+                case "verification":
+                    Debug.Write("here");
+                    CookieContainer verifyCookies = (CookieContainer)state["VAEDcookieContainer"];
+                    var verificationForm = new VerificationCode.Validate();
+                    verificationForm.Cookie = verifyCookies;
+                    verificationForm.ShowDialog();
+                    verifyCookies = verificationForm.Cookie;
+                    string verifyResponse = verificationForm.VerifyResponse;
+                    state["VAEDloggedIn"] = verifyResponse;
+                    state["VAEDcookieContainer"] = verifyCookies;
+                    textValues["VAEDloggedIn"] = verifyResponse;
+                    if (verifyResponse == "ok")
+                    {
+                        Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
+                    }
+                    break;
                 case "update eddn":
                     break;
-
                 case "profile":
                     if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                     {
