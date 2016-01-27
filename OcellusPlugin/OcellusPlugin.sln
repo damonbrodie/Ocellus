@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcellusPlugin", "OcellusPlugin.csproj", "{64335FAA-1DBB-4FFB-B1D4-83E6B49CBB35}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8E34ED02-9BBB-4523-BC5C-ED985F2D5F60}"
+	ProjectSection(SolutionItems) = preProject
+		Images\ocellus-logo-tranparent.png = Images\ocellus-logo-tranparent.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
