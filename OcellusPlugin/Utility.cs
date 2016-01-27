@@ -14,7 +14,8 @@ class Debug
         string debugPath = System.IO.Path.Combine(Config.Path(), "debug.log");
         if (!File.Exists(debugPath))
         {
-            Debug.Write("Initializing Debug");
+            var handle = File.Create(debugPath);
+            handle.Close();
         }
         return debugPath;
     }

@@ -30,7 +30,7 @@ namespace OcellusPlugin
             return new Guid("{A818A69A-D6A9-4CC8-943C-E6ABBAF4C76C}");  
         }
 
-        public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
+        public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
             // Setup plugin storage directory - used for cookies and debug logs
             string appPath = Config.Path();
@@ -97,7 +97,7 @@ namespace OcellusPlugin
 
         }
 
-        public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, Boolean?> booleanValues, ref Dictionary<string, object> extendedValues)
+        public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
             Debug.Write("COMMAND:  " + context);
             switch (context)
@@ -143,13 +143,18 @@ namespace OcellusPlugin
                     var credentialsForm = new Credentials.Login();
                     credentialsForm.ShowDialog();
                     CookieContainer loginCookies = credentialsForm.Cookie;
+                    state["VAEDcookieContainer"] = loginCookies;
                     string loginResponse = credentialsForm.LoginResponse;
                     Debug.Write("LoginResponse: " + loginResponse);
                     textValues["VAEDloggedIn"] = loginResponse;
                     break;
                 case "verification":
-                    Debug.Write("here");
-                    CookieContainer verifyCookies = (CookieContainer)state["VAEDcookieContainer"];
+
+                    CookieContainer verifyCookies = new CookieContainer();
+                    if (state.ContainsKey("VAEDcookieContainer"))
+                    {
+                        verifyCookies = (CookieContainer)state["VAEDcookieContainer"];
+                    }
                     var verificationForm = new VerificationCode.Validate();
                     verificationForm.Cookie = verifyCookies;
                     verificationForm.ShowDialog();
@@ -162,6 +167,7 @@ namespace OcellusPlugin
                     {
                         Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
                     }
+
                     break;
                 case "update eddn":
                     break;
@@ -190,7 +196,7 @@ namespace OcellusPlugin
                             
                         string currentSystem = "";
                         string currentStarport = "";
-                        Boolean currentlyDocked = false;
+                        bool currentlyDocked = false;
                         var result = new Dictionary<string, dynamic>();
                         try
                         {
@@ -379,9 +385,9 @@ namespace OcellusPlugin
                             long currentPosition = (long)state["VAEDcurrentLogPosition"];
                             Int32 elitePid = (Int32)state["VAEDelitePid"];
 
-                            Tuple<Boolean, string, string, long, Int32> tLogReturn = Elite.tailNetLog(state["VAEDlogPath"].ToString(), state["VAEDnetLogFile"].ToString(), currentPosition, elitePid);
+                            Tuple<bool, string, string, long, Int32> tLogReturn = Elite.tailNetLog(state["VAEDlogPath"].ToString(), state["VAEDnetLogFile"].ToString(), currentPosition, elitePid);
 
-                            Boolean success = tLogReturn.Item1;
+                            bool success = tLogReturn.Item1;
                             currentSystem = tLogReturn.Item2.ToString();
                             state["VAEDnetLogFile"] = tLogReturn.Item3.ToString();
                             state["VAEDcurrentLogPosition"] = tLogReturn.Item4;

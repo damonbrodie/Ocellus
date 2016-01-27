@@ -27,7 +27,7 @@ class Web
 
         List<string> cookieStrings = new List<string>();
 
-        Boolean firstCookie = true;
+        bool firstCookie = true;
 
         // assemble complete cookies back together
         foreach (string piece in pieces)
@@ -50,7 +50,6 @@ class Web
                         string temp = cookieStrings[last];
                         temp = temp + ',' + piece;
                         cookieStrings[last] = temp;
-
                     }
                     else if (equalIndex < semiIndex && equalIndex != -1)  // fragment must be the beginning of next cookie
                     {
@@ -82,7 +81,7 @@ class Web
         string strPNameAndPValue = string.Empty;
         string strDNameAndDValue = string.Empty;
         string[] NameValuePairTemp;
-        Boolean doNotAdd = false;
+        bool doNotAdd = false;
         Cookie cookTemp = new Cookie();
 
         for (int j = 0; j < intEachCookPartsCount; j++)
@@ -162,7 +161,6 @@ class Web
             {
                 cookTemp.Secure = true;
             }
-
         }
 
         if (cookTemp.Path == string.Empty)
@@ -221,7 +219,7 @@ class Web
         }
     }
 
-    public static Boolean downloadFile(string url, string filename)
+    public static bool downloadFile(string url, string filename)
     {
         try
         {
@@ -245,7 +243,7 @@ class Web
         }
     }
     
-    public static Tuple<Boolean, string, CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer = null, string referer = null, string sendData = null)
+    public static Tuple<bool, string, CookieContainer, string> sendRequest(string url, CookieContainer cookieContainer = null, string referer = null, string sendData = null)
     {
         url = url.Replace("\n", "");
         url = url.Replace("\r", "");
@@ -334,6 +332,9 @@ class Web
                 List<string> cookieList = cookieStringsFromHeader(cookieString);
                 List<string> cookieNames = new List<string>();
                 CookieContainer newCookieJar = new CookieContainer();
+
+                // Merge the newly set cookies with those that we carried in previously
+
                 foreach (string eachCookieString in cookieList)
                 {
                     try
@@ -361,14 +362,14 @@ class Web
                     }
                 }
 
-                Tuple<Boolean, string, CookieContainer, string> tRespon = sendRequest(redirect, newCookieJar, referer, sendData);
+                Tuple<bool, string, CookieContainer, string> tRespon = sendRequest(redirect, newCookieJar, referer, sendData);
 
                 CookieContainer returnedCookies = tRespon.Item3;
                 string returnedHtmldata = tRespon.Item4;
-
                 return Tuple.Create(false, "", returnedCookies, returnedHtmldata);
             }
         }
+        Debug.Write("HTML " + htmldata);
         return Tuple.Create(false, "", cookieContainer, htmldata);
     }
 }

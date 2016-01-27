@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 
 class FileVar
 {
-    private static void removeFileVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
+    private static void removeFileVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, bool?> booleanValues)
     {
 
         string pattern = @"^VAEDfileVar-.*$";
@@ -58,7 +58,7 @@ class FileVar
         }
     }
 
-    private static Boolean createFileConfig(string configfile)
+    private static bool createFileConfig(string configfile)
     {
         if (!File.Exists(configfile))
         {
@@ -88,7 +88,7 @@ class FileVar
         string fileConfigFile = Path.Combine(Config.Path(), "FileVariables.txt");
         if (!File.Exists(fileConfigFile))
         {
-            Boolean worked = createFileConfig(fileConfigFile);
+            bool worked = createFileConfig(fileConfigFile);
             if (!worked)
             {
                 return null;
@@ -97,7 +97,7 @@ class FileVar
         return fileConfigFile;
     }
 
-    public static void readFileVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
+    public static void readFileVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, bool?> booleanValues)
     {
         removeFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
         string fileConfigFile = getFileVarFilename();

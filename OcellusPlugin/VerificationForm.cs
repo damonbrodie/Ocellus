@@ -30,7 +30,6 @@ namespace VerificationCode
             else
             {
                 CookieContainer verifyCookies = this.Cookie;
-
                 Tuple<CookieContainer, string> tVerify = Companion.verifyWithAPI(verifyCookies, txtVerification.Text);
                 verifyCookies = tVerify.Item1;
                 string verifyResponse = tVerify.Item2;
@@ -39,6 +38,7 @@ namespace VerificationCode
                 {
                     Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
                     this.VerifyResponse = verifyResponse;
+                    this.Cookie = verifyCookies;
                     this.Close();
                 }
                 txtVerification.Text = "";

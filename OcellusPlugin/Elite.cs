@@ -162,7 +162,7 @@ class Elite
         }
     }
 
-    public static Tuple<Boolean, string, string, long, Int32> tailNetLog(string path, string logFile, long seekPos, Int32 elitePid)
+    public static Tuple<bool, string, string, long, Int32> tailNetLog(string path, string logFile, long seekPos, Int32 elitePid)
     {
 
         Int32 checkPid = Elite.getPID(elitePid);
@@ -187,7 +187,7 @@ class Elite
 
             currentSystem = tResponse.Item1;
             seekPos = tResponse.Item2;
-            Boolean flag = false;
+            bool flag = false;
             if (currentSystem != string.Empty)
             {
                 flag = true;
@@ -228,7 +228,7 @@ class Elite
         }
     }
 
-    public static Boolean isEliteRunning()
+    public static bool isEliteRunning()
     {
         Int32 gamePid = getPID();
         if (gamePid > 0)
@@ -248,8 +248,8 @@ class Elite
             string backupFile = Path.Combine(path, "AppConfig_before_Ocellus.xml");
 
             string[] configLines = File.ReadAllLines(configFile);
-            
-            Boolean hasVerboseVar = false;
+
+            bool hasVerboseVar = false;
 
             foreach (string configLine in configLines)
             {

@@ -29,7 +29,7 @@ namespace Credentials
 
         private void btnSubmit_Click(object sender, EventArgs e)
         {
-            Boolean error = false;
+            bool error = false;
             try
             {
                 var testEmail = new System.Net.Mail.MailAddress(txt_email.Text);

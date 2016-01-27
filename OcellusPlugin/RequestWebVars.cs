@@ -11,7 +11,7 @@ using System.Web.Script.Serialization;
 
 class RequestWebVars
 {
-    private static void removeWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
+    private static void removeWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, bool?> booleanValues)
     {
         string pattern = @"^VAEDwebVar-.*$";
         Regex regexWebVar = new Regex(pattern);
@@ -74,16 +74,16 @@ class RequestWebVars
         return jsonHosts;
     }
 
-    public static Tuple<Boolean, string, Dictionary<string,string>, Dictionary<string, int>, Dictionary<string,Boolean>, string> requestWebVars(string url)
+    public static Tuple<bool, string, Dictionary<string,string>, Dictionary<string, int>, Dictionary<string, bool>, string> requestWebVars(string url)
     {
-        Boolean error = false;
+        bool error = false;
         string errorMessage = "";
         string htmlData = null;
         Dictionary<string, string> stringVars = new Dictionary<string, string>();
         Dictionary<string, int> intVars = new Dictionary<string, int>();
-        Dictionary<string, Boolean> boolVars = new Dictionary<string, bool>();
+        Dictionary<string, bool> boolVars = new Dictionary<string, bool>();
 
-        Tuple<Boolean, string, CookieContainer, string> tResponse = Web.sendRequest(url);
+        Tuple<bool, string, CookieContainer, string> tResponse = Web.sendRequest(url);
         if (tResponse.Item1 == false)
         {
             htmlData = tResponse.Item4;
@@ -109,7 +109,7 @@ class RequestWebVars
                         if (matchWebVar.Success && maxVariables > 0)
                         {
                             var variableValue = result["webVar"][variableName];
-                            if (variableValue.GetType() == typeof(Boolean))
+                            if (variableValue.GetType() == typeof(bool))
                             {
                                 boolVars[variableName] = variableValue;
                                 maxVariables--;
@@ -159,7 +159,7 @@ class RequestWebVars
         return Tuple.Create(error, errorMessage, stringVars, intVars, boolVars, htmlData);
     }
 
-    public static void readWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, Boolean?> booleanValues)
+    public static void readWebVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, bool?> booleanValues)
     {
         int webVarCooldown = Utilities.isCoolingDown(ref state, "VAEDwebVarCooldown");
         if (webVarCooldown > 0)
@@ -176,7 +176,7 @@ class RequestWebVars
 
         foreach (string host in jsonHosts)
         {
-            Tuple<Boolean, string, Dictionary<string, string>, Dictionary<string, int>, Dictionary<string, Boolean>, string> tResponse = requestWebVars(host);
+            Tuple<bool, string, Dictionary<string, string>, Dictionary<string, int>, Dictionary<string, bool>, string> tResponse = requestWebVars(host);
             // XXX handle error return codes
             foreach (string key in tResponse.Item3.Keys)
             {

@@ -19,7 +19,7 @@ namespace WebVars
 
         public void testJson(string url)
         {
-            Tuple<Boolean, string, Dictionary<string, string>, Dictionary<string, int>, Dictionary<string, Boolean>, string> tResponse = RequestWebVars.requestWebVars(url);
+            Tuple<bool, string, Dictionary<string, string>, Dictionary<string, int>, Dictionary<string, bool>, string> tResponse = RequestWebVars.requestWebVars(url);
 
             while (dataGridTest.Rows.Count > 0)
             {
@@ -128,7 +128,7 @@ namespace WebVars
 
         private void EditWebVars_Load(object sender, EventArgs e)
         {
-            Boolean moreVarsInRegistry = true;
+            bool moreVarsInRegistry = true;
             int counter = 1;
             while (moreVarsInRegistry == true)
             {

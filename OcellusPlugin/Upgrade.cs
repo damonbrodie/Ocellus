@@ -15,7 +15,7 @@ class Upgrade
 
     private static Tuple<double, string, string> checkServerVersion()
     {
-        Tuple<Boolean, string, CookieContainer, string> tResponse = Web.sendRequest(versionCheckURL);
+        Tuple<bool, string, CookieContainer, string> tResponse = Web.sendRequest(versionCheckURL);
         string htmlData = tResponse.Item4;
         JavaScriptSerializer serializer = new JavaScriptSerializer();
         try
@@ -35,7 +35,7 @@ class Upgrade
         return Tuple.Create<double, string, string>(-1.0, null, null);
     }
 
-    public static Boolean needUpgrade()
+    public static bool needUpgrade()
     {
         Tuple<double, string, string> tResponse = checkServerVersion();
         double serverVer = tResponse.Item1;
@@ -47,7 +47,7 @@ class Upgrade
         return false;
     }
 
-    public static Boolean downloadUpdate()
+    public static bool downloadUpdate()
     {
         Tuple<double, string, string> tResponse = checkServerVersion();
         // XXX download the update file
