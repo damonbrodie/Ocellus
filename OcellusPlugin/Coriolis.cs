@@ -211,6 +211,51 @@ class Coriolis
         public Components components = new Components();
     }
 
+    private static string mapShip(string shipType)
+    {
+        Dictionary<string, string> typeMap = new Dictionary<string, string>
+        {
+            { "Adder", "Adder" },
+            { "Anaconda", "Anaconda" },
+            { "Asp", "Asp Explorer" },
+            { "Asp_Scout", "Asp Scout" },
+            { "CobraMkIII", "Cobra Mk III" },
+            { "CobraMkIV", "Cobra Mk IV" },
+            { "DiamondBackXL", "Diamondback Explorer" },
+            { "DiamondBack", "Diamondback Scout" },
+            { "Eagle", "Eagle" },
+            { "Federation_Dropship", "Federal Dropship" },
+            { "Federation_Dropship_MkII", "Federal Assault Ship" },
+            { "Federal Corvette", "Federal Corvette" } ,
+            { "Federation_Gunship", "Federal Gunship" },
+            { "FerDeLance", "Fer-De-Lance" },
+            { "Hauler", "Hauler" },
+            { "Empire_Trader", "Imperial Clipper" },
+            { "Empire_Courier", "Imperial Courier" },
+            { "Imperial Cutter", "Imperial Cutter" },
+            { "Empire_Eagle", "Imperial Eagle" },
+            { "Independant_Trader", "Keelback" },
+            { "Orca", "Orca" },
+            { "Python", "Python" },
+            { "SideWinder", "Sidewinder" },
+            { "Type6", "Type-6 Transporter" },
+            { "Type7", "Type-7 Transporter" },
+            { "Type9", "Type-9 Heavy" },
+            { "Viper", "Viper" },
+            { "Viper_MkIV", "Viper Mk IV" },
+            { "Vulture", "Vulture" }
+        };
+
+        if (typeMap.ContainsKey(shipType))
+        {
+            return typeMap[shipType];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     private static string ModuleMap(string moduleName)
     {
         Dictionary<string, string> moduleMap = new Dictionary<string, string>
@@ -642,8 +687,15 @@ class Coriolis
             return null;
         }
         coriolis.schema = "http://cdn.coriolis.io/schemas/ship-loadout/2.json#";
-        coriolis.name = "Anaconda";
-        coriolis.ship = "Anaconda";
+
+        int shipId = companion["commander"]["currentShipId"];
+        string currentShipId = shipId.ToString();
+        string currentShip = companion["ships"][currentShipId]["name"];
+
+        string coriolisShipName = mapShip(currentShip);
+
+        coriolis.name = coriolisShipName;
+        coriolis.ship = coriolisShipName;
 
         // Cargo hatch isn't in the companion API
         CargoHatch newCargoHatch = new CargoHatch();
