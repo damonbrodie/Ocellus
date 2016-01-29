@@ -306,7 +306,6 @@ class Elite
     {
         string[] rankings = new string[] { "Harmless", "Mostly Harmless", "Novice",
             "Competent", "Expert", "Master", "Dangerous", "Deadly", "Elite" };
-
         return rankings[rank];
     }
 
@@ -314,7 +313,6 @@ class Elite
     {
         string[] rankings = new string[] { "Penniless", "Mostly Penniless", "Pedlar",
             "Dealer", "Merchant", "Broker", "Entrepreneur", "Tycoon", "Elite" };
-
         return rankings[rank];
     }
 
@@ -322,7 +320,6 @@ class Elite
     {
         string[] rankings = new string[] { "Aimless", "Mostly Aimless", "Scout",
             "Surveyor", "Trailblazer", "Pathfinder", "Ranger", "Pioneer", "Elite" };
-
         return rankings[rank];
     }
 
@@ -330,7 +327,6 @@ class Elite
     {
         string[] rankings = new string[] { "Helpless", "Mostly Helpless", "Amateur",
             "Semi Professional", "Professional", "Champion", "Hero", "Gladiator", "Elite" };
-
         return rankings[rank];
     }
 
@@ -340,7 +336,6 @@ class Elite
             "Midshipman", "Petty Officer", "Chief Petty Officer", "Warrant Officer",
             "Ensign", "Lieutenant", "Lieutenant Commander", "Post Commander",
             "Post Captain", "Rear Admiral", "Vice Admiral", "Admiral" };
-
         return rankings[rank];
     }
 
@@ -350,7 +345,6 @@ class Elite
             "Master", "Squire", "Knight", "Lord",
             "Baron", "Viscount", "Count", "Earl",
             "Marquis", "Duke", "Prince", "King" };
-
         return rankings[rank];
     }
 
@@ -358,7 +352,6 @@ class Elite
     {
         string[] rankings = new string[] { "None", "Rating 1", "Rating 2",
             "Rating 3", "Rating 4", "Rating 5" };
-
         return rankings[rank];
     }
 
