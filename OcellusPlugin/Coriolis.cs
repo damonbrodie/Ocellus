@@ -561,7 +561,6 @@ class Coriolis
             { "heatsinklauncher", "I" },
             { "plasmapointdefence", "I" },
             { "dockingcomputer", "E" }
-
         };
 
         // Planetary Hangars break the normal rules
@@ -674,9 +673,6 @@ class Coriolis
                 case "standard":
                     mod = currModule.Value["module"];
                     addStandard(mod, ref coriolis);
-                    break;
-
-                default:
                     break;
             }
         }
