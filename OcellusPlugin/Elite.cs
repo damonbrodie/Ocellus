@@ -30,9 +30,7 @@ class Elite
 
     private static Tuple<string, long> getSystemFromLog(string path, string logFile, long seekPos)
     {
-
         string fullPath = Path.Combine(path, logFile);
-
 
         long fileLength = 0;
 
