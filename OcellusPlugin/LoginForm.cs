@@ -7,15 +7,9 @@ namespace Credentials
     public partial class Login : Form
     {
 
-        public CookieContainer Cookie
-        {
-            get; set;
-        }
+        public CookieContainer Cookie { get; set; }
 
-        public string LoginResponse
-        {
-            get; set;
-        }
+        public string LoginResponse { get; set; }
         public Login()
         {
             InitializeComponent();

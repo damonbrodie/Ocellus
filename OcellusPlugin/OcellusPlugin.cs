@@ -121,7 +121,9 @@ namespace OcellusPlugin
                     textValues["VAEDdebugFile"] = tempDebug;
                     break;
                 case "coriolis":
-                    Coriolis.createCoriolisJson(ref state);
+                    string json = Coriolis.createCoriolisJson(ref state);
+                    Debug.Write("------------------ Coriolis JSON Follows ---------------------");
+                    Debug.Write(json);
                     break;
                 case "edit web variables":
                     var webVarsForm = new WebVars.EditWebVars();
@@ -412,40 +414,37 @@ namespace OcellusPlugin
                                 }
                             }
                         }
-                        if (1 == 1) // Debug
-                        {
-                            // Write out JSON
-                            Debug.Write("----------------HTMLDATA FOLLOWS------------------------------");
-                            Debug.Write(htmlData);
+                        // Write out JSON
+                        //Debug.Write("----------------HTMLDATA FOLLOWS------------------------------");
+                        //Debug.Write(htmlData);
 
-                            Debug.Write("TEXT VALUES");
-                            foreach (string key in textValues.Keys)
-                            {
-                                if (textValues[key] != null)
-                                {
-                                    Debug.Write(key + ":  " + textValues[key]);
-                                }
+                        //Debug.Write("TEXT VALUES");
+                        //foreach (string key in textValues.Keys)
+                        //{
+                        //    if (textValues[key] != null)
+                        //    {
+                        //        Debug.Write(key + ":  " + textValues[key]);
+                        //    }
 
-                            }
+                        //}
 
-                            Debug.Write("INTEGER VALUES");
-                            foreach (string key in intValues.Keys)
-                            {
-                                if (intValues[key] != null)
-                                {
-                                    Debug.Write(key + ":  " + intValues[key].ToString());
-                                }
-                            }
+                        //Debug.Write("INTEGER VALUES");
+                        //foreach (string key in intValues.Keys)
+                        //{
+                        //    if (intValues[key] != null)
+                        //    {
+                        //        Debug.Write(key + ":  " + intValues[key].ToString());
+                        //    }
+                        //}
 
-                            Debug.Write("BOOLEAN VALUES");
-                            foreach (string key in booleanValues.Keys)
-                            {
-                                if (booleanValues[key] != null)
-                                {
-                                    Debug.Write(key + ":  " + booleanValues[key].ToString());
-                                }
-                            }
-                        }
+                        //Debug.Write("BOOLEAN VALUES");
+                        //foreach (string key in booleanValues.Keys)
+                        //{
+                        //    if (booleanValues[key] != null)
+                        //    {
+                        //        Debug.Write(key + ":  " + booleanValues[key].ToString());
+                        //    }
+                        //}
                     }
                     else // Not logged in
                     {
