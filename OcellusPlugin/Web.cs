@@ -369,7 +369,6 @@ class Web
                 return Tuple.Create(false, "", returnedCookies, returnedHtmldata);
             }
         }
-        Debug.Write("HTML " + htmldata);
         return Tuple.Create(false, "", cookieContainer, htmldata);
     }
 }

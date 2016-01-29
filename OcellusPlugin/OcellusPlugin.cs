@@ -411,7 +411,6 @@ namespace OcellusPlugin
                                     textValues["VAEDeddbStarportId"] = tempEddb[textValues["VAEDcurrentSystem"]]["stations"][textValues["VAEDcurrentStarport"]].ToString();
                                 }
                             }
-
                         }
                         if (1 == 1) // Debug
                         {
@@ -457,7 +456,6 @@ namespace OcellusPlugin
                 default:
                     Debug.Write("ERROR: unknown command");
                     break;
-                
             }          
         }
     }
