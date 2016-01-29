@@ -43,7 +43,6 @@ class Elite
 
         if (File.Exists(fullPath))
         {
-
             FileInfo fileInfo = new FileInfo(logFile);
             fileLength = fileInfo.Length;
 
@@ -68,7 +67,6 @@ class Elite
             catch (Exception ex)
             {
                 Debug.Write("Error reading file " + ex.ToString());
-
             }
         }
         return Tuple.Create(currentSystem, fileLength);
@@ -142,9 +140,6 @@ class Elite
                                 {
                                     PluginRegistry.setStringValue("startParams", "steam://rungameid/419270");
                                 }
-                                
-                                
-                                
                             }
                             else
                             {
@@ -164,7 +159,6 @@ class Elite
 
     public static Tuple<bool, string, string, long, Int32> tailNetLog(string path, string logFile, long seekPos, Int32 elitePid)
     {
-
         Int32 checkPid = Elite.getPID(elitePid);
 
         string currentSystem = "";
@@ -200,7 +194,6 @@ class Elite
         seekPos = 0;
         elitePid = -1;
         return Tuple.Create(false, string.Empty, string.Empty, seekPos, elitePid);
-
     }
 
     public static Int32 getPID(Int32 checkPid = -1)

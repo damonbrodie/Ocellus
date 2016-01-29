@@ -53,9 +53,7 @@ class Companion
         {
             returnString = "error";
         }
-
         return Tuple.Create(cookieContainer, returnString);
-
     }
 
     public static Tuple<CookieContainer, string> verifyWithAPI(CookieContainer cookieContainer, string verificationCode)

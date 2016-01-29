@@ -102,7 +102,6 @@ namespace OcellusPlugin
             Debug.Write("COMMAND:  " + context);
             switch (context)
             {
-
                 case "check upgrade":
                     if (Upgrade.needUpgrade())
                     {
@@ -151,7 +150,6 @@ namespace OcellusPlugin
                     textValues["VAEDloggedIn"] = loginResponse;
                     break;
                 case "verification":
-
                     CookieContainer verifyCookies = new CookieContainer();
                     if (state.ContainsKey("VAEDcookieContainer"))
                     {
@@ -169,7 +167,6 @@ namespace OcellusPlugin
                     {
                         Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
                     }
-
                     break;
                 case "update eddn":
                     break;
@@ -194,7 +191,6 @@ namespace OcellusPlugin
                         string htmlData = tRespon.Item2;
 
                         JavaScriptSerializer serializer = new JavaScriptSerializer();
-
                             
                         string currentSystem = "";
                         string currentStarport = "";
@@ -239,7 +235,6 @@ namespace OcellusPlugin
 
                             foreach (string key in keys)
                             {
-
                                 string tempShip = result["ships"][key]["name"];
 
                                 string tempSystem = null;
