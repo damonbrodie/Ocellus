@@ -121,6 +121,7 @@ namespace OcellusPlugin
                     break;
                 case "coriolis":
                     string json = Coriolis.createCoriolisJson(ref state);
+                    Clipboard.SetText(json);
                     Debug.Write("------------------ Coriolis JSON Follows ---------------------");
                     Debug.Write(json);
                     break;
