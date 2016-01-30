@@ -14,9 +14,11 @@ namespace OcellusPlugin
 {   
     public class OcellusPlugin
     {
+        public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
+        public const string pluginVersion = "0.2";
         public static string VA_DisplayName()
         {
-            return "Ocellus - Elite: Dangerous Assistant " + Upgrade.pluginVersion;  
+            return pluginName + " v. " + pluginVersion;  
         }
 
         public static string VA_DisplayInfo()
@@ -170,6 +172,7 @@ namespace OcellusPlugin
                     }
                     break;
                 case "update eddn":
+                    Eddn.updateEddn(ref state);
                     break;
                 case "profile":
                     if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
@@ -410,9 +413,11 @@ namespace OcellusPlugin
                                 }
                             }
                         }
-                        // Write out JSON
-                        //Debug.Write("----------------HTMLDATA FOLLOWS------------------------------");
-                        //Debug.Write(htmlData);
+
+                        DateTime timestamp = DateTime.Now;
+                        state["VAEDcompanionTime"] = timestamp.ToString("yyyy-MM-dd") + "T" + timestamp.ToString("H:m:szzz");
+                        Debug.Write("----------------HTMLDATA FOLLOWS------------------------------");
+                        Debug.Write(htmlData);
 
                         //Debug.Write("TEXT VALUES");
                         //foreach (string key in textValues.Keys)

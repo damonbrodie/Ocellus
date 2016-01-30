@@ -11,7 +11,6 @@ using System.Web.Script.Serialization;
 class Upgrade
 {
     private const string versionCheckURL = "http://ocellus.io/version";
-    public const string pluginVersion = "0.1";
 
     private static Tuple<double, string, string> checkServerVersion()
     {
@@ -39,7 +38,7 @@ class Upgrade
     {
         Tuple<double, string, string> tResponse = checkServerVersion();
         double serverVer = tResponse.Item1;
-        double myVer = double.Parse(pluginVersion);
+        double myVer = double.Parse(OcellusPlugin.OcellusPlugin.pluginVersion);
         if (myVer < serverVer)
         {
             return true;

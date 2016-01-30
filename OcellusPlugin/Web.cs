@@ -271,12 +271,12 @@ class Web
 
         // WebRequest doesn't pick up cookies on 302 Redirects.  We have to do this manually
         request.AllowAutoRedirect = false;
-        request.ProtocolVersion = HttpVersion.Version11;
-        request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-        request.Headers["Cache-Control"] = "max-age=0";
-        request.Headers["Upgrade-Insecure-Requests"] = "1";
-        request.Headers["Accept-Language"] = "en-US,en;q=0.8";
-        request.Headers["Cache-Control"] = "max-age=0";
+        //request.ProtocolVersion = HttpVersion.Version11;
+        //request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+        //request.Headers["Cache-Control"] = "max-age=0";
+        //request.Headers["Upgrade-Insecure-Requests"] = "1";
+        //request.Headers["Accept-Language"] = "en-US,en;q=0.8";
+        //request.Headers["Cache-Control"] = "max-age=0";
         request.Timeout = 30000; // 30 seconds
         if (referer != null)
         {

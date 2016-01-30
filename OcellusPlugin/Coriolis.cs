@@ -202,7 +202,7 @@ class Coriolis
     public class RootObject
     {
         [DataMember(Name = "$schema", Order = 1)]
-        public string schema { get; set; }
+        public string schema = "http://cdn.coriolis.io/schemas/ship-loadout/2.json#";
         [DataMember(Order = 2)]
         public string name { get; set; }
         [DataMember(Order = 3)]
@@ -686,7 +686,6 @@ class Coriolis
             Debug.Write("Companion JSON missing ship information");
             return null;
         }
-        coriolis.schema = "http://cdn.coriolis.io/schemas/ship-loadout/2.json#";
 
         int shipId = companion["commander"]["currentShipId"];
         string currentShipId = shipId.ToString();
