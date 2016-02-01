@@ -114,6 +114,10 @@ namespace OcellusPlugin
                         booleanValues["VAEDneedUpgrade"] = false;
                     }
                     break;
+                case "send key":
+                    DirectInput.sendKey(0x14);
+  
+                    break;
                 case "clear debug":
                     Debug.Clear();
                     break;

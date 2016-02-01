@@ -12,6 +12,19 @@ using System.Runtime.Serialization.Json;
 class Eddn
 {
     [DataContractAttribute]
+    public class Module
+    {
+        [DataMember(Order = 1)]
+        public string category { get; set; }
+        [DataMember(Order = 2)]
+        public string rating { get; set; }
+        [DataMember(Order = 3)]
+        public string @class { get; set; }
+        [DataMember(Order = 4)]
+        public string name { get; set; }
+    }
+
+    [DataContractAttribute]
     public class Commodity
     {
         [DataMember(Order = 1)]
@@ -31,7 +44,7 @@ class Eddn
     }
 
    [DataContractAttribute]
-    public class Message
+    public class MessageCommodity
     {
         [DataMember(Order = 1)]
         public string systemName { get; set; }
@@ -41,6 +54,32 @@ class Eddn
         public string timestamp { get; set; }
         [DataMemberAttribute(Order = 4)]
         public List<Commodity> commodities = new List<Commodity>();
+    }
+
+    [DataContractAttribute]
+    public class MessageOutfitting
+    {
+        [DataMember(Order = 1)]
+        public string systemName { get; set; }
+        [DataMember(Order = 2)]
+        public string stationName { get; set; }
+        [DataMember(Order = 3)]
+        public string timestamp { get; set; }
+        [DataMemberAttribute(Order = 4)]
+        public List<Module> modules = new List<Module>();
+    }
+
+    [DataContractAttribute]
+    public class MessageShips
+    {
+        [DataMember(Order = 1)]
+        public string systemName { get; set; }
+        [DataMember(Order = 2)]
+        public string stationName { get; set; }
+        [DataMember(Order = 3)]
+        public string timestamp { get; set; }
+        [DataMember(Order = 4)]
+        public List<string> ships = new List<string>();
     }
 
     [DataContractAttribute]
@@ -62,7 +101,29 @@ class Eddn
         [DataMember(Order = 2)]
         public Header header = new Header();
         [DataMember(Order = 3)]
-        public Message message = new Message();
+        public MessageCommodity message = new MessageCommodity();
+    }
+
+    [DataContract]
+    public class RootObjectOutfitting
+    {
+        [DataMember(Name = "$schemaRef", Order = 1)]
+        public string schemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
+        [DataMember(Order = 2)]
+        public Header header = new Header();
+        [DataMember(Order = 3)]
+        public MessageOutfitting message = new MessageOutfitting();
+    }
+
+    [DataContract]
+    public class RootObjectShips
+    {
+        [DataMember(Name = "$schemaRef", Order = 1)]
+        public string schemaRef = "http://schemas.elite-markets.net/eddn/commodity/2";
+        [DataMember(Order = 2)]
+        public Header header = new Header();
+        [DataMember(Order = 3)]
+        public MessageShips message = new MessageShips();
     }
 
     private const string uploadURL = "http://eddn-gateway.elite-markets.net:8080/upload/";
@@ -121,70 +182,78 @@ class Eddn
         }
         return newCommodity;
     }
-    private static string createCommodityJson(ref Dictionary<string, object> state)
+
+    private static Tuple<string, string, string> createEddnJson(ref Dictionary<string, object> state)
     {
         if (!state.ContainsKey("VAEDcompanionDict"))
         {
-            return null;
+            Debug.Write("Error:  No Companion API data");
+            return Tuple.Create<string, string, string>(null, null, null);
         }
-        try
+
+        Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
+
+        bool isDocked = companion["commander"]["docked"];
+        if (!isDocked)
         {
-            Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
-            RootObjectCommodities eddnCommodities = new RootObjectCommodities();
+            Debug.Write("Not Docked - won't submit stale data to EDDN");
+            return Tuple.Create<string, string, string>(null, null, null);
+        }
 
-            if (!companion.ContainsKey("lastStarport") && !companion["lastStartport"].ContainsKey("commodities"))
-            {
-                Debug.Write("No commodities - cannot update EDDN");
-                return null;
-            }
+        string system = companion["lastSystem"]["name"];
+        string starport = companion["lastStarport"]["name"];
 
-            bool isDocked = companion["commander"]["docked"];
-            if (!isDocked)
-            {
-                Debug.Write("Not Docked - won't submit stale data to EDDN");
-                return null;
-            }
+        RootObjectCommodities eddnCommodities = new RootObjectCommodities();
+        RootObjectOutfitting eddnOutfitting = new RootObjectOutfitting();
+        RootObjectShips eddnShips = new RootObjectShips();
 
-            string system = companion["lastSystem"]["name"];
-            string starport = companion["lastStarport"]["name"];
+        eddnCommodities.header.uploaderID = companion["commander"]["name"];
+        eddnCommodities.message.systemName = system;
+        eddnCommodities.message.stationName = starport;
+        eddnCommodities.message.timestamp = state["VAEDcompanionTime"].ToString();
 
-            eddnCommodities.header.uploaderID = companion["commander"]["name"];
-            eddnCommodities.message.systemName = system;
-            eddnCommodities.message.stationName = starport;
-            eddnCommodities.message.timestamp = state["VAEDcompanionTime"].ToString();
+        string commodityJson = null;
+        string outfittinJson = null;
+        string shipsJson = null;
 
+        if (companion.ContainsKey("lastStarport") && companion["lastStartport"].ContainsKey("commodities"))
+        {
             ArrayList commodities = companion["lastStarport"]["commodities"];
 
-            foreach (Dictionary<string, object> currCommodity in commodities)
+            // We don't submit if there are no commodities here
+            if (commodities.Count > 0)
             {
-                Commodity toAdd = extractCommodity(currCommodity);
-                eddnCommodities.message.commodities.Add(toAdd);
-                Debug.Write("comm: " + toAdd.name);
+                foreach (Dictionary<string, object> currCommodity in commodities)
+                {
+                    Commodity toAdd = extractCommodity(currCommodity);
+                    eddnCommodities.message.commodities.Add(toAdd);
+                }
+                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObjectCommodities));
+                MemoryStream stream = new MemoryStream();
+                serializer.WriteObject(stream, eddnCommodities);
+                stream.Position = 0;
+                StreamReader sr = new StreamReader(stream);
+                commodityJson = sr.ReadToEnd();
             }
+        }
 
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObjectCommodities));
-            MemoryStream stream = new MemoryStream();
-            serializer.WriteObject(stream, eddnCommodities);
-            stream.Position = 0;
-            StreamReader sr = new StreamReader(stream);
-            string json = sr.ReadToEnd();
-            return json;
-        }
-        catch (Exception ex)
+        if (companion.ContainsKey("lastStarport") && companion["lastStartport"].ContainsKey("modules"))
         {
-            Debug.Write(ex.ToString());
+            ArrayList modules = companion["lastStarport"]["modules"];
+
         }
-        return null;
-        
+
+
+            return Tuple.Create<string, string, string>(commodityJson, outfittinJson, shipsJson);
     }
 
     public static void updateEddn(ref Dictionary<string, object> state)
     {
-        string commodityJson = createCommodityJson(ref state);
-        if (commodityJson != null)
+        Tuple<string, string, string> tResponse = createEddnJson(ref state);
+        if (tResponse.Item1 != null)
         {
-            Web.sendRequest(uploadURL, null, null, commodityJson);
-            Debug.Write(commodityJson);
+            Web.sendRequest(uploadURL, null, null, tResponse.Item1);
+            Debug.Write(tResponse.Item1);
         }
     }
 }
