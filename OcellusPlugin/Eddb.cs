@@ -42,11 +42,13 @@ class Eddb
         return true;
     }
 
+
     public static void loadEddbIndex(ref Dictionary<string, object> state)
     {
         string eddbIndexFile = Path.Combine(Config.Path(), "eddb_index.txt");
         if (!File.Exists(eddbIndexFile) && ! downloadIndex())
         {
+            Debug.Write("Error getting the eddb index - returning");
             return;
         }
         try

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Windows.Forms;
-using System.Web.Script.Serialization;
+using System.Speech.Recognition;
 
 
 // *****************************
@@ -15,7 +15,26 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.2";
+        public const string pluginVersion = "0.3";
+
+        private static string dictateSystem(ref Dictionary<string, object> state)
+        {
+            if (! state.ContainsKey("VAEDrecognitionEngine"))
+            {
+                Debug.Write("Error:  Speech engine not initialized");
+                return null;
+            }
+
+            SpeechRecognitionEngine recognitionEngine = (SpeechRecognitionEngine)state["VAEDrecognitionEngine"];
+            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
+            recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1);
+            RecognitionResult result = recognitionEngine.Recognize(TimeSpan.FromSeconds(5));
+            if (result != null)
+            {
+                return result.Text;
+            }
+            return null; 
+        }
         public static string VA_DisplayName()
         {
             return pluginName + " v. " + pluginVersion;  
@@ -28,57 +47,40 @@ namespace OcellusPlugin
 
         public static Guid VA_Id()
         {
-
             return new Guid("{A818A69A-D6A9-4CC8-943C-E6ABBAF4C76C}");  
         }
 
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
+            // Setup Speech engine
+
+            if (EliteGrammar.downloadGrammar() == true)
+            {
+                SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
+                recognitionEngine.SetInputToDefaultAudioDevice();
+                Grammar grammar = new Grammar(Path.Combine(Config.Path(), "SystemsGrammar.xml"));
+                recognitionEngine.LoadGrammar(grammar);
+                state.Add("VAEDrecognitionEngine", recognitionEngine);
+            }
+
+
             // Setup plugin storage directory - used for cookies and debug logs
             string appPath = Config.Path();
             string cookieFile = Config.CookiePath();
-            string debugFile = Path.Combine(appPath, "debug.log");
 
             // Determine Elite Dangerous directories
             string gamePath = Elite.getGamePath();
-            string logPath = Elite.getGameLogPath(gamePath);
             string gameStartString = PluginRegistry.getStringValue("startPath");
             string gameStartParams = PluginRegistry.getStringValue("startParams");
             state.Add("VAEDgamePath", gamePath);
-            state.Add("VAEDlogPath", logPath);
             textValues["VAEDgameStartString"] = gameStartString;
             textValues["VAEDgameStartParams"] = gameStartParams;
-            state.Add("VAEDnetLogFile", String.Empty);
-
-
-            // verboseEnabled:  0 - not enabled, 1 - was already enabled, 2 - just enabled now
-            string gameConfigPath = Path.Combine(gamePath, "Products", "elite-dangerous-64");
-            int verboseEnabled = Elite.enableVerboseLogging(gameConfigPath);
-            state.Add("VAEDverboseLoggingEnabled", verboseEnabled);
-
-
-            // Determine if ED is currently running
-            Int32 processId = Elite.getPID();
-            state.Add("VAEDelitePid", processId);
-
-
-            // Reset current location in netLog reading to the top
-            long pos = 0;
-            state.Add("VAEDcurrentLogPosition", pos);
-
-            booleanValues["VAEDisEliteRunning"] = Elite.isEliteRunning();
-
-            if (verboseEnabled == 2 && booleanValues["VAEDEliteRunning"] == true )
-            {
-                booleanValues["VAEDneedRestart"] = true;
-            }
-            else if (verboseEnabled == 0)
-            {
-                booleanValues["VAEDverboseProblem"] = true;
-            }
 
             // Load EDDB Index into memory
             Eddb.loadEddbIndex(ref state);
+
+            // Load Atlas Index into memory
+            Atlas.loadAtlasIndex(ref state);
 
             CookieContainer cookieJar = new CookieContainer();
 
@@ -114,9 +116,31 @@ namespace OcellusPlugin
                         booleanValues["VAEDneedUpgrade"] = false;
                     }
                     break;
+                case "distance from here":
+                    decimalValues["VAEDdecimalDistance"] = null;
+                    decimalValues["VAEDintDistance"] = null;
+                    if (state.ContainsKey("VAEDcompanionDict") && textValues.ContainsKey("VAEDtargetSystem"))
+                    {
+                        Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
+                        string currentSystem = "";
+                        if (companion.ContainsKey("lastSystem") && companion["lastSystem"].ContainsKey("name"))
+                        {
+                            currentSystem = companion["lastSystem"]["name"];
+                        }
+                        Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
+
+                        double distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
+                        decimalValues["VAEDdecimalDistance"] = (decimal)distance;
+                        intValues["VAEDintDistance"] = (int)(distance + .5);
+
+                    }
+                    break;
+                case "dictate system":
+                    string system = dictateSystem(ref state);
+                    textValues["VAEDdictateSystem"] = system;
+                    break;
                 case "send key":
                     DirectInput.sendKey(0x14);
-  
                     break;
                 case "clear debug":
                     Debug.Clear();
@@ -181,275 +205,7 @@ namespace OcellusPlugin
                 case "profile":
                     if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                     {
-                        int profileCooldown = Utilities.isCoolingDown(ref state, "VAEDprofileCooldown");
-                        if (profileCooldown > 0)
-                        {
-                            Debug.Write("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
-                            break;
-                        }
-
-                        textValues["VAEDprofileStatus"] = "ok";
-
-                        CookieContainer profileCookies = (CookieContainer)state["VAEDcookieContainer"];
-
-                        Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
-
-                        state["VAEDcookieContainer"] = tRespon.Item1;
-                        Web.WriteCookiesToDisk(Config.CookiePath(), tRespon.Item1);
-                        string htmlData = tRespon.Item2;
-
-                        JavaScriptSerializer serializer = new JavaScriptSerializer();
-                            
-                        string currentSystem = "";
-                        string currentStarport = "";
-                        bool currentlyDocked = false;
-                        var result = new Dictionary<string, dynamic>();
-                        try
-                        {
-                            result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
-                            state["VAEDcompanionDict"] = result;
-                            string cmdr = result["commander"]["name"];
-                            int credits = result["commander"]["credits"];
-                            int debt = result["commander"]["debt"];
-                            int shipId = result["commander"]["currentShipId"];
-                            string currentShipId = shipId.ToString();
-                            currentlyDocked = result["commander"]["docked"];
-                            string combatRank = Elite.combatRankToString(result["commander"]["rank"]["combat"]);
-                            string tradeRank = Elite.tradeRankToString(result["commander"]["rank"]["trade"]);
-                            string exploreRank = Elite.exploreRankToString(result["commander"]["rank"]["explore"]);
-                            string cqcRank = Elite.cqcRankToString(result["commander"]["rank"]["cqc"]);
-
-                            string federationRank = Elite.federationRankToString(result["commander"]["rank"]["federation"]);
-                            string empireRank = Elite.empireRankToString(result["commander"]["rank"]["empire"]);
-
-                            string powerPlayRank = Elite.powerPlayRankToString(result["commander"]["rank"]["power"]);
-
-                            Dictionary<string, object> allShips = result["ships"];
-                            int howManyShips = allShips.Count;
-                            int cargoCapacity = result["ship"]["cargo"]["capacity"];
-                            int quantityInCargo = result["ship"]["cargo"]["qty"];
-                            string currentShip = result["ships"][currentShipId]["name"];
-                            result["commander"]["currentShip"] = currentShip;
-
-                            List<string> keys = new List<string>(allShips.Keys);
-
-                            // Null out ship locations
-                            string[] listOfShips = Elite.listofShipsShortNames();
-                            foreach (string ship in listOfShips)
-                            {
-                                textValues["VAEDship-" + ship + "-1"] = null;
-                                intValues["VAEDshipCounter-" + ship] = 0;
-                            }
-
-                            foreach (string key in keys)
-                            {
-                                string tempShip = result["ships"][key]["name"];
-
-                                string tempSystem = null;
-                                if (result["ships"][key].ContainsKey("starsystem"))
-                                {
-                                    tempSystem = result["ships"][key]["starsystem"]["name"];
-                                    if (key == currentShipId)
-                                    {
-                                        currentSystem = tempSystem;
-                                    }
-                                }
-                                string tempStation = null;
-                                if (result["ships"][key].ContainsKey("station"))
-                                {
-                                    tempStation = result["ships"][key]["station"]["name"];
-                                    if (key == currentShipId)
-                                    {
-                                        currentStarport = tempStation;
-                                    }
-                                }
-
-                                string shipCounterString = "VAEDshipCounter-" + tempShip;
-                                intValues[shipCounterString]++;
-                                int counterInt = (int)intValues[shipCounterString];
-                                string counterStr = counterInt.ToString();
-                                textValues["VAEDship-" + tempShip + "-" + counterStr] = tempSystem;
-                            }
-
-                            //Setup ambiguous ship variables
-                            textValues["VAEDambiguousViper"] = null;
-                            textValues["VAEDambiguousCobra"] = null;
-                            textValues["VAEDambiguousDiamondback"] = null;
-                            textValues["VAEDambiguousAsp"] = null;
-                            textValues["VAEDambiguousEagle"] = null;
-                                
-                            if ((intValues["VAEDshipCounter-Viper"] + intValues["VAEDshipCounter-Viper_MkIV"]) == 1)
-                            {
-                                if (textValues["VAEDship-Viper-1"] != null)
-                                {
-                                    textValues["VAEDambiguousViper"] = textValues["VAEDship-Viper-1"];
-                                }
-                                else
-                                {
-                                    textValues["VAEDambiguousViper"] = textValues["VAEDship-Viper_MkIV-1"];
-                                }
-                                    
-                            }
-                            if ((intValues["VAEDshipCounter-CobraMkIII"] + intValues["VAEDshipCounter-CobraMkIV"]) == 1)
-                            {
-                                if (textValues["VAEDship-CobraMkIII-1"] != null)
-                                {
-                                    textValues["VAEDambiguousCobra"] = textValues["VAEDship-CobraMkIII-1"];
-                                }
-                                else
-                                {
-                                    textValues["VAEDambiguousCobra"] = textValues["VAEDship-CobraMkIV-1"];
-                                }
-                            }
-                            if ((intValues["VAEDshipCounter-DiamondBack"] + intValues["VAEDshipCounter-DiamondBackXL"]) == 1)
-                            {
-                                if (textValues["VAEDship-DiamondBack-1"] != null)
-                                {
-                                    textValues["VAEDambiguousDiamondBack"] = textValues["VAEDship-DiamondBack-1"];
-                                }
-                                else
-                                {
-                                    textValues["VAEDambiguousDiamondBack"] = textValues["VAEDship-DiamondBackXL-1"];
-                                }
-                            }
-                            if ((intValues["VAEDshipCounter-Asp"] + intValues["VAEDshipCounter-Asp_Scout"]) == 1)
-                            {
-                                if (textValues["VAEDship-Asp-1"] != null)
-                                {
-                                    textValues["VAEDambiguousAsp"] = textValues["VAEDship-Asp-1"];
-                                }
-                                else
-                                {
-                                    textValues["VAEDambiguousAsp"] = textValues["VAEDship-Asp_Scout-1"];
-                                }
-                            }
-                            if ((intValues["VAEDshipCounter-Eagle"] + intValues["VAEDshipCounter-Empire_Eagle"]) == 1)
-                            {
-                                if (textValues["VAEDship-Eagle-1"] != null)
-                                {
-                                    textValues["VAEDambiguousEagle"] = textValues["VAEDship-Eagle-1"];
-                                }
-                                else
-                                {
-                                    textValues["VAEDambiguousEagle"] = textValues["VAEDship-Empire_Eagle-1"];
-                                }
-                            }
-
-                            intValues["VAEDnumberOfShips"] = howManyShips;
-                            textValues["VAEDcmdr"] = cmdr;
-                            intValues["VAEDcredits"] = credits;
-                            intValues["VAEDloan"] = debt;
-                            booleanValues["VAEDcurrentlyDocked"] = currentlyDocked;
-                            textValues["VAEDcombatRank"] = combatRank;
-                            textValues["VAEDexploreRank"] = exploreRank;
-                            textValues["VAEDtradeRank"] = tradeRank;
-                            textValues["VAEDcqcRank"] = cqcRank;
-                            textValues["VAEDfederationRank"] = federationRank;
-                            textValues["VAEDempireRank"] = empireRank;
-                            textValues["VAEDcurrentShip"] = currentShip;
-                            intValues["VAEDcargoCapacity"] = cargoCapacity;
-                            intValues["VAEDquantityInCargo"] = quantityInCargo;
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.Write("ERROR: Unable to parse Companion API output " + ex.ToString());
-                            Debug.Write(htmlData);
-                            textValues["VAEDprofileStatus"] = "error";
-                        }
-
-                        textValues["VAEDeddbStarportId"] = null;
-                        textValues["VAEDcurrentStarport"] = null;
-                        textValues["VAEDeddbSystemId"] = null;
-                        textValues["VAEDcurrentSystem"] = null;
-
-                        if (currentlyDocked)
-                        {
-                            textValues["VAEDcurrentSystem"] = currentSystem;
-                            textValues["VAEDcurrentStarport"] = currentStarport;
-
-                            //Set Station Services
-                            booleanValues["VAEDstarportCommodities"] = false;
-                            booleanValues["VAEDstarportShipyard"] = false;
-                            booleanValues["VAEDstarportOutfitting"] = false;
-                            if (result["lastStarport"].ContainsKey("commodities"))
-                            {
-                                booleanValues["VAEDstarportCommodities"] = true;
-                            }
-                            if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"]["ships"].ContainsKey("shipyard_list"))
-                            {
-                                booleanValues["VAEDstarportShipyard"] = true;
-                            }
-                            if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"].ContainsKey("modules"))
-                            {
-                                booleanValues["VAEDstarportOutfitting"] = true;
-                            }
-                        }
-                        else
-                        {
-                            // If not docked, then we get the System information from the netLog file
-                            long currentPosition = (long)state["VAEDcurrentLogPosition"];
-                            Int32 elitePid = (Int32)state["VAEDelitePid"];
-
-                            Tuple<bool, string, string, long, Int32> tLogReturn = Elite.tailNetLog(state["VAEDlogPath"].ToString(), state["VAEDnetLogFile"].ToString(), currentPosition, elitePid);
-
-                            bool success = tLogReturn.Item1;
-                            currentSystem = tLogReturn.Item2.ToString();
-                            state["VAEDnetLogFile"] = tLogReturn.Item3.ToString();
-                            state["VAEDcurrentLogPosition"] = tLogReturn.Item4;
-                            state["VAEDelitePid"] = tLogReturn.Item5;
-
-                            if (success)
-                            {
-                                textValues["VAEDcurrentSystem"] = currentSystem;
-                            }
-                        }
-
-                        if (state.ContainsKey("VAEDeddbIndex"))
-                        {
-                            Dictionary<string, dynamic> tempEddb = (Dictionary<string, dynamic>)state["VAEDeddbIndex"];
-
-                            if (textValues["VAEDcurrentSystem"] != null && tempEddb.ContainsKey(textValues["VAEDcurrentSystem"]))
-                            {
-                                textValues["VAEDeddbSystemId"] = tempEddb[textValues["VAEDcurrentSystem"]]["id"].ToString();
-                                if (textValues["VAEDcurrentStarport"] != null && tempEddb[textValues["VAEDcurrentSystem"]]["stations"].ContainsKey(textValues["VAEDcurrentStarport"]))
-                                {
-                                    textValues["VAEDeddbStarportId"] = tempEddb[textValues["VAEDcurrentSystem"]]["stations"][textValues["VAEDcurrentStarport"]].ToString();
-                                }
-                            }
-                        }
-
-                        DateTime timestamp = DateTime.Now;
-                        state["VAEDcompanionTime"] = timestamp.ToString("yyyy-MM-dd") + "T" + timestamp.ToString("H:m:szzz");
-                        Debug.Write("----------------HTMLDATA FOLLOWS------------------------------");
-                        Debug.Write(htmlData);
-
-                        //Debug.Write("TEXT VALUES");
-                        //foreach (string key in textValues.Keys)
-                        //{
-                        //    if (textValues[key] != null)
-                        //    {
-                        //        Debug.Write(key + ":  " + textValues[key]);
-                        //    }
-
-                        //}
-
-                        //Debug.Write("INTEGER VALUES");
-                        //foreach (string key in intValues.Keys)
-                        //{
-                        //    if (intValues[key] != null)
-                        //    {
-                        //        Debug.Write(key + ":  " + intValues[key].ToString());
-                        //    }
-                        //}
-
-                        //Debug.Write("BOOLEAN VALUES");
-                        //foreach (string key in booleanValues.Keys)
-                        //{
-                        //    if (booleanValues[key] != null)
-                        //    {
-                        //        Debug.Write(key + ":  " + booleanValues[key].ToString());
-                        //    }
-                        //}
+                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                     }
                     else // Not logged in
                     {
