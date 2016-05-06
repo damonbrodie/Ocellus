@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
 using Microsoft.Win32;
 
 
@@ -143,7 +141,7 @@ class Elite
         }
     }
 
-
+ 
     public static string combatRankToString(int rank)
     {
         string[] rankings = new string[] { "Harmless", "Mostly Harmless", "Novice",

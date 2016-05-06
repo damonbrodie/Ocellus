@@ -147,7 +147,9 @@ class Coriolis
         public int priority { get; set; }
         [DataMemberAttribute (Order = 5)]
         public string group { get; set; }
-        [DataMemberAttribute (Order = 6)]
+        [DataMemberAttribute(IsRequired = false, Order = 6)]
+        public string name { get; set; }
+        [DataMemberAttribute (Order = 7)]
         public string mount { get; set; }
     }
 
@@ -361,7 +363,16 @@ class Coriolis
             { "hpt_slugshot_turret_small", new Hardpoint { @class=1, rating="E", group="Fragment Cannon", mount="Turret" } },
             { "hpt_slugshot_turret_medium", new Hardpoint { @class=2, rating="D", group="Fragment Cannon", mount="Turret" } },
             { "hpt_slugshot_turret_large", new Hardpoint { @class=3, rating="C", group="Fragment Cannon", mount="Turret" } },
-        }; // XXX Add Advanced Plasma Accelerator, Cytoscrambler Burst Laser, Imperial Hammer Rail Gun, Pacifier Frag-Cannon, Mining Lance Beam Laser, Enforcer Cannon
+            { "hpt_railgun_fixed_medium_burst", new Hardpoint { @class=2, rating="E", group="Imperial Hammer", mount="Fixed" } },
+            { "hpt_xxx", new Hardpoint { @class=3, rating="C", group="Fragment Cannon", mount="Fixed", name="Pacifier" } },
+            { "hpt_xxx", new Hardpoint { @class=1, rating="E", group="Beam Laser", mount="Fixed", name="Retributor" } },
+            { "hpt_xxx", new Hardpoint { @class=1, rating="F", group="Multi-cannon", mount="Fixed", name="Enforder" } },
+            { "hpt_xxx", new Hardpoint { @class=2, rating="C", group="Pulse Laser", mount="Fixed", name="Disruptor" } },
+            { "hpt_xxx", new Hardpoint { @class=2, rating="B", group="Missle Rack", mount="Fixed", name="Pack-Hound" } },
+            { "hpt_xxx", new Hardpoint { @class=1, rating="I", group="Mine Launcher", mount="Fixed", name="Shock Mine Launcher" } },
+            { "hpt_xxx", new Hardpoint { @class=1, rating="F", group="Burst Laser", mount="Fixed", name="Cytoscrambler" } },
+            { "hpt_xxx", new Hardpoint { @class=1, rating="D", group="Mining Laser", mount="Fixed", name="Mining Lance" } },
+        }; // XXX Add Advanced Plasma Accelerator, Cytoscrambler Burst Laser, Pacifier Frag-Cannon, Mining Lance Beam Laser, Enforcer Cannon
 
         Hardpoint newHardpoint = new Hardpoint();
         string currName = currModule["name"].ToLower();

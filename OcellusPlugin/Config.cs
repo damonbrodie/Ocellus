@@ -26,4 +26,8 @@ class Config
     {
         return System.IO.Path.Combine(Config.Path(), "cookies.txt");
     }
+    public static string DebugPath()
+    {
+        return System.IO.Path.Combine(Config.Path(), "debug.txt");
+    }
 }

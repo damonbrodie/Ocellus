@@ -67,6 +67,8 @@ namespace OcellusPlugin
             // Setup plugin storage directory - used for cookies and debug logs
             string appPath = Config.Path();
             string cookieFile = Config.CookiePath();
+            string debugFile = Config.DebugPath();
+            textValues["VAEDdebugPath"] = debugFile;
 
             // Determine Elite Dangerous directories
             string gamePath = Elite.getGamePath();
