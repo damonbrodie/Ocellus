@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Threading;
 
 // **************************************
 // *  Functions for doing EDDN updates  *
@@ -316,21 +317,39 @@ class Eddn
 
     public static void updateEddn(ref Dictionary<string, object> state)
     {
+        int eddnCooldown = Utilities.isCoolingDown(ref state, "VAEDeddnCooldown");
+        if (eddnCooldown > 0)
+        {
+            Debug.Write("EDDN update is cooling down: " + eddnCooldown.ToString() + " seconds remain.");
+            return;
+        }
         Tuple<string, string, string> tResponse = createEddnJson(ref state);
         if (tResponse.Item1 != null)
         {
-           Web.sendRequest(uploadURL, null, null, tResponse.Item1);
-           // Debug.Write(tResponse.Item1);
+            Debug.Write("About to submit Commodities to EDDN");
+            Web.sendRequest(uploadURL, null, null, tResponse.Item1);
+        }
+        else
+        {
+            Debug.Write("No Commodities");
         }
         if (tResponse.Item2 != null)
         {
+            Debug.Write("About to submit Outfitting to EDDN");
             Web.sendRequest(uploadURL, null, null, tResponse.Item2);
-            Debug.Write(tResponse.Item2);
+        }
+        else
+        {
+            Debug.Write("No Outfitting");
         }
         if (tResponse.Item3 != null)
         {
-           Web.sendRequest(uploadURL, null, null, tResponse.Item3);
-           // Debug.Write(tResponse.Item3);
+            Debug.Write("About to submit Shipyard to EDDN");
+            Web.sendRequest(uploadURL, null, null, tResponse.Item3);
+        }
+        else
+        {
+            Debug.Write("No Shipyard");
         }
     }
 

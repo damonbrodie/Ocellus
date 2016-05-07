@@ -277,7 +277,7 @@ class Web
         //request.Headers["Upgrade-Insecure-Requests"] = "1";
         //request.Headers["Accept-Language"] = "en-US,en;q=0.8";
         //request.Headers["Cache-Control"] = "max-age=0";
-        request.Timeout = 30000; // 30 seconds
+        request.Timeout = 10000; // 10 seconds
         if (referer != null)
         {
             request.Referer = referer;
@@ -325,6 +325,7 @@ class Web
         if (redirect != null)
         {
             redirect = redirect.Replace("\r", "").Replace("\n", "");
+            //  XXX Handle this gracefully
             redirect = "https://companion.orerve.net" + redirect;
 
             if (cookieString != null)

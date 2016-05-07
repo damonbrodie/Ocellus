@@ -324,7 +324,7 @@ class Coriolis
             { "hpt_minelauncher_fixed_small", new Hardpoint { @class=1, rating="I", group="Mine Launcher", mount="Fixed" } },
             { "hpt_minelauncher_fixed_medium", new Hardpoint { @class=2, rating="I", group="Mine Launcher", mount="Fixed" } },
             { "hpt_mininglaser_fixed_small", new Hardpoint { @class=1, rating="D", group="Mining Laser", mount="Fixed" } },
-            { "hpt_mininglaser_fixed_medium", new Hardpoint { @class=2, rating="D", group="Multi-cannon", mount="Fixed" } },
+            { "hpt_mininglaser_fixed_medium", new Hardpoint { @class=2, rating="D", group="Mining Laser", mount="Fixed" } },
             { "hpt_multicannon_fixed_small", new Hardpoint { @class=1, rating="F", group="Multi-cannon", mount="Fixed" } },
             { "hpt_multicannon_fixed_medium", new Hardpoint { @class=2, rating="E", group="Multi-cannon", mount="Fixed" } },
             { "hpt_multicannon_gimbal_small", new Hardpoint { @class=1, rating="G", group="Multi-cannon", mount="Gimballed" } },
@@ -364,14 +364,14 @@ class Coriolis
             { "hpt_slugshot_turret_medium", new Hardpoint { @class=2, rating="D", group="Fragment Cannon", mount="Turret" } },
             { "hpt_slugshot_turret_large", new Hardpoint { @class=3, rating="C", group="Fragment Cannon", mount="Turret" } },
             { "hpt_railgun_fixed_medium_burst", new Hardpoint { @class=2, rating="E", group="Imperial Hammer", mount="Fixed" } },
-            { "hpt_xxx", new Hardpoint { @class=3, rating="C", group="Fragment Cannon", mount="Fixed", name="Pacifier" } },
-            { "hpt_xxx", new Hardpoint { @class=1, rating="E", group="Beam Laser", mount="Fixed", name="Retributor" } },
-            { "hpt_xxx", new Hardpoint { @class=1, rating="F", group="Multi-cannon", mount="Fixed", name="Enforder" } },
-            { "hpt_xxx", new Hardpoint { @class=2, rating="C", group="Pulse Laser", mount="Fixed", name="Disruptor" } },
-            { "hpt_xxx", new Hardpoint { @class=2, rating="B", group="Missle Rack", mount="Fixed", name="Pack-Hound" } },
-            { "hpt_xxx", new Hardpoint { @class=1, rating="I", group="Mine Launcher", mount="Fixed", name="Shock Mine Launcher" } },
-            { "hpt_xxx", new Hardpoint { @class=1, rating="F", group="Burst Laser", mount="Fixed", name="Cytoscrambler" } },
-            { "hpt_xxx", new Hardpoint { @class=1, rating="D", group="Mining Laser", mount="Fixed", name="Mining Lance" } },
+            { "hpt_xxx1", new Hardpoint { @class=3, rating="C", group="Fragment Cannon", mount="Fixed", name="Pacifier" } },
+            { "hpt_xxx2", new Hardpoint { @class=1, rating="E", group="Beam Laser", mount="Fixed", name="Retributor" } },
+            { "hpt_xxx3", new Hardpoint { @class=1, rating="F", group="Multi-cannon", mount="Fixed", name="Enforder" } },
+            { "hpt_xxx4", new Hardpoint { @class=2, rating="C", group="Pulse Laser", mount="Fixed", name="Disruptor" } },
+            { "hpt_xxx5", new Hardpoint { @class=2, rating="B", group="Missle Rack", mount="Fixed", name="Pack-Hound" } },
+            { "hpt_xxx6", new Hardpoint { @class=1, rating="I", group="Mine Launcher", mount="Fixed", name="Shock Mine Launcher" } },
+            { "hpt_xxx7", new Hardpoint { @class=1, rating="F", group="Burst Laser", mount="Fixed", name="Cytoscrambler" } },
+            { "hpt_xxx8", new Hardpoint { @class=1, rating="D", group="Mining Laser", mount="Fixed", name="Mining Lance" } },
         }; // XXX Add Advanced Plasma Accelerator, Cytoscrambler Burst Laser, Pacifier Frag-Cannon, Mining Lance Beam Laser, Enforcer Cannon
 
         Hardpoint newHardpoint = new Hardpoint();
@@ -689,62 +689,70 @@ class Coriolis
             return null;
         }
 
-        Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
-        RootObject coriolis = new RootObject();
-
-        if (!companion.ContainsKey("ship") && !companion["ship"].ContainsKey("modules"))
+        try
         {
-            Debug.Write("Companion JSON missing ship information");
-            return null;
-        }
+            Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
+            RootObject coriolis = new RootObject();
 
-        int shipId = companion["commander"]["currentShipId"];
-        string currentShipId = shipId.ToString();
-        string currentShip = companion["ships"][currentShipId]["name"];
-
-        string coriolisShipName = mapShip(currentShip);
-
-        coriolis.name = coriolisShipName;
-        coriolis.ship = coriolisShipName;
-
-        // Cargo hatch isn't in the companion API
-        CargoHatch newCargoHatch = new CargoHatch();
-        newCargoHatch.enabled = true;
-        newCargoHatch.priority = 5;
-
-        coriolis.components.standard.cargoHatch = newCargoHatch;
-
-        foreach (KeyValuePair<string, dynamic> currModule in companion["ship"]["modules"])
-        {
-            string currMapping = ModuleMap(currModule.Key);
-            Dictionary<string, dynamic> mod = null;
-            switch (currMapping)
+            if (!companion.ContainsKey("ship") && !companion["ship"].ContainsKey("modules"))
             {
-                case "hardpoints":
-                    mod = currModule.Value["module"];
-                    addHardpoint(mod, ref coriolis);
-                    break;
-                case "utility":
-                    mod = currModule.Value["module"];
-                    addUtility(mod, ref coriolis);
-                    break;
-                case "internal":
-                    mod = currModule.Value["module"];
-                    addInternal(mod, ref coriolis);
-                    break;
-                case "standard":
-                    mod = currModule.Value["module"];
-                    addStandard(mod, ref coriolis);
-                    break;
+                Debug.Write("Companion JSON missing ship information");
+                return null;
             }
-        }
 
-        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObject));
-        MemoryStream stream = new MemoryStream();
-        serializer.WriteObject(stream, coriolis);
-        stream.Position = 0;
-        StreamReader sr = new StreamReader(stream);
-        string json = sr.ReadToEnd();
-        return json;
+            int shipId = companion["commander"]["currentShipId"];
+            string currentShipId = shipId.ToString();
+            string currentShip = companion["ships"][currentShipId]["name"];
+
+            string coriolisShipName = mapShip(currentShip);
+
+            coriolis.name = coriolisShipName;
+            coriolis.ship = coriolisShipName;
+
+            // Cargo hatch isn't in the companion API
+            CargoHatch newCargoHatch = new CargoHatch();
+            newCargoHatch.enabled = true;
+            newCargoHatch.priority = 5;
+
+            coriolis.components.standard.cargoHatch = newCargoHatch;
+
+            foreach (KeyValuePair<string, dynamic> currModule in companion["ship"]["modules"])
+            {
+                string currMapping = ModuleMap(currModule.Key);
+                Dictionary<string, dynamic> mod = null;
+                switch (currMapping)
+                {
+                    case "hardpoints":
+                        mod = currModule.Value["module"];
+                        addHardpoint(mod, ref coriolis);
+                        break;
+                    case "utility":
+                        mod = currModule.Value["module"];
+                        addUtility(mod, ref coriolis);
+                        break;
+                    case "internal":
+                        mod = currModule.Value["module"];
+                        addInternal(mod, ref coriolis);
+                        break;
+                    case "standard":
+                        mod = currModule.Value["module"];
+                        addStandard(mod, ref coriolis);
+                        break;
+                }
+            }
+
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObject));
+            MemoryStream stream = new MemoryStream();
+            serializer.WriteObject(stream, coriolis);
+            stream.Position = 0;
+            StreamReader sr = new StreamReader(stream);
+            string json = sr.ReadToEnd();
+            return json;
+        }
+        catch (Exception ex)
+        {
+            Debug.Write(ex.ToString());
+        }
+        return null; 
     }
 }
