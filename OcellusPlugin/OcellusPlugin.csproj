@@ -67,8 +67,11 @@
     <Compile Include="Coriolis.cs" />
     <Compile Include="Eddb.cs" />
     <Compile Include="Eddn.cs" />
+    <Compile Include="EliteBinds.cs" />
+    <Compile Include="EliteKeyMap.cs" />
     <Compile Include="FileVars.cs" />
     <Compile Include="EliteGrammar.cs" />
+    <Compile Include="KeyMouse.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
