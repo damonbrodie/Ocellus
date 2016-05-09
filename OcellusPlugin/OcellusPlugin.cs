@@ -95,6 +95,9 @@ namespace OcellusPlugin
                 state.Add("VAEDcookieContainer", cookieJar);
                 state["VAEDloggedIn"] = "ok";
             }
+
+            EliteBinds eliteBinds = new EliteBinds();
+            state.Add("VAEDeliteBinds", eliteBinds);
         }
 
         public static void VA_Exit1(ref Dictionary<string, object> state)
@@ -142,7 +145,9 @@ namespace OcellusPlugin
                     textValues["VAEDdictateSystem"] = system;
                     break;
                 case "send key":
-                    DirectInput.sendKey(0x14);
+                    EliteBinds eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
+                    List<ushort> scanCodes = eliteBinds.GetCodes(textValues["VAEDsendKey"]);
+                    KeyMouse.KeyPress(scanCodes);
                     break;
                 case "clear debug":
                     Debug.Clear();
