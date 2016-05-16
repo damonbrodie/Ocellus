@@ -14,9 +14,8 @@ class Companion
     private const string confirmURL = "https://companion.orerve.net/user/confirm";
     private const string profileURL = "https://companion.orerve.net/profile";
 
-    public static Tuple<CookieContainer, string> loginToAPI()
+    public static Tuple<CookieContainer, string> loginToAPI(CookieContainer cookieContainer)
     {
-        CookieContainer cookieContainer = new CookieContainer();
         string email = PluginRegistry.getStringValue("email");
         string password = PluginRegistry.getStringValue("password");
         if (email == null || email == string.Empty || password == null || password == string.Empty)
@@ -37,6 +36,7 @@ class Companion
             // XXX handle returned errors
             cookieContainer = tLoginResponse.Item3;
             string postPageHTML = tLoginResponse.Item4;
+            Debug.Write("LOGIN OUTPUT:  " + postPageHTML);
             if (postPageHTML.Contains("Verification"))
             {
                 returnString = "verification";
@@ -53,7 +53,8 @@ class Companion
         }
         else
         {
-            returnString = "error";
+            Debug.Write("Got empty response");
+            returnString = "ok";
         }
         return Tuple.Create(cookieContainer, returnString);
     }

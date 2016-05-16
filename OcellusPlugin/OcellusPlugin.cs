@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 using System.Speech.Recognition;
 
 
@@ -59,7 +60,7 @@ namespace OcellusPlugin
                 SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
                 recognitionEngine.SetInputToDefaultAudioDevice();
                 Grammar grammar = new Grammar(Path.Combine(Config.Path(), "SystemsGrammar.xml"));
-                recognitionEngine.LoadGrammar(grammar);
+                Task.Run(() => recognitionEngine.LoadGrammar(grammar));
                 state.Add("VAEDrecognitionEngine", recognitionEngine);
             }
 
@@ -86,14 +87,25 @@ namespace OcellusPlugin
 
             CookieContainer cookieJar = new CookieContainer();
 
-            state.Add("VAEDloggedIn", "no");
-
             if (File.Exists(cookieFile))
             {
                 // If we have cookies then we are likely already logged in
                 cookieJar = Web.ReadCookiesFromDisk(cookieFile);
-                state.Add("VAEDcookieContainer", cookieJar);
-                state["VAEDloggedIn"] = "ok";
+                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(cookieJar);
+                if (tAuthentication.Item2 == "ok")
+                {
+                    cookieJar = tAuthentication.Item1;
+                    state.Add("VAEDcookieContainer", cookieJar);
+                    state["VAEDloggedIn"] = "ok";
+                }
+                else
+                {
+                }
+            }
+            else
+            {
+                
+                state.Add("VAEDloggedIn", "no");
             }
 
             EliteBinds eliteBinds = new EliteBinds();

@@ -52,7 +52,7 @@ namespace Credentials
 
                 CookieContainer cookieContainer = new CookieContainer();
 
-                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI();
+                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(cookieContainer);
 
                 this.Cookie = tAuthentication.Item1;
                 string loginResponse = tAuthentication.Item2;
