@@ -40,9 +40,9 @@ class Upgrade
         if (upgradeCooldown > 0)
         {
             Debug.Write("Ocellus version check is cooling down: " + upgradeCooldown.ToString() + " seconds remain.");
-            if (state.ContainsKey("VAEDneedUpgrade"))
+            if (state.ContainsKey("VAEDupgradeAvailable"))
             {
-                return (bool)state["VAEDneedUpgrade"];
+                return (bool)state["VAEDupgradeAvailable"];
             }
             return false;
             
@@ -52,10 +52,8 @@ class Upgrade
         double myVer = double.Parse(OcellusPlugin.OcellusPlugin.pluginVersion);
         if (myVer < serverVer)
         {
-            state["VAEDneedUpgrade"] = true;
             return true;
         }
-        state["VAEDneedUpgrade"] = false;
         return false;
     }
 

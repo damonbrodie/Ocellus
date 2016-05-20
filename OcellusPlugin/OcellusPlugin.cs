@@ -128,11 +128,13 @@ namespace OcellusPlugin
                     case "check upgrade":
                         if (Upgrade.needUpgrade(ref state))
                         {
-                            booleanValues["VAEDneedUpgrade"] = true;
+                            booleanValues["VAEDupgradeAvailable"] = true;
+                            state["VAEDupgradeAvailable"] = true;
                         }
                         else
                         {
-                            booleanValues["VAEDneedUpgrade"] = false;
+                            booleanValues["VAEDupgradeAvailable"] = false;
+                            state["VAEDupgradeAvailable"] = false;
                         }
                         break;
                     case "distance from here":
@@ -176,7 +178,7 @@ namespace OcellusPlugin
                         string[] parts = textValues["VAEDsendKey"].Split(new char[] { ':' }, 2);
 
                         List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
-                        booleanValues["VAEDsendKeyError"] = false;
+                        booleanValues["VAEDsendKeyError"] = false; 
                         switch (parts[0])
                         {
                             case "KEYPRESS":
