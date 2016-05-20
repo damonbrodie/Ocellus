@@ -73,14 +73,49 @@ class Atlas
 
     public static double calcDistance(ref Dictionary<string, dynamic> atlas, string fromSystem, string toSystem)
     {
-        double fromX = (double)atlas[fromSystem]["x"];
-        double fromY = (double)atlas[fromSystem]["y"];
-        double fromZ = (double)atlas[fromSystem]["z"];
-        double toX = (double)atlas[toSystem]["x"];
-        double toY = (double)atlas[toSystem]["y"];
-        double toZ = (double)atlas[toSystem]["z"];
+        Debug.Write("calcDistance from: " + fromSystem);
+        Debug.Write("calcDistance to: " + toSystem);
+        double fromX;
+        double fromY;
+        double fromZ;
 
-        double distance = Math.Sqrt(Math.Pow((fromX + toX), 2) + Math.Pow((fromY + toY), 2) + Math.Pow((fromZ + toZ), 2));
+        double toX;
+        double toY;
+        double toZ;
+        if (fromSystem == toSystem)
+        {
+            return 0;
+        }
+        if (atlas.ContainsKey(fromSystem))
+        {
+            fromX = (double)atlas[fromSystem]["x"];
+            fromY = (double)atlas[fromSystem]["y"];
+            fromZ = (double)atlas[fromSystem]["z"];
+            Debug.Write("from X: " + atlas[fromSystem]["x"].ToString());
+            Debug.Write("from y: " + atlas[fromSystem]["y"].ToString());
+            Debug.Write("from z: " + atlas[fromSystem]["z"].ToString());
+        }
+        else
+        {
+            Debug.Write("Error:  System " + fromSystem + " is not in the EDDN database");
+            return -1;
+        }
+
+        if (atlas.ContainsKey(fromSystem))
+        {
+            toX = (double)atlas[toSystem]["x"];
+            toY = (double)atlas[toSystem]["y"];
+            toZ = (double)atlas[toSystem]["z"];
+            Debug.Write("to X: " + atlas[toSystem]["x"].ToString());
+            Debug.Write("to y: " + atlas[toSystem]["y"].ToString());
+            Debug.Write("to z: " + atlas[toSystem]["z"].ToString());
+        }
+        else
+        {
+            Debug.Write("Error:  System " + toSystem + " is not in the EDDN database");
+            return -1;
+        }
+        double distance = Math.Sqrt(Math.Pow((fromX - toX), 2) + Math.Pow((fromY - toY), 2) + Math.Pow((fromZ - toZ), 2));
 
         return distance;
     }

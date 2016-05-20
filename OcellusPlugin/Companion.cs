@@ -91,7 +91,7 @@ class Companion
         return Tuple.Create(tRespon.Item3, tRespon.Item4);
     }
 
-    public static void updateProfile(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues)
+    public static bool updateProfile(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues)
     {
 
 
@@ -99,7 +99,7 @@ class Companion
         if (profileCooldown > 0)
         {
             Debug.Write("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
-            return;
+            return true;
         }
 
         textValues["VAEDprofileStatus"] = "ok";
@@ -270,6 +270,7 @@ class Companion
             Debug.Write("ERROR: Unable to parse Companion API output " + ex.ToString());
             Debug.Write(htmlData);
             textValues["VAEDprofileStatus"] = "error";
+            return false;
         }
 
         textValues["VAEDeddbStarportId"] = null;
@@ -280,7 +281,6 @@ class Companion
         {
             textValues["VAEDcurrentSystem"] = result["lastSystem"]["name"];
         }
-
 
         if (currentlyDocked)
         {
@@ -303,7 +303,6 @@ class Companion
                 booleanValues["VAEDstarportOutfitting"] = true;
             }
         }
-
 
         if (state.ContainsKey("VAEDeddbIndex"))
         {
@@ -351,5 +350,6 @@ class Companion
         //        Debug.Write(key + ":  " + booleanValues[key].ToString());
         //    }
         //}
+        return true;
     }
 }

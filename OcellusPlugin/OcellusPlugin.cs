@@ -120,121 +120,161 @@ namespace OcellusPlugin
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-            Debug.Write("COMMAND:  " + context);
-            switch (context)
+            try
             {
-                case "check upgrade":
-                    if (Upgrade.needUpgrade())
-                    {
-                        booleanValues["VAEDneedUpgrade"] = true;
-                    }
-                    else
-                    {
-                        booleanValues["VAEDneedUpgrade"] = false;
-                    }
-                    break;
-                case "distance from here":
-                    decimalValues["VAEDdecimalDistance"] = null;
-                    decimalValues["VAEDintDistance"] = null;
-                    if (state.ContainsKey("VAEDcompanionDict") && textValues.ContainsKey("VAEDtargetSystem"))
-                    {
-                        Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
-                        string currentSystem = "";
-                        if (companion.ContainsKey("lastSystem") && companion["lastSystem"].ContainsKey("name"))
+                Debug.Write("COMMAND:  " + context);
+                switch (context)
+                {
+                    case "check upgrade":
+                        if (Upgrade.needUpgrade())
                         {
-                            currentSystem = companion["lastSystem"]["name"];
+                            booleanValues["VAEDneedUpgrade"] = true;
                         }
-                        Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
+                        else
+                        {
+                            booleanValues["VAEDneedUpgrade"] = false;
+                        }
+                        break;
+                    case "distance from here":
+                        bool worked = Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
+                        decimalValues["VAEDdecimalDistance"] = null;
+                        decimalValues["VAEDintDistance"] = null;
+                        if (worked)
+                        {
+                            Debug.Write("ran the update profile");
+                            if (state.ContainsKey("VAEDcompanionDict") && textValues.ContainsKey("VAEDtargetSystem"))
+                            {
+                                Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
+                                string currentSystem = "";
+                                if (companion.ContainsKey("lastSystem") && companion["lastSystem"].ContainsKey("name"))
+                                {
+                                    currentSystem = companion["lastSystem"]["name"];
+                                    Debug.Write("got from system");
+                                }
+                                else
+                                {
+                                    booleanValues["VAEDerror"] = true;
+                                    break;
+                                }
+                                Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
 
-                        double distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
-                        decimalValues["VAEDdecimalDistance"] = (decimal)distance;
-                        intValues["VAEDintDistance"] = (int)(distance + .5);
+                                double distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
+                                Debug.Write("Got Here");
 
-                    }
-                    break;
-                case "dictate system":
-                    string system = dictateSystem(ref state);
-                    textValues["VAEDdictateSystem"] = system;
-                    break;
-                case "send key":
-                    EliteBinds eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
-                    List<ushort> scanCodes = eliteBinds.GetCodes(textValues["VAEDsendKey"]);
-                    KeyMouse.KeyPress(scanCodes);
-                    break;
-                case "clear debug":
-                    Debug.Clear();
-                    break;
-                case "get debug":
-                    string tempDebug = Debug.Path();
-                    textValues["VAEDdebugFile"] = tempDebug;
-                    break;
-                case "coriolis":
-                    string json = Coriolis.createCoriolisJson(ref state);
-                    Clipboard.SetText(json);
-                    Debug.Write("------------------ Coriolis JSON Follows ---------------------");
-                    Debug.Write(json);
-                    break;
-                case "edit web variables":
-                    var webVarsForm = new WebVars.EditWebVars();
-                    webVarsForm.ShowDialog();
-                    break;
-                case "update web vars":
-                    //RequestWebVars.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
-                    break;
-                case "update file vars":
-                    FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
-                    break;
-                case "clipboard":
-                    if (Clipboard.ContainsText(TextDataFormat.Text))
-                    {
-                        textValues.Add("VAEDclipboard", Clipboard.GetText());
-                    }
-                    break;
-                case "set credentials":
-                    var credentialsForm = new Credentials.Login();
-                    credentialsForm.ShowDialog();
-                    CookieContainer loginCookies = credentialsForm.Cookie;
-                    state["VAEDcookieContainer"] = loginCookies;
-                    string loginResponse = credentialsForm.LoginResponse;
-                    Debug.Write("LoginResponse: " + loginResponse);
-                    textValues["VAEDloggedIn"] = loginResponse;
-                    break;
-                case "verification":
-                    CookieContainer verifyCookies = new CookieContainer();
-                    if (state.ContainsKey("VAEDcookieContainer"))
-                    {
-                        verifyCookies = (CookieContainer)state["VAEDcookieContainer"];
-                    }
-                    var verificationForm = new VerificationCode.Validate();
-                    verificationForm.Cookie = verifyCookies;
-                    verificationForm.ShowDialog();
-                    verifyCookies = verificationForm.Cookie;
-                    string verifyResponse = verificationForm.VerifyResponse;
-                    state["VAEDloggedIn"] = verifyResponse;
-                    state["VAEDcookieContainer"] = verifyCookies;
-                    textValues["VAEDloggedIn"] = verifyResponse;
-                    if (verifyResponse == "ok")
-                    {
-                        Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
-                    }
-                    break;
-                case "update eddn":
-                    Eddn.updateEddn(ref state);
-                    break;
-                case "profile":
-                    if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
-                    {
-                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
-                    }
-                    else // Not logged in
-                    {
-                        textValues["VAEDprofileStatus"] = "credentials";
-                    }
-                    break;
+                                decimalValues["VAEDdecimalDistance"] = (decimal)distance;
+                                intValues["VAEDintDistance"] = (int)(distance + .5);
+                                booleanValues["VAEDerror"] = false;
+                                break;
+                            }
+                        }
+                        Debug.Write("boo hoo");
+                        booleanValues["VAEDerror"] = true;
+                        break;
+                    case "dictate system":
+                        string system = dictateSystem(ref state);
+                        textValues["VAEDdictateSystem"] = system;
+                        break;
+                    case "send key":
+                        EliteBinds eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
+                        string[] parts = textValues["VAEDsendKey"].Split(new char[] { ':' }, 2);
 
-                default:
-                    Debug.Write("ERROR: unknown command");
-                    break;
+                        List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
+                        booleanValues["VAEDsendKeyError"] = false;
+                        switch (parts[0])
+                        {
+                            case "KEYPRESS":
+                                KeyMouse.KeyPress(scanCodes);
+                                break;
+                            case "KEYUP":
+                                KeyMouse.KeyUp(scanCodes);
+                                break;
+                            case "KEYDOWN":
+                                KeyMouse.KeyDown(scanCodes);
+                                break;
+                            default:
+                                booleanValues["VAEDsendKeyError"] = true;
+                                break;
+                        }
+                        break;
+                    case "clear debug":
+                        Debug.Clear();
+                        break;
+                    case "get debug":
+                        string tempDebug = Debug.Path();
+                        textValues["VAEDdebugFile"] = tempDebug;
+                        break;
+                    case "export for coriolis":
+                        string json = Coriolis.createCoriolisJson(ref state);
+                        Clipboard.SetText(json);
+                        Debug.Write("------------------ Coriolis JSON Follows ---------------------");
+                        Debug.Write(json);
+                        break;
+                    case "edit web variables":
+                        var webVarsForm = new WebVars.EditWebVars();
+                        webVarsForm.ShowDialog();
+                        break;
+                    case "update web vars":
+                        GetWebVars.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
+                        break;
+                    case "update file vars":
+                        FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
+                        break;
+                    case "clipboard":
+                        if (Clipboard.ContainsText(TextDataFormat.Text))
+                        {
+                            textValues.Add("VAEDclipboard", Clipboard.GetText());
+                        }
+                        break;
+                    case "set credentials":
+                        var credentialsForm = new Credentials.Login();
+                        credentialsForm.ShowDialog();
+                        CookieContainer loginCookies = credentialsForm.Cookie;
+                        state["VAEDcookieContainer"] = loginCookies;
+                        string loginResponse = credentialsForm.LoginResponse;
+                        Debug.Write("LoginResponse: " + loginResponse);
+                        textValues["VAEDloggedIn"] = loginResponse;
+                        break;
+                    case "verification":
+                        CookieContainer verifyCookies = new CookieContainer();
+                        if (state.ContainsKey("VAEDcookieContainer"))
+                        {
+                            verifyCookies = (CookieContainer)state["VAEDcookieContainer"];
+                        }
+                        var verificationForm = new VerificationCode.Validate();
+                        verificationForm.Cookie = verifyCookies;
+                        verificationForm.ShowDialog();
+                        verifyCookies = verificationForm.Cookie;
+                        string verifyResponse = verificationForm.VerifyResponse;
+                        state["VAEDloggedIn"] = verifyResponse;
+                        state["VAEDcookieContainer"] = verifyCookies;
+                        textValues["VAEDloggedIn"] = verifyResponse;
+                        if (verifyResponse == "ok")
+                        {
+                            Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
+                        }
+                        break;
+                    case "update eddn":
+                        Eddn.updateEddn(ref state);
+                        break;
+                    case "profile":
+                        if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
+                        {
+                            Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
+                        }
+                        else // Not logged in
+                        {
+                            textValues["VAEDprofileStatus"] = "credentials";
+                        }
+                        break;
+
+                    default:
+                        Debug.Write("ERROR: unknown command");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.ToString());
             }          
         }
     }

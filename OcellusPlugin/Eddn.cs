@@ -324,14 +324,14 @@ class Eddn
             return;
         }
         Tuple<string, string, string> tResponse = createEddnJson(ref state);
-        if (tResponse.Item1 != null)
+        if (tResponse.Item3 != null)
         {
-            Debug.Write("About to submit Commodities to EDDN");
-            Web.sendRequest(uploadURL, null, null, tResponse.Item1);
+            Debug.Write("About to submit Shipyard to EDDN");
+            Web.sendRequest(uploadURL, null, null, tResponse.Item3);
         }
         else
         {
-            Debug.Write("No Commodities");
+            Debug.Write("No Shipyard");
         }
         if (tResponse.Item2 != null)
         {
@@ -342,14 +342,14 @@ class Eddn
         {
             Debug.Write("No Outfitting");
         }
-        if (tResponse.Item3 != null)
+        if (tResponse.Item1 != null)
         {
-            Debug.Write("About to submit Shipyard to EDDN");
-            Web.sendRequest(uploadURL, null, null, tResponse.Item3);
+            Debug.Write("About to submit Commodities to EDDN");
+            Web.sendRequest(uploadURL, null, null, tResponse.Item1);
         }
         else
         {
-            Debug.Write("No Shipyard");
+            Debug.Write("No Commodities");
         }
     }
 
