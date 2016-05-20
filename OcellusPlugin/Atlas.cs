@@ -91,9 +91,6 @@ class Atlas
             fromX = (double)atlas[fromSystem]["x"];
             fromY = (double)atlas[fromSystem]["y"];
             fromZ = (double)atlas[fromSystem]["z"];
-            Debug.Write("from X: " + atlas[fromSystem]["x"].ToString());
-            Debug.Write("from y: " + atlas[fromSystem]["y"].ToString());
-            Debug.Write("from z: " + atlas[fromSystem]["z"].ToString());
         }
         else
         {
@@ -106,9 +103,6 @@ class Atlas
             toX = (double)atlas[toSystem]["x"];
             toY = (double)atlas[toSystem]["y"];
             toZ = (double)atlas[toSystem]["z"];
-            Debug.Write("to X: " + atlas[toSystem]["x"].ToString());
-            Debug.Write("to y: " + atlas[toSystem]["y"].ToString());
-            Debug.Write("to z: " + atlas[toSystem]["z"].ToString());
         }
         else
         {

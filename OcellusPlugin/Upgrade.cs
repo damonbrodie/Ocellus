@@ -34,15 +34,28 @@ class Upgrade
         return Tuple.Create<double, string, string>(-1.0, null, null);
     }
 
-    public static bool needUpgrade()
+    public static bool needUpgrade(ref Dictionary<string, object> state)
     {
+        int upgradeCooldown = Utilities.isCoolingDown(ref state, "VAEDupgradeCooldown", 60);
+        if (upgradeCooldown > 0)
+        {
+            Debug.Write("Ocellus version check is cooling down: " + upgradeCooldown.ToString() + " seconds remain.");
+            if (state.ContainsKey("VAEDneedUpgrade"))
+            {
+                return (bool)state["VAEDneedUpgrade"];
+            }
+            return false;
+            
+        }
         Tuple<double, string, string> tResponse = checkServerVersion();
         double serverVer = tResponse.Item1;
         double myVer = double.Parse(OcellusPlugin.OcellusPlugin.pluginVersion);
         if (myVer < serverVer)
         {
+            state["VAEDneedUpgrade"] = true;
             return true;
         }
+        state["VAEDneedUpgrade"] = false;
         return false;
     }
 

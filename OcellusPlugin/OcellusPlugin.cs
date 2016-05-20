@@ -126,7 +126,7 @@ namespace OcellusPlugin
                 switch (context)
                 {
                     case "check upgrade":
-                        if (Upgrade.needUpgrade())
+                        if (Upgrade.needUpgrade(ref state))
                         {
                             booleanValues["VAEDneedUpgrade"] = true;
                         }
@@ -141,7 +141,6 @@ namespace OcellusPlugin
                         decimalValues["VAEDintDistance"] = null;
                         if (worked)
                         {
-                            Debug.Write("ran the update profile");
                             if (state.ContainsKey("VAEDcompanionDict") && textValues.ContainsKey("VAEDtargetSystem"))
                             {
                                 Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
@@ -149,17 +148,16 @@ namespace OcellusPlugin
                                 if (companion.ContainsKey("lastSystem") && companion["lastSystem"].ContainsKey("name"))
                                 {
                                     currentSystem = companion["lastSystem"]["name"];
-                                    Debug.Write("got from system");
                                 }
                                 else
                                 {
+                                    Debug.Write("Error:  Could not determine current location for command 'distance from here'");
                                     booleanValues["VAEDerror"] = true;
                                     break;
                                 }
                                 Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
 
                                 double distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
-                                Debug.Write("Got Here");
 
                                 decimalValues["VAEDdecimalDistance"] = (decimal)distance;
                                 intValues["VAEDintDistance"] = (int)(distance + .5);
@@ -167,7 +165,6 @@ namespace OcellusPlugin
                                 break;
                             }
                         }
-                        Debug.Write("boo hoo");
                         booleanValues["VAEDerror"] = true;
                         break;
                     case "dictate system":
