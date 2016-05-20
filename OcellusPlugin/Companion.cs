@@ -84,7 +84,7 @@ class Companion
         }
     }
 
-    public static Tuple<CookieContainer, string> getProfile(CookieContainer cookieContainer)
+    private static Tuple<CookieContainer, string> getProfile(CookieContainer cookieContainer)
     {
         Tuple<bool, string, CookieContainer, string> tRespon = Web.sendRequest(profileURL, cookieContainer);
         // XXX handle error messages

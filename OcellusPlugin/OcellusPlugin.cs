@@ -123,7 +123,7 @@ namespace OcellusPlugin
             try
             {
                 Debug.Write("COMMAND:  " + context);
-                switch (context)
+                switch (context.ToLower())
                 {
                     case "check upgrade":
                         if (Upgrade.needUpgrade(ref state))
@@ -201,6 +201,7 @@ namespace OcellusPlugin
                         textValues["VAEDdebugFile"] = tempDebug;
                         break;
                     case "export for coriolis":
+                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         string json = Coriolis.createCoriolisJson(ref state);
                         Clipboard.SetText(json);
                         Debug.Write("------------------ Coriolis JSON Follows ---------------------");
