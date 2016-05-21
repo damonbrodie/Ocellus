@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
+using System.Speech.Recognition;
 
 
 class EliteGrammar
@@ -35,6 +37,18 @@ class EliteGrammar
             return false;
         }
         return true;
+    }
+    public static string dictateSystem(SpeechRecognitionEngine recognitionEngine)
+    {
+        recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
+        recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1);
+        RecognitionResult result = recognitionEngine.Recognize(TimeSpan.FromSeconds(5));
+        
+        if (result != null)
+        {
+            return result.Semantics.Value.ToString();
+        }
+        return null;
     }
 }
 

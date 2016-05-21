@@ -18,24 +18,6 @@ namespace OcellusPlugin
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
         public const string pluginVersion = "0.3";
 
-        private static string dictateSystem(ref Dictionary<string, object> state)
-        {
-            if (! state.ContainsKey("VAEDrecognitionEngine"))
-            {
-                Debug.Write("Error:  Speech engine not initialized");
-                return null;
-            }
-
-            SpeechRecognitionEngine recognitionEngine = (SpeechRecognitionEngine)state["VAEDrecognitionEngine"];
-            recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
-            recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1);
-            RecognitionResult result = recognitionEngine.Recognize(TimeSpan.FromSeconds(5));
-            if (result != null)
-            {
-                return result.Text;
-            }
-            return null; 
-        }
         public static string VA_DisplayName()
         {
             return pluginName + " v. " + pluginVersion;  
@@ -170,8 +152,18 @@ namespace OcellusPlugin
                         booleanValues["VAEDerror"] = true;
                         break;
                     case "dictate system":
-                        string system = dictateSystem(ref state);
-                        textValues["VAEDdictateSystem"] = system;
+                        if (state.ContainsKey("VAEDrecognitionEngine"))
+                        {
+                            SpeechRecognitionEngine recognitionEngine = (SpeechRecognitionEngine)state["VAEDrecognitionEngine"];
+
+                            string system = EliteGrammar.dictateSystem(recognitionEngine);
+                            textValues["VAEDdictateSystem"] = system;
+                        }
+                        else
+                        {
+                            Debug.Write("Error:  Speech Engine not yet Initialized.  (Possibly still loading)");
+                        }
+
                         break;
                     case "send key":
                         EliteBinds eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
