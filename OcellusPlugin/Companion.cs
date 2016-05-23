@@ -156,6 +156,36 @@ class Companion
                 intValues["VAEDshipCounter-" + ship] = 0;
             }
 
+            textValues["VAEDcurrentSystem"] = null;
+            if (result.ContainsKey("lastSystem") && result["lastSystem"].ContainsKey("name"))
+            {
+                textValues["VAEDcurrentSystem"] = result["lastSystem"]["name"];
+            }
+
+            Dictionary<string, dynamic> theShips = new Dictionary<string, dynamic>();
+            foreach (string key in keys)
+            {
+                string tempShip = result["ships"][key]["name"];
+
+                string tempSystem = null;
+                if (result["ships"][key].ContainsKey("starsystem"))
+                {
+                    tempSystem = result["ships"][key]["starsystem"]["name"];
+                    if (key == currentShipId)
+                    {
+                        currentSystem = tempSystem;
+                    }
+                }
+                int currDistance = -1;
+                if (textValues.ContainsKey("VAEDcurrentSystem") && textValues["VAEDcurrentSystem"] != null && state.ContainsKey("VAEDatlasIndex"))
+                {
+                    Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
+                    currDistance = Atlas.calcDistance(ref tempAtlas, textValues["VAEDcurrentSystem"], currentSystem);
+                }
+                //theShips.Add(
+                
+            }
+
             foreach (string key in keys)
             {
                 string tempShip = result["ships"][key]["name"];
@@ -276,11 +306,6 @@ class Companion
         textValues["VAEDeddbStarportId"] = null;
         textValues["VAEDcurrentStarport"] = null;
         textValues["VAEDeddbSystemId"] = null;
-
-        if (result.ContainsKey("lastSystem") && result["lastSystem"].ContainsKey("name"))
-        {
-            textValues["VAEDcurrentSystem"] = result["lastSystem"]["name"];
-        }
 
         if (currentlyDocked)
         {

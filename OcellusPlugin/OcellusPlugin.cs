@@ -17,6 +17,7 @@ namespace OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
         public const string pluginVersion = "0.3";
+        public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
 
         public static string VA_DisplayName()
         {
@@ -25,7 +26,7 @@ namespace OcellusPlugin
 
         public static string VA_DisplayInfo()
         {
-            return "VoiceAttack Plugin\r\n\r\nFor use with Elite: Dangerous\r\n\r";  
+            return "Ocellus VoiceAttack Plugin\r\n\r\nFor use with Elite: Dangerous\r\n\r";  
         } 
 
         public static Guid VA_Id()
@@ -119,6 +120,12 @@ namespace OcellusPlugin
                             state["VAEDupgradeAvailable"] = false;
                         }
                         break;
+                    case "voiceattack ontop":
+                        User32.AlwaysOnTop("VoiceAttack");
+                        break;
+                    case "voiceattack normal":
+                        User32.RemoveAlwaysOnTop();
+                        break;
                     case "distance from here":
                         bool worked = Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         decimalValues["VAEDdecimalDistance"] = null;
@@ -141,10 +148,9 @@ namespace OcellusPlugin
                                 }
                                 Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
 
-                                double distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
+                                int distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
 
-                                decimalValues["VAEDdecimalDistance"] = (decimal)distance;
-                                intValues["VAEDintDistance"] = (int)(distance + .5);
+                                intValues["VAEDintDistance"] = distance;
                                 booleanValues["VAEDerror"] = false;
                                 break;
                             }
@@ -174,12 +180,15 @@ namespace OcellusPlugin
                         switch (parts[0])
                         {
                             case "KEYPRESS":
+                                User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyPress(scanCodes);
                                 break;
                             case "KEYUP":
+                                User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyUp(scanCodes);
                                 break;
                             case "KEYDOWN":
+                                User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyDown(scanCodes);
                                 break;
                             default:
@@ -205,10 +214,10 @@ namespace OcellusPlugin
                         var webVarsForm = new WebVars.EditWebVars();
                         webVarsForm.ShowDialog();
                         break;
-                    case "update web vars":
+                    case "update web variables":
                         GetWebVars.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
                         break;
-                    case "update file vars":
+                    case "update file variables":
                         FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
                         break;
                     case "clipboard":

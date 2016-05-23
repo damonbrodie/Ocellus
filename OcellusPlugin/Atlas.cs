@@ -71,10 +71,8 @@ class Atlas
 
     }
 
-    public static double calcDistance(ref Dictionary<string, dynamic> atlas, string fromSystem, string toSystem)
+    public static int calcDistance(ref Dictionary<string, dynamic> atlas, string fromSystem, string toSystem)
     {
-        Debug.Write("calcDistance from: " + fromSystem);
-        Debug.Write("calcDistance to: " + toSystem);
         double fromX;
         double fromY;
         double fromZ;
@@ -109,7 +107,7 @@ class Atlas
             Debug.Write("Error:  System " + toSystem + " is not in the EDDN database");
             return -1;
         }
-        double distance = Math.Sqrt(Math.Pow((fromX - toX), 2) + Math.Pow((fromY - toY), 2) + Math.Pow((fromZ - toZ), 2));
+        int distance = (int)(Math.Sqrt(Math.Pow((fromX - toX), 2) + Math.Pow((fromY - toY), 2) + Math.Pow((fromZ - toZ), 2)) + .5);
 
         return distance;
     }

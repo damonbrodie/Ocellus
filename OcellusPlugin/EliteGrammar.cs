@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Speech.Recognition;
+using System.Threading.Tasks;
 
 
 class EliteGrammar
@@ -38,6 +39,21 @@ class EliteGrammar
         }
         return true;
     }
+
+    private static bool loadGrammar()
+    {
+        SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
+        recognitionEngine.SetInputToDefaultAudioDevice();
+        Grammar grammar = new Grammar(Path.Combine(Config.Path(), "SystemsGrammar.xml"));
+        recognitionEngine.LoadGrammar(grammar);
+        return true;
+    }
+
+    public async Task<bool> initialize()
+    {
+        return await Task.Run(() => loadGrammar());
+    }
+
     public static string dictateSystem(SpeechRecognitionEngine recognitionEngine)
     {
         recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);

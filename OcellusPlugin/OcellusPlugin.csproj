@@ -103,6 +103,7 @@
     <Compile Include="WebVarsForm.Designer.cs">
       <DependentUpon>WebVarsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

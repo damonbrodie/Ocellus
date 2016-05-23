@@ -254,6 +254,7 @@ class Web
         }
         catch
         {
+            Debug.Write("Error:  Bad URL - " + url);
             return Tuple.Create(true, "Bad URL", cookieContainer, "");
         }
 
@@ -277,7 +278,7 @@ class Web
         //request.Headers["Upgrade-Insecure-Requests"] = "1";
         //request.Headers["Accept-Language"] = "en-US,en;q=0.8";
         //request.Headers["Cache-Control"] = "max-age=0";
-        request.Timeout = 10000; // 10 seconds
+        //request.Timeout = 10000; // 10 seconds
         if (referer != null)
         {
             request.Referer = referer;
@@ -303,9 +304,11 @@ class Web
         string htmldata = null;
 
         HttpWebResponse response;
+       
         try
         {
             response = (HttpWebResponse)request.GetResponse();
+            Debug.Write("Server response: " + response.StatusCode.ToString() + ", " + response.StatusDescription);
         }
 
         catch (WebException ex)
