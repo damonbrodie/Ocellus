@@ -166,18 +166,25 @@ using System.Threading;
         }
 
         [STAThread]
-        public static void setFocus(string title)
+        public static bool setFocus(string title)
         {
             System.Diagnostics.Process me = System.Diagnostics.Process.GetCurrentProcess();
             System.Diagnostics.Process[] myProcesses = System.Diagnostics.Process.GetProcesses();
+           
             foreach (System.Diagnostics.Process p in myProcesses)
             {
-                if (p.MainWindowTitle == title && p.Id != me.Id)
+                if (p.MainWindowTitle == title)
                 {
-                    SwitchToThisWindow(p.MainWindowHandle, true);
-                    Thread.Sleep(200);
-                    return;
+                    if (p.Id != me.Id)
+                    {
+                        SwitchToThisWindow(p.MainWindowHandle, true);
+                        Thread.Sleep(200);
+             
+                    }
+                return true;
                 }
             }
+        // Did not find the game running
+        return false;
         }
     }

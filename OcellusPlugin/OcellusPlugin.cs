@@ -108,7 +108,7 @@ namespace OcellusPlugin
                 Debug.Write("COMMAND:  " + context);
                 switch (context.ToLower())
                 {
-                    case "check upgrade":
+                    case "check for upgrade":
                         if (Upgrade.needUpgrade(ref state))
                         {
                             booleanValues["VAEDupgradeAvailable"] = true;
@@ -171,14 +171,15 @@ namespace OcellusPlugin
                         }
 
                         break;
-                    case "send key":
+                    case "press key bind":
                         EliteBinds eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
-                        string[] parts = textValues["VAEDsendKey"].Split(new char[] { ':' }, 2);
+                        string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
 
                         List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
-                        booleanValues["VAEDsendKeyError"] = false; 
+                        booleanValues["VAEDkeyBindingError"] = false; 
                         switch (parts[0])
                         {
+                            // For now we only try and focus the game before keypressing.  Igorning the setFocus return code.
                             case "KEYPRESS":
                                 User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyPress(scanCodes);
@@ -192,7 +193,7 @@ namespace OcellusPlugin
                                 KeyMouse.KeyDown(scanCodes);
                                 break;
                             default:
-                                booleanValues["VAEDsendKeyError"] = true;
+                                booleanValues["VAEDkeyBindingError"] = true;
                                 break;
                         }
                         break;
@@ -226,7 +227,7 @@ namespace OcellusPlugin
                             textValues.Add("VAEDclipboard", Clipboard.GetText());
                         }
                         break;
-                    case "set credentials":
+                    case "get frontier credentials":
                         var credentialsForm = new Credentials.Login();
                         credentialsForm.ShowDialog();
                         CookieContainer loginCookies = credentialsForm.Cookie;
@@ -235,7 +236,7 @@ namespace OcellusPlugin
                         Debug.Write("LoginResponse: " + loginResponse);
                         textValues["VAEDloggedIn"] = loginResponse;
                         break;
-                    case "verification":
+                    case "get frontier verification":
                         CookieContainer verifyCookies = new CookieContainer();
                         if (state.ContainsKey("VAEDcookieContainer"))
                         {
@@ -254,10 +255,10 @@ namespace OcellusPlugin
                             Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
                         }
                         break;
-                    case "update eddn":
+                    case "update to eddn":
                         Eddn.updateEddn(ref state);
                         break;
-                    case "profile":
+                    case "get variables from frontier":
                         if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                         {
                             Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
