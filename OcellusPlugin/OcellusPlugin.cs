@@ -256,6 +256,7 @@ namespace OcellusPlugin
                         }
                         break;
                     case "update to eddn":
+                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         Eddn.updateEddn(ref state);
                         break;
                     case "get variables from frontier":
