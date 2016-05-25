@@ -32,12 +32,18 @@ class Eddb
 
         if (Web.downloadFile(indexURL, zipFile))
         {
+            File.Delete(eddbIndexFile);
             ZipFile.ExtractToDirectory(zipFile, path);
             File.Delete(zipFile);
+            return true;
         }
         else
         {
             Debug.Write("ERROR:  Unable to download EDDB Index from Ocellus.io");
+        }
+        if (!File.Exists(eddbIndexFile))
+        {
+            return false;
         }
         return true;
     }
@@ -46,7 +52,7 @@ class Eddb
     public static void loadEddbIndex(ref Dictionary<string, object> state)
     {
         string eddbIndexFile = Path.Combine(Config.Path(), "eddb_index.txt");
-        if (!File.Exists(eddbIndexFile) && ! downloadIndex())
+        if (! downloadIndex() && !File.Exists(eddbIndexFile))
         {
             Debug.Write("Error getting the eddb index - returning");
             return;

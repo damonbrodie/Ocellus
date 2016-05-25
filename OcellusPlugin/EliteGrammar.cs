@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
+using System.IO.Compression;
 using System.Speech.Recognition;
 using System.Threading.Tasks;
 
@@ -9,14 +9,16 @@ class EliteGrammar
 {
     private const string grammarURL = "http://ocellus.io/data/SystemsGrammar.xml";
 
+
     public static bool downloadGrammar()
     {
         string path = Config.Path();
+        string zipFile = Path.Combine(path, "SystemsGrammar.zip");
         string grammarFile = Path.Combine(Config.Path(), "SystemsGrammar.xml");
 
         if (File.Exists(grammarFile))
         {
-            // Download the grammar once a week
+            // Download the index once a week
             DateTime fileTime = File.GetLastWriteTime(grammarFile);
             DateTime weekago = DateTime.Now.AddDays(-7);
             if (fileTime > weekago)
@@ -25,20 +27,25 @@ class EliteGrammar
             }
         }
 
-
-        if (Web.downloadFile(grammarURL, grammarFile))
+        if (Web.downloadFile(grammarURL, zipFile))
         {
-            Debug.Write("Downloaded Grammar from Ocellus.io");
+            File.Delete(grammarFile);
+            ZipFile.ExtractToDirectory(zipFile, path);
+            File.Delete(zipFile);
             return true;
+        }
+        else
+        {
+            Debug.Write("ERROR:  Unable to download Systems Grammar from Ocellus.io");
         }
 
         if (!File.Exists(grammarFile))
         {
-            Debug.Write("ERROR:  Unable to download Grammar from Ocellus.io");
             return false;
         }
         return true;
     }
+
 
     private static bool loadGrammar()
     {

@@ -29,12 +29,18 @@ class Atlas
 
         if (Web.downloadFile(atlasURL, zipFile))
         {
+            File.Delete(atlasFile);
             ZipFile.ExtractToDirectory(zipFile, path);
             File.Delete(zipFile);
+            return true;
         }
         else
         {
             Debug.Write("ERROR:  Unable to download Atlas Index from Ocellus.io");
+        }
+        if (!File.Exists(atlasFile))
+        {
+            return false;
         }
         return true;
     }
@@ -42,7 +48,7 @@ class Atlas
     public static void loadAtlasIndex(ref Dictionary<string, object> state)
     {
         string atlasIndexFile = Path.Combine(Config.Path(), "atlas_index.txt");
-        if (!File.Exists(atlasIndexFile) && !downloadAtlas())
+        if (!downloadAtlas() && !File.Exists(atlasIndexFile) )
         {
             Debug.Write("Error getting the atlas index - returning");
             return;

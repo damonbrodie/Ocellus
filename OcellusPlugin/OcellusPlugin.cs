@@ -38,7 +38,7 @@ namespace OcellusPlugin
         {
             // Setup Speech engine
 
-            if (EliteGrammar.downloadGrammar() == true)
+            if (EliteGrammar.downloadGrammar())
             {
                 SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
                 recognitionEngine.SetInputToDefaultAudioDevice();
@@ -63,11 +63,13 @@ namespace OcellusPlugin
             textValues["VAEDgameStartParams"] = gameStartParams;
 
             // Load EDDB Index into memory
+
             Eddb.loadEddbIndex(ref state);
 
             // Load Atlas Index into memory
             Atlas.loadAtlasIndex(ref state);
 
+            
             CookieContainer cookieJar = new CookieContainer();
 
             if (File.Exists(cookieFile))
@@ -215,10 +217,10 @@ namespace OcellusPlugin
                         var webVarsForm = new WebVars.EditWebVars();
                         webVarsForm.ShowDialog();
                         break;
-                    case "update web variables":
+                    case "get web variables":
                         GetWebVars.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
                         break;
-                    case "update file variables":
+                    case "get file variables":
                         FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
                         break;
                     case "clipboard":
