@@ -118,11 +118,18 @@ namespace WebVars
                 PluginRegistry.setStringValue("webVar" + counter.ToString(), txtJson5.Text);
                 counter++;
             }
+
+            if (counter == 1)
+            {
+                PluginRegistry.setStringValue("webVar", "none");
+            }
+
             while (counter <= 5)
             {
                 PluginRegistry.deleteKey("WebVar" + counter.ToString());
                 counter++;
             }
+
             this.Close();
         }
 
@@ -167,6 +174,12 @@ namespace WebVars
                 else
                 {
                     moreVarsInRegistry = false;
+                    string haveWebVar = PluginRegistry.getStringValue("webVar");
+                    if (haveWebVar == null)
+                    {
+                        txtJson1.Text = "http://ocellus.io/webvars_test";
+                    }
+                    btnTest1.Enabled = true;
                 }
             }
         }

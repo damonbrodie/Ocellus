@@ -308,7 +308,7 @@ class Web
         try
         {
             response = (HttpWebResponse)request.GetResponse();
-            Debug.Write("Server response: " + response.StatusCode.ToString() + ", " + response.StatusDescription);
+            Debug.Write("Server response: " + response.StatusCode.ToString());
         }
 
         catch (WebException ex)

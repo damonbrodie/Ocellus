@@ -195,6 +195,18 @@ class Elite
         return rankings[rank];
     }
 
+    public static string[] listOfShipsPhoneticNames()
+    {
+        // Ship names "official" names
+        string[] ships = {"Adder", "Anaconda", "Asp Explorer", "Asp Scout", "Cobra Mark 3", "Cobra Mark 4",
+                "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Dropship",
+                "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer de Lance", "Hauler",
+                "Imperial Clipper", "Imperial Courier", "Cutter", "Imperial Eagle", "Keelback", "Orca",
+                "Python", "Sidewinder", "Type 6", "Type 7", "Type 9",
+                "Viper Mark 3", "Viper Mark 4", "Vulture" };
+        return ships;
+    }
+
     public static string[] listOfShipsLongNames()
     {
         // Ship names "official" names
@@ -213,10 +225,52 @@ class Elite
         // XXX needs to be verified.
         string[] ships = {"Adder", "Anaconda", "Asp", "Asp_Scout", "CobraMkIII", "CobraMkIV",
                 "DiamondBackXL", "DiamondBack", "Eagle", "Federation_Dropship",
-                "Federation_Dropship_MkII", "Federal Corvette", "Federation_Gunship", "FerDeLance",
+                "Federation_Dropship_MkII", "Federation_Corvette", "Federation_Gunship", "FerDeLance",
                 "Hauler", "Empire_Trader", "Empire_Courier", "Imperial Cutter", "Empire_Eagle",
                 "Independant_Trader", "Orca", "Python", "SideWinder", "Type6", "Type7", "Type9",
                 "Viper", "Viper_MkIV", "Vulture" };
         return ships;
+    }
+
+    public static string[] listOfShipVariableNames()
+    {
+        // Ship names for use in variables
+        string[] ships = {"Adder", "Anaconda", "AspExplorer", "AspScout", "CobraMkIII", "CobraMkIV",
+                "DiamondbackExplorer", "DiamondbackScout", "Eagle", "FederalDropship",
+                "FederalAssaultShip", "FederalCorvette", "FederalGunship", "Fer-de-Lance", "Hauler",
+                "ImperialClipper", "ImperialCourier", "Cutter", "ImperialEagle", "Keelback", "Orca",
+                "Python", "Sidewinder", "Type-6", "Type-7", "Type-9",
+                "ViperMkIII", "ViperMkIV", "Vulture" };
+        return ships;
+    }
+
+    public static string frontierShipToVariable(string frontierShip)
+    {
+        int counter = 0;
+        string[] variableShips = listOfShipVariableNames();
+        foreach (string ship in listofShipsShortNames())
+        {
+            if (ship == frontierShip)
+            {
+                return variableShips[counter];
+            }
+            counter++;
+        }
+        return null;
+    }
+
+    public static string frontierShipToPhonetic(string frontierShip)
+    {
+        int counter = 0;
+        string[] phoneticShips = listOfShipsPhoneticNames();
+        foreach (string ship in listofShipsShortNames())
+        {
+            if (ship == frontierShip)
+            {
+                return phoneticShips[counter];
+            }
+            counter++;
+        }
+        return null;
     }
 }

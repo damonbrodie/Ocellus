@@ -213,7 +213,7 @@ namespace OcellusPlugin
                         Debug.Write("------------------ Coriolis JSON Follows ---------------------");
                         Debug.Write(json);
                         break;
-                    case "edit web variables":
+                    case "edit web variable sources":
                         var webVarsForm = new WebVars.EditWebVars();
                         webVarsForm.ShowDialog();
                         break;

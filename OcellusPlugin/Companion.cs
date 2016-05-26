@@ -115,13 +115,11 @@ class Companion
         JavaScriptSerializer serializer = new JavaScriptSerializer();
 
         string currentSystem = "";
-        string currentStarport = "";
         bool currentlyDocked = false;
         var result = new Dictionary<string, dynamic>();
         try
         {
             result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
-            Debug.Write(htmlData);
             state["VAEDcompanionDict"] = result;
             string cmdr = result["commander"]["name"];
             int credits = result["commander"]["credits"];
@@ -148,18 +146,19 @@ class Companion
 
             List<string> keys = new List<string>(allShips.Keys);
 
-            // Null out ship locations
-            string[] listOfShips = Elite.listofShipsShortNames();
-            foreach (string ship in listOfShips)
-            {
-                textValues["VAEDship-" + ship + "-1"] = null;
-                intValues["VAEDshipCounter-" + ship] = 0;
-            }
-
+            //Set current System
             textValues["VAEDcurrentSystem"] = null;
             if (result.ContainsKey("lastSystem") && result["lastSystem"].ContainsKey("name"))
             {
                 textValues["VAEDcurrentSystem"] = result["lastSystem"]["name"];
+            }
+
+            // Null out ship locations
+            string[] listOfShips = Elite.listOfShipVariableNames();
+            foreach (string ship in listOfShips)
+            {
+                textValues["VAEDship-" + ship + "-1"] = null;
+                intValues["VAEDshipCounter-" + ship] = 0;
             }
 
             Dictionary<string, dynamic> theShips = new Dictionary<string, dynamic>();
@@ -194,26 +193,15 @@ class Companion
                 if (result["ships"][key].ContainsKey("starsystem"))
                 {
                     tempSystem = result["ships"][key]["starsystem"]["name"];
-                    if (key == currentShipId)
-                    {
-                        currentSystem = tempSystem;
-                    }
                 }
-                string tempStation = null;
-                if (result["ships"][key].ContainsKey("station"))
-                {
-                    tempStation = result["ships"][key]["station"]["name"];
-                    if (key == currentShipId)
-                    {
-                        currentStarport = tempStation;
-                    }
-                }
-
-                string shipCounterString = "VAEDshipCounter-" + tempShip;
+                string variableShipName = Elite.frontierShipToVariable(tempShip);
+                string shipCounterString = "VAEDshipCounter-" + variableShipName;
+                Debug.Write(tempShip);
+                Debug.Write(variableShipName);
                 intValues[shipCounterString]++;
                 int counterInt = (int)intValues[shipCounterString];
                 string counterStr = counterInt.ToString();
-                textValues["VAEDship-" + tempShip + "-" + counterStr] = tempSystem;
+                textValues["VAEDship-" + variableShipName + "-" + counterStr] = tempSystem;
             }
 
             //Setup ambiguous ship variables
@@ -223,15 +211,15 @@ class Companion
             textValues["VAEDambiguousAsp"] = null;
             textValues["VAEDambiguousEagle"] = null;
 
-            if ((intValues["VAEDshipCounter-Viper"] + intValues["VAEDshipCounter-Viper_MkIV"]) == 1)
+            if ((intValues["VAEDshipCounter-ViperMkIII"] + intValues["VAEDshipCounter-ViperMkIV"]) == 1)
             {
-                if (textValues["VAEDship-Viper-1"] != null)
+                if (textValues["VAEDship-ViperMkIII-1"] != null)
                 {
-                    textValues["VAEDambiguousViper"] = textValues["VAEDship-Viper-1"];
+                    textValues["VAEDambiguousViper"] = textValues["VAEDship-ViperMkIII-1"];
                 }
                 else
                 {
-                    textValues["VAEDambiguousViper"] = textValues["VAEDship-Viper_MkIV-1"];
+                    textValues["VAEDambiguousViper"] = textValues["VAEDship-ViperMkIV-1"];
                 }
 
             }
@@ -246,29 +234,29 @@ class Companion
                     textValues["VAEDambiguousCobra"] = textValues["VAEDship-CobraMkIV-1"];
                 }
             }
-            if ((intValues["VAEDshipCounter-DiamondBack"] + intValues["VAEDshipCounter-DiamondBackXL"]) == 1)
+            if ((intValues["VAEDshipCounter-DiamondbackExplorer"] + intValues["VAEDshipCounter-DiamondbackScout"]) == 1)
             {
-                if (textValues["VAEDship-DiamondBack-1"] != null)
+                if (textValues["VAEDship-DiamondbackScout-1"] != null)
                 {
-                    textValues["VAEDambiguousDiamondBack"] = textValues["VAEDship-DiamondBack-1"];
+                    textValues["VAEDambiguousDiamondback"] = textValues["VAEDship-DiamondBackScout-1"];
                 }
                 else
                 {
-                    textValues["VAEDambiguousDiamondBack"] = textValues["VAEDship-DiamondBackXL-1"];
+                    textValues["VAEDambiguousDiamondback"] = textValues["VAEDship-DiamondBackExplorer-1"];
                 }
             }
-            if ((intValues["VAEDshipCounter-Asp"] + intValues["VAEDshipCounter-Asp_Scout"]) == 1)
+            if ((intValues["VAEDshipCounter-AspExplorer"] + intValues["VAEDshipCounter-AspScout"]) == 1)
             {
-                if (textValues["VAEDship-Asp-1"] != null)
+                if (textValues["VAEDship-AspExplorer-1"] != null)
                 {
-                    textValues["VAEDambiguousAsp"] = textValues["VAEDship-Asp-1"];
+                    textValues["VAEDambiguousAsp"] = textValues["VAEDship-AspExplorer-1"];
                 }
                 else
                 {
-                    textValues["VAEDambiguousAsp"] = textValues["VAEDship-Asp_Scout-1"];
+                    textValues["VAEDambiguousAsp"] = textValues["VAEDship-AspScout-1"];
                 }
             }
-            if ((intValues["VAEDshipCounter-Eagle"] + intValues["VAEDshipCounter-Empire_Eagle"]) == 1)
+            if ((intValues["VAEDshipCounter-Eagle"] + intValues["VAEDshipCounter-ImperialEagle"]) == 1)
             {
                 if (textValues["VAEDship-Eagle-1"] != null)
                 {
@@ -276,7 +264,7 @@ class Companion
                 }
                 else
                 {
-                    textValues["VAEDambiguousEagle"] = textValues["VAEDship-Empire_Eagle-1"];
+                    textValues["VAEDambiguousEagle"] = textValues["VAEDship-ImperialEagle-1"];
                 }
             }
 
@@ -292,6 +280,7 @@ class Companion
             textValues["VAEDfederationRank"] = federationRank;
             textValues["VAEDempireRank"] = empireRank;
             textValues["VAEDcurrentShip"] = currentShip;
+            textValues["VAEDphoneticShip"] = Elite.frontierShipToPhonetic(currentShip);
             intValues["VAEDcargoCapacity"] = cargoCapacity;
             intValues["VAEDquantityInCargo"] = quantityInCargo;
         }
@@ -302,79 +291,59 @@ class Companion
             textValues["VAEDprofileStatus"] = "error";
             return false;
         }
-
-        textValues["VAEDeddbStarportId"] = null;
-        textValues["VAEDcurrentStarport"] = null;
-        textValues["VAEDeddbSystemId"] = null;
-
-        if (currentlyDocked)
+        try
         {
-            textValues["VAEDcurrentStarport"] = currentStarport;
+            textValues["VAEDeddbStarportId"] = null;
+            textValues["VAEDcurrentStarport"] = null;
+            textValues["VAEDeddbSystemId"] = null;
 
-            //Set Station Services
-            booleanValues["VAEDstarportCommodities"] = false;
-            booleanValues["VAEDstarportShipyard"] = false;
-            booleanValues["VAEDstarportOutfitting"] = false;
-            if (result["lastStarport"].ContainsKey("commodities"))
+            if (currentlyDocked)
             {
-                booleanValues["VAEDstarportCommodities"] = true;
-            }
-            if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"]["ships"].ContainsKey("shipyard_list"))
-            {
-                booleanValues["VAEDstarportShipyard"] = true;
-            }
-            if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"].ContainsKey("modules"))
-            {
-                booleanValues["VAEDstarportOutfitting"] = true;
-            }
-        }
-
-        if (state.ContainsKey("VAEDeddbIndex"))
-        {
-            Dictionary<string, dynamic> tempEddb = (Dictionary<string, dynamic>)state["VAEDeddbIndex"];
-
-            if (textValues["VAEDcurrentSystem"] != null && tempEddb.ContainsKey(textValues["VAEDcurrentSystem"]))
-            {
-                textValues["VAEDeddbSystemId"] = tempEddb[textValues["VAEDcurrentSystem"]]["id"].ToString();
-                if (textValues["VAEDcurrentStarport"] != null && tempEddb[textValues["VAEDcurrentSystem"]]["stations"].ContainsKey(textValues["VAEDcurrentStarport"]))
+                if (result.ContainsKey("lastStarport") && result["lastStarport"].ContainsKey("name"))
                 {
-                    textValues["VAEDeddbStarportId"] = tempEddb[textValues["VAEDcurrentSystem"]]["stations"][textValues["VAEDcurrentStarport"]].ToString();
+                    textValues["VAEDcurrentStarport"] = result["lastStarport"]["name"];
+                }
+
+                //Set Station Services
+                booleanValues["VAEDstarportCommodities"] = false;
+                booleanValues["VAEDstarportShipyard"] = false;
+                booleanValues["VAEDstarportOutfitting"] = false;
+                if (result["lastStarport"].ContainsKey("commodities"))
+                {
+                    booleanValues["VAEDstarportCommodities"] = true;
+                }
+                if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"]["ships"].ContainsKey("shipyard_list"))
+                {
+                    booleanValues["VAEDstarportShipyard"] = true;
+                }
+                if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"].ContainsKey("modules"))
+                {
+                    booleanValues["VAEDstarportOutfitting"] = true;
+                }
+            }
+
+            if (state.ContainsKey("VAEDeddbIndex"))
+            {
+                Dictionary<string, dynamic> tempEddb = (Dictionary<string, dynamic>)state["VAEDeddbIndex"];
+
+                if (textValues["VAEDcurrentSystem"] != null && tempEddb.ContainsKey(textValues["VAEDcurrentSystem"]))
+                {
+                    textValues["VAEDeddbSystemId"] = tempEddb[textValues["VAEDcurrentSystem"]]["id"].ToString();
+                    if (textValues["VAEDcurrentStarport"] != null && tempEddb[textValues["VAEDcurrentSystem"]]["stations"].ContainsKey(textValues["VAEDcurrentStarport"]))
+                    {
+                        textValues["VAEDeddbStarportId"] = tempEddb[textValues["VAEDcurrentSystem"]]["stations"][textValues["VAEDcurrentStarport"]].ToString();
+                    }
                 }
             }
         }
-
+        catch (Exception ex)
+        {
+            Debug.Write(ex.ToString());
+        }
         DateTime timestamp = DateTime.Now;
         state["VAEDcompanionTime"] = timestamp.ToString("yyyy-MM-dd") + "T" + timestamp.ToString("H:m:szzz");
-        Debug.Write("----------------HTMLDATA FOLLOWS------------------------------");
+        Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
         Debug.Write(htmlData);
-
-        //Debug.Write("TEXT VALUES");
-        //foreach (string key in textValues.Keys)
-        //{
-        //    if (textValues[key] != null)
-        //    {
-        //        Debug.Write(key + ":  " + textValues[key]);
-        //    }
-
-        //}
-
-        //Debug.Write("INTEGER VALUES");
-        //foreach (string key in intValues.Keys)
-        //{
-        //    if (intValues[key] != null)
-        //    {
-        //        Debug.Write(key + ":  " + intValues[key].ToString());
-        //    }
-        //}
-
-        //Debug.Write("BOOLEAN VALUES");
-        //foreach (string key in booleanValues.Keys)
-        //{
-        //    if (booleanValues[key] != null)
-        //    {
-        //        Debug.Write(key + ":  " + booleanValues[key].ToString());
-        //    }
-        //}
         return true;
     }
 }
