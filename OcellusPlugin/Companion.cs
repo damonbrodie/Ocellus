@@ -181,8 +181,7 @@ class Companion
                     Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
                     currDistance = Atlas.calcDistance(ref tempAtlas, textValues["VAEDcurrentSystem"], currentSystem);
                 }
-                //theShips.Add(
-                
+                //theShips.Add(   
             }
 
             foreach (string key in keys)
@@ -287,6 +286,7 @@ class Companion
         catch (Exception ex)
         {
             Debug.Write("ERROR: Unable to parse Companion API output " + ex.ToString());
+            Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
             Debug.Write(htmlData);
             textValues["VAEDprofileStatus"] = "error";
             return false;
@@ -338,7 +338,11 @@ class Companion
         }
         catch (Exception ex)
         {
+            Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
+            Debug.Write(htmlData);
             Debug.Write(ex.ToString());
+            textValues["VAEDprofileStatus"] = "error";
+            return false;
         }
         DateTime timestamp = DateTime.Now;
         state["VAEDcompanionTime"] = timestamp.ToString("yyyy-MM-dd") + "T" + timestamp.ToString("H:m:szzz");

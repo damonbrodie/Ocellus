@@ -117,12 +117,6 @@ namespace OcellusPlugin
                             state["VAEDupgradeAvailable"] = false;
                         }
                         break;
-                    case "voiceattack ontop":
-                        User32.AlwaysOnTop("VoiceAttack");
-                        break;
-                    case "voiceattack normal":
-                        User32.RemoveAlwaysOnTop();
-                        break;
                     case "distance from here":
                         bool worked = Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         decimalValues["VAEDdecimalDistance"] = null;
