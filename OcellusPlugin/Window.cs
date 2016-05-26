@@ -5,65 +5,77 @@ using System.Text;
 using System.Threading;
 
 
-    public class User32
+public class User32
+{
+    /// <summary>
+    /// filter function
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <param name="lParam"></param>
+    /// <returns></returns>
+    public delegate bool EnumDelegate(IntPtr hWnd, int lParam);
+
+    /// <summary>
+    /// check if windows visible
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <returns></returns>
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static extern bool IsWindowVisible(IntPtr hWnd);
+
+    /// <summary>
+    /// return windows text
+    /// </summary>
+    /// <param name="hWnd"></param>
+    /// <param name="lpWindowText"></param>
+    /// <param name="nMaxCount"></param>
+    /// <returns></returns>
+    [DllImport("user32.dll", EntryPoint = "GetWindowText",
+    ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpWindowText, int nMaxCount);
+
+    /// <summary>
+    /// enumarator on all desktop windows
+    /// </summary>
+    /// <param name="hDesktop"></param>
+    /// <param name="lpEnumCallbackFunction"></param>
+    /// <param name="lParam"></param>
+    /// <returns></returns>
+    [DllImport("user32.dll", EntryPoint = "EnumDesktopWindows",
+    ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction, IntPtr lParam);
+
+    [DllImportAttribute("User32.dll")]
+    private static extern int FindWindow(String ClassName, String WindowName);
+
+    const int SWP_NOMOVE = 0x0002;
+    const int SWP_NOSIZE = 0x0001;
+    const int SWP_SHOWWINDOW = 0x0040;
+    const int SWP_NOACTIVATE = 0x0010;
+    const int HWND_TOPMOST = -1;
+    const int HWND_NOTOPMOST = -2;
+    [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+    public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
+
+    [DllImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
+    static extern bool ShowWindow(IntPtr hWnd, ShowWindowEnum flags);
+    private enum ShowWindowEnum
     {
-        /// <summary>
-        /// filter function
-        /// </summary>
-        /// <param name="hWnd"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        public delegate bool EnumDelegate(IntPtr hWnd, int lParam);
+        Hide = 0,
+        ShowNormal = 1, ShowMinimized = 2, ShowMaximized = 3,
+        Maximize = 3, ShowNormalNoActivate = 4, Show = 5,
+        Minimize = 6, ShowMinNoActivate = 7, ShowNoActivate = 8,
+        Restore = 9, ShowDefault = 10, ForceMinimized = 11
+    };
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    public static extern int SetForegroundWindow(IntPtr hwnd);
 
-        /// <summary>
-        /// check if windows visible
-        /// </summary>
-        /// <param name="hWnd"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool IsWindowVisible(IntPtr hWnd);
-
-        /// <summary>
-        /// return windows text
-        /// </summary>
-        /// <param name="hWnd"></param>
-        /// <param name="lpWindowText"></param>
-        /// <param name="nMaxCount"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", EntryPoint = "GetWindowText",
-        ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpWindowText, int nMaxCount);
-
-        /// <summary>
-        /// enumarator on all desktop windows
-        /// </summary>
-        /// <param name="hDesktop"></param>
-        /// <param name="lpEnumCallbackFunction"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        [DllImport("user32.dll", EntryPoint = "EnumDesktopWindows",
-        ExactSpelling = false, CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDelegate lpEnumCallbackFunction, IntPtr lParam);
-
-        [DllImportAttribute("User32.dll")]
-        private static extern int FindWindow(String ClassName, String WindowName);
-
-        const int SWP_NOMOVE = 0x0002;
-        const int SWP_NOSIZE = 0x0001;
-        const int SWP_SHOWWINDOW = 0x0040;
-        const int SWP_NOACTIVATE = 0x0010;
-        const int HWND_TOPMOST = -1;
-        const int HWND_NOTOPMOST = -2;
-        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
-        public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
-
-        [DllImport("user32.dll")]
-        public static extern void SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
 
     private struct WINDOWPLACEMENT
         {
@@ -177,7 +189,13 @@ using System.Threading;
                 {
                     if (p.Id != me.Id)
                     {
-                        SwitchToThisWindow(p.MainWindowHandle, true);
+                        IntPtr hwnd = p.MainWindowHandle;
+                        if (hwnd == IntPtr.Zero)
+                        {
+                            //the window is hidden so try to restore it before setting focus.
+                            ShowWindow(p.Handle, ShowWindowEnum.Restore);
+                        }
+                        SetForegroundWindow(p.MainWindowHandle);
                         Thread.Sleep(200);
              
                     }

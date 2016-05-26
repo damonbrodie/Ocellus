@@ -166,12 +166,14 @@ namespace OcellusPlugin
                         // If the Binds file changes then reload the binds.
                         string bindsFile = (string)state["VAEDbindsFile"];
                         DateTime oldTimestamp = (DateTime)state["VAEDbindsTimestamp"];
+
                         DateTime newTimestamp = File.GetLastWriteTime(bindsFile);
                         EliteBinds eliteBinds;
                         if (oldTimestamp != newTimestamp)
                         {
                             Debug.Write("Binds file change:  reloading");
                             eliteBinds = new EliteBinds();
+                            state["VAEDbindsTimestamp"] = newTimestamp;
                             state["VAEDeliteBinds"] = eliteBinds;
                         }
                         else

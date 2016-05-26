@@ -112,6 +112,12 @@ class Companion
         Web.WriteCookiesToDisk(Config.CookiePath(), tRespon.Item1);
         string htmlData = tRespon.Item2;
 
+        if (htmlData.Contains("Please correct the following") || htmlData == "")
+        {
+            textValues["VAEDprofileStatus"] = "error";
+            return false;
+        }
+
         JavaScriptSerializer serializer = new JavaScriptSerializer();
 
         string currentSystem = "";
