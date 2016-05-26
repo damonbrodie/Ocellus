@@ -273,4 +273,19 @@ class Elite
         }
         return null;
     }
+
+    public static string frontierShipToPretty(string frontierShip)
+    {
+        int counter = 0;
+        string[] prettyShips = listOfShipsLongNames();
+        foreach (string ship in listofShipsShortNames())
+        {
+            if (ship == frontierShip)
+            {
+                return prettyShips[counter];
+            }
+            counter++;
+        }
+        return null;
+    }
 }

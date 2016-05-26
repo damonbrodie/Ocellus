@@ -279,7 +279,7 @@ class Companion
             textValues["VAEDcqcRank"] = cqcRank;
             textValues["VAEDfederationRank"] = federationRank;
             textValues["VAEDempireRank"] = empireRank;
-            textValues["VAEDcurrentShip"] = currentShip;
+            textValues["VAEDcurrentShip"] = Elite.frontierShipToPretty(currentShip);
             textValues["VAEDphoneticShip"] = Elite.frontierShipToPhonetic(currentShip);
             intValues["VAEDcargoCapacity"] = cargoCapacity;
             intValues["VAEDquantityInCargo"] = quantityInCargo;
