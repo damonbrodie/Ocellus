@@ -13,6 +13,22 @@ class Elite
     const string uninstallRegistryPath64bit = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall";
     const string uninstallRegistryPath32bit = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
 
+    public static string getBindsFilename()
+    {
+        // TODO: move hard-coded file names to defines or similar
+        var bindsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            @"Frontier Developments\Elite Dangerous\Options\Bindings");
+        var files = Directory.GetFiles(bindsFolder);
+        var bindsFile = "";
+        foreach (var file in files)
+        {
+            // TODO: grab file matching "Custom.<N>.<M>.binds" with highest N.M
+            if (Path.GetFileName(file) != "Custom.1.8.binds") continue;
+            bindsFile = file;
+            break;
+        }
+        return bindsFile;
+    }
 
     private static Tuple<string, long> getSystemFromLog(string path, string logFile, long seekPos)
     {
@@ -194,14 +210,14 @@ class Elite
             "Rating 3", "Rating 4", "Rating 5" };
         return rankings[rank];
     }
-
+    
     public static string[] listOfShipsPhoneticNames()
     {
-        // Ship names "official" names
+        // Ship names "phonetic"
         string[] ships = {"Adder", "Anaconda", "Asp Explorer", "Asp Scout", "Cobra Mark 3", "Cobra Mark 4",
                 "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Dropship",
                 "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer de Lance", "Hauler",
-                "Imperial Clipper", "Imperial Courier", "Cutter", "Imperial Eagle", "Keelback", "Orca",
+                "Imperial Clipper", "Imperial Courier", "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca",
                 "Python", "Sidewinder", "Type 6", "Type 7", "Type 9",
                 "Viper Mark 3", "Viper Mark 4", "Vulture" };
         return ships;
@@ -209,17 +225,17 @@ class Elite
 
     public static string[] listOfShipsLongNames()
     {
-        // Ship names "official" names
+        // Ship names "official"
         string[] ships = {"Adder", "Anaconda", "Asp Explorer", "Asp Scout", "Cobra MkIII", "Cobra MkIV",
                 "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Dropship",
                 "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer-de-Lance", "Hauler",
-                "Imperial Clipper", "Imperial Courier", "Cutter", "Imperial Eagle", "Keelback", "Orca",
+                "Imperial Clipper", "Imperial Courier", "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca",
                 "Python", "Sidewinder MkI", "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy",
                 "Viper MkIII", "ViperMkIV", "Vulture" };
         return ships;
     }
 
-    public static string[] listofShipsShortNames()
+    public static string[] listofShipsFrontierNames()
     {
         // Ship names as refered to in the API
         // XXX needs to be verified.
@@ -238,7 +254,7 @@ class Elite
         string[] ships = {"Adder", "Anaconda", "AspExplorer", "AspScout", "CobraMkIII", "CobraMkIV",
                 "DiamondbackExplorer", "DiamondbackScout", "Eagle", "FederalDropship",
                 "FederalAssaultShip", "FederalCorvette", "FederalGunship", "Fer-de-Lance", "Hauler",
-                "ImperialClipper", "ImperialCourier", "Cutter", "ImperialEagle", "Keelback", "Orca",
+                "ImperialClipper", "ImperialCourier", "ImperialCutter", "ImperialEagle", "Keelback", "Orca",
                 "Python", "Sidewinder", "Type-6", "Type-7", "Type-9",
                 "ViperMkIII", "ViperMkIV", "Vulture" };
         return ships;
@@ -248,7 +264,7 @@ class Elite
     {
         int counter = 0;
         string[] variableShips = listOfShipVariableNames();
-        foreach (string ship in listofShipsShortNames())
+        foreach (string ship in listofShipsFrontierNames())
         {
             if (ship == frontierShip)
             {
@@ -263,7 +279,7 @@ class Elite
     {
         int counter = 0;
         string[] phoneticShips = listOfShipsPhoneticNames();
-        foreach (string ship in listofShipsShortNames())
+        foreach (string ship in listofShipsFrontierNames())
         {
             if (ship == frontierShip)
             {
@@ -278,7 +294,7 @@ class Elite
     {
         int counter = 0;
         string[] prettyShips = listOfShipsLongNames();
-        foreach (string ship in listofShipsShortNames())
+        foreach (string ship in listofShipsFrontierNames())
         {
             if (ship == frontierShip)
             {

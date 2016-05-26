@@ -13,17 +13,7 @@ namespace OcellusPlugin
         public EliteBinds()
         {
             // TODO: move hard-coded file names to defines or similar
-            var bindsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                @"Frontier Developments\Elite Dangerous\Options\Bindings");
-            var files = Directory.GetFiles(bindsFolder);
-            var bindsFile = "";
-            foreach (var file in files)
-            {
-                // TODO: grab file matching "Custom.<N>.<M>.binds" with highest N.M
-                if (Path.GetFileName(file) != "Custom.1.8.binds") continue;
-                bindsFile = file;
-                break;
-            }
+            var bindsFile = Elite.getBindsFilename();
 
             // TODO: do something if file not found
             var bindsTree = XElement.Load(bindsFile);

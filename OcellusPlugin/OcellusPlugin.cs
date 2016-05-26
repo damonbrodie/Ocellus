@@ -47,7 +47,6 @@ namespace OcellusPlugin
                 state.Add("VAEDrecognitionEngine", recognitionEngine);
             }
 
-
             // Setup plugin storage directory - used for cookies and debug logs
             string appPath = Config.Path();
             string cookieFile = Config.CookiePath();
@@ -63,15 +62,12 @@ namespace OcellusPlugin
             textValues["VAEDgameStartParams"] = gameStartParams;
 
             // Load EDDB Index into memory
-
             Eddb.loadEddbIndex(ref state);
 
             // Load Atlas Index into memory
             Atlas.loadAtlasIndex(ref state);
 
-            
             CookieContainer cookieJar = new CookieContainer();
-
             if (File.Exists(cookieFile))
             {
                 // If we have cookies then we are likely already logged in
@@ -83,24 +79,23 @@ namespace OcellusPlugin
                     state.Add("VAEDcookieContainer", cookieJar);
                     state["VAEDloggedIn"] = "ok";
                 }
-                else
-                {
-                }
             }
             else
-            {
-                
+            {   
                 state.Add("VAEDloggedIn", "no");
             }
 
             EliteBinds eliteBinds = new EliteBinds();
             state.Add("VAEDeliteBinds", eliteBinds);
+            string bindsFile = Elite.getBindsFilename();
+            DateTime fileTime = File.GetLastWriteTime(bindsFile);
+            state.Add("VAEDbindsFile", bindsFile);
+            state.Add("VAEDbindsTimestamp", fileTime);
         }
 
         public static void VA_Exit1(ref Dictionary<string, object> state)
         {
             //this function gets called when VoiceAttack is closing (normally).  You would put your cleanup code in here, but be aware that your code must be robust enough to not absolutely depend on this function being called
-
         }
 
         public static void VA_Invoke1(String context, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
@@ -174,7 +169,21 @@ namespace OcellusPlugin
 
                         break;
                     case "press key bind":
-                        EliteBinds eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
+                        // If the Binds file changes then reload the binds.
+                        string bindsFile = (string)state["VAEDbindsFile"];
+                        DateTime oldTimestamp = (DateTime)state["VAEDbindsTimestamp"];
+                        DateTime newTimestamp = File.GetLastWriteTime(bindsFile);
+                        EliteBinds eliteBinds;
+                        if (oldTimestamp != newTimestamp)
+                        {
+                            Debug.Write("Binds file change:  reloading");
+                            eliteBinds = new EliteBinds();
+                            state["VAEDeliteBinds"] = eliteBinds;
+                        }
+                        else
+                        {
+                            eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
+                        }
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
 
                         List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
