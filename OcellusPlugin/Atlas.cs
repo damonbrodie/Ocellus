@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Web.Script.Serialization;
 
 
+// **********************************************************************************
+// *  Functions for determining distance to any populated sytem in Elite Dangerous  *
+// **********************************************************************************
 class Atlas
 {
     private const string atlasURL = "http://ocellus.io/data/atlas_index.zip";
@@ -69,6 +72,7 @@ class Atlas
             {
                 state.Add("VAEDatlasIndex", atlasIndex);
             }
+            Debug.Write("EDDN data loaded.  "+ atlasIndex.Count.ToString() + " populated systems");
         }
         catch (Exception ex)
         {
@@ -86,6 +90,16 @@ class Atlas
         double toX;
         double toY;
         double toZ;
+        if (fromSystem == "" || fromSystem == null)
+        {
+            Debug.Write("Error:  calcDistance - fromSystem not specified");
+            return -1;
+        }
+        if (toSystem == "" || toSystem == null)
+        {
+            Debug.Write("Error:  calcDistance - toSystem not specified");
+            return -1;
+        }
         if (fromSystem == toSystem)
         {
             return 0;
@@ -98,11 +112,11 @@ class Atlas
         }
         else
         {
-            Debug.Write("Error:  System " + fromSystem + " is not in the EDDN database");
+            Debug.Write("Error:  From system '" + fromSystem + "' is not in the EDDN database");
             return -1;
         }
-
-        if (atlas.ContainsKey(fromSystem))
+        Debug.Write(toSystem);
+        if (atlas.ContainsKey(toSystem))
         {
             toX = (double)atlas[toSystem]["x"];
             toY = (double)atlas[toSystem]["y"];
@@ -110,7 +124,7 @@ class Atlas
         }
         else
         {
-            Debug.Write("Error:  System " + toSystem + " is not in the EDDN database");
+            Debug.Write("Error:  Dest system '" + toSystem + "' is not in the EDDN database");
             return -1;
         }
         int distance = (int)(Math.Sqrt(Math.Pow((fromX - toX), 2) + Math.Pow((fromY - toY), 2) + Math.Pow((fromZ - toZ), 2)) + .5);

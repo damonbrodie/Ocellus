@@ -52,7 +52,7 @@ class Debug
 
 class Utilities
 {
-    public static int isCoolingDown(ref Dictionary<string, object> state, string cooldownName, int minutes = 1)
+    public static int isCoolingDown(ref Dictionary<string, object> state, string cooldownName, int seconds = 60)
     {
         if (! state.ContainsKey(cooldownName))
         {
@@ -60,14 +60,14 @@ class Utilities
             return 0;
         }
 
-        int minutesAgo = -1;
-        if (minutes > 1)
+        int secondsAgo = -1;
+        if (seconds > 1)
         {
-            minutesAgo = minutes * -1;
+            secondsAgo = seconds * -1;
         }
         
         DateTime lastRun = (DateTime)state[cooldownName];
-        DateTime compareTime = DateTime.Now.AddMinutes(minutesAgo);
+        DateTime compareTime = DateTime.Now.AddSeconds(secondsAgo);
 
         double diffSeconds = (lastRun - compareTime).TotalSeconds;
 

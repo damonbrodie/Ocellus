@@ -95,7 +95,7 @@ class Companion
     {
 
 
-        int profileCooldown = Utilities.isCoolingDown(ref state, "VAEDprofileCooldown");
+        int profileCooldown = Utilities.isCoolingDown(ref state, "VAEDprofileCooldown", 30);
         if (profileCooldown > 0)
         {
             Debug.Write("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
@@ -120,7 +120,6 @@ class Companion
 
         JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-        string currentSystem = "";
         bool currentlyDocked = false;
         var result = new Dictionary<string, dynamic>();
         try
@@ -150,13 +149,23 @@ class Companion
             string currentShip = result["ships"][currentShipId]["name"];
             result["commander"]["currentShip"] = currentShip;
 
-            List<string> keys = new List<string>(allShips.Keys);
+
 
             //Set current System
             textValues["VAEDcurrentSystem"] = null;
             if (result.ContainsKey("lastSystem") && result["lastSystem"].ContainsKey("name"))
             {
+
                 textValues["VAEDcurrentSystem"] = result["lastSystem"]["name"];
+                TrackSystems.Add(ref state, result["lastSystem"]["name"]);
+            }
+            else
+            {
+                Debug.Write("ERROR: Companion API doesn't have current location ");
+                Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
+                Debug.Write(htmlData);
+                textValues["VAEDprofileStatus"] = "error";
+                return false;
             }
 
             // Null out ship locations
@@ -167,27 +176,22 @@ class Companion
                 intValues["VAEDshipCounter-" + ship] = 0;
             }
 
+            List <string> keys = new List<string>(allShips.Keys);
             Dictionary<string, dynamic> theShips = new Dictionary<string, dynamic>();
             foreach (string key in keys)
             {
                 string tempShip = result["ships"][key]["name"];
-
                 string tempSystem = null;
                 if (result["ships"][key].ContainsKey("starsystem"))
                 {
                     tempSystem = result["ships"][key]["starsystem"]["name"];
-                    if (key == currentShipId)
-                    {
-                        currentSystem = tempSystem;
-                    }
                 }
                 int currDistance = -1;
-                if (textValues.ContainsKey("VAEDcurrentSystem") && textValues["VAEDcurrentSystem"] != null && state.ContainsKey("VAEDatlasIndex"))
+                if ( tempSystem != null)
                 {
                     Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
-                    currDistance = Atlas.calcDistance(ref tempAtlas, textValues["VAEDcurrentSystem"], currentSystem);
+                    currDistance = Atlas.calcDistance(ref tempAtlas, textValues["VAEDcurrentSystem"], tempSystem);
                 }
-                //theShips.Add(   
             }
 
             foreach (string key in keys)
@@ -201,8 +205,6 @@ class Companion
                 }
                 string variableShipName = Elite.frontierShipToVariable(tempShip);
                 string shipCounterString = "VAEDshipCounter-" + variableShipName;
-                Debug.Write(tempShip);
-                Debug.Write(variableShipName);
                 intValues[shipCounterString]++;
                 int counterInt = (int)intValues[shipCounterString];
                 string counterStr = counterInt.ToString();
@@ -285,7 +287,7 @@ class Companion
             textValues["VAEDfederationRank"] = federationRank;
             textValues["VAEDempireRank"] = empireRank;
             textValues["VAEDcurrentShip"] = Elite.frontierShipToPretty(currentShip);
-            textValues["VAEDphoneticShip"] = Elite.frontierShipToPhonetic(currentShip);
+            textValues["VAEDphoneticShip"] = Elite.frontierShipToPhonetic(currentShip).ToLower();
             intValues["VAEDcargoCapacity"] = cargoCapacity;
             intValues["VAEDquantityInCargo"] = quantityInCargo;
         }

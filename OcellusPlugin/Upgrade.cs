@@ -36,7 +36,7 @@ class Upgrade
 
     public static bool needUpgrade(ref Dictionary<string, object> state)
     {
-        int upgradeCooldown = Utilities.isCoolingDown(ref state, "VAEDupgradeCooldown", 60);
+        int upgradeCooldown = Utilities.isCoolingDown(ref state, "VAEDupgradeCooldown", 3600);
         if (upgradeCooldown > 0)
         {
             Debug.Write("Ocellus version check is cooling down: " + upgradeCooldown.ToString() + " seconds remain.");

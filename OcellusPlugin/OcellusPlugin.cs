@@ -67,6 +67,11 @@ namespace OcellusPlugin
             // Load Atlas Index into memory
             Atlas.loadAtlasIndex(ref state);
 
+            Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
+     
+            // Load Tracked Systems into memory
+            TrackSystems.Load(ref state);
+
             CookieContainer cookieJar = new CookieContainer();
             if (File.Exists(cookieFile))
             {
@@ -134,33 +139,44 @@ namespace OcellusPlugin
                                 else
                                 {
                                     Debug.Write("Error:  Could not determine current location for command 'distance from here'");
-                                    booleanValues["VAEDerror"] = true;
+                                    booleanValues["VAEDerrorSourceSystem"] = true;
                                     break;
                                 }
                                 Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
 
                                 int distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
-
+                                if (distance < 0)
+                                {
+                                    //Cound not find destination system
+                                    Debug.Write("Error:  Could not determine distance to target system");
+                                    booleanValues["VAEDerrorTargetSystem"] = true;
+                                    break;
+                                }
+                                // Found the system - return distance
                                 intValues["VAEDintDistance"] = distance;
-                                booleanValues["VAEDerror"] = false;
+                                booleanValues["VAEDerrorTargetSystem"] = false;
+                                booleanValues["VAEDerrorSourceSystem"] = false;
                                 break;
                             }
                         }
-                        booleanValues["VAEDerror"] = true;
+                        //Can't find the System
+                        booleanValues["VAEDerrorSourceSystem"] = true;
+                        booleanValues["VAEDerrorDestinationSystem"] = false;
                         break;
                     case "dictate system":
                         if (state.ContainsKey("VAEDrecognitionEngine"))
                         {
                             SpeechRecognitionEngine recognitionEngine = (SpeechRecognitionEngine)state["VAEDrecognitionEngine"];
 
-                            string system = EliteGrammar.dictateSystem(recognitionEngine);
+                            string system = EliteGrammar.dictateSystem(recognitionEngine, (List<String>)state["VAEDtrackedSystems"]);
                             textValues["VAEDdictateSystem"] = system;
+                            break;
                         }
                         else
                         {
                             Debug.Write("Error:  Speech Engine not yet Initialized.  (Possibly still loading)");
                         }
-
+                        textValues["VAEDdictateSystem"] = null;
                         break;
                     case "press key bind":
                         // If the Binds file changes then reload the binds.
@@ -183,10 +199,15 @@ namespace OcellusPlugin
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
 
                         List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
+                        if (scanCodes == null)
+                        {
+                            booleanValues["VAEDkeyBindingError"] = true;
+                            break;
+                        }
                         booleanValues["VAEDkeyBindingError"] = false; 
                         switch (parts[0])
                         {
-                            // For now we only try and focus the game before keypressing.  Igorning the setFocus return code.
+                            // For now we only "best effort" focus the game before keypressing.  Igorning the setFocus return code.
                             case "KEYPRESS":
                                 User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyPress(scanCodes);

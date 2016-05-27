@@ -84,6 +84,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TrackSystems.cs" />
     <Compile Include="WebVars.cs" />
     <Compile Include="Upgrade.cs" />
     <Compile Include="Utility.cs" />

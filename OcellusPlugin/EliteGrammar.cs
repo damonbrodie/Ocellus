@@ -3,8 +3,12 @@ using System.IO;
 using System.IO.Compression;
 using System.Speech.Recognition;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 
+// ******************************************************************
+// *  Functions creating and using speech engine for Elite Systems  *
+// ******************************************************************
 class EliteGrammar
 {
     private const string grammarURL = "http://ocellus.io/data/SystemsGrammar.xml";
@@ -61,17 +65,33 @@ class EliteGrammar
         return await Task.Run(() => loadGrammar());
     }
 
-    public static string dictateSystem(SpeechRecognitionEngine recognitionEngine)
+    public static string dictateSystem(SpeechRecognitionEngine recognitionEngine, List<string> trackedSystems)
     {
         recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
         recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1);
         RecognitionResult result = recognitionEngine.Recognize(TimeSpan.FromSeconds(5));
-        
-        if (result != null)
+        double topPickConfidence = 0.00;
+        string topPickSystem = null;
+        foreach (RecognizedPhrase phrase in result.Alternates)
         {
-            return result.Semantics.Value.ToString();
+            double confidence = (double)phrase.Confidence;
+            var grammar = phrase.Grammar.Name;
+            var rule = phrase.Grammar.RuleName;
+            var semantic = phrase.Semantics.Value;
+            
+            if (trackedSystems.Contains(phrase.Text))
+            {
+                confidence = confidence + (double)0.05;
+                Debug.Write("Bumping up " + phrase.Text + "by 5% confidence");
+            }
+            if (confidence > topPickConfidence)
+            {
+                topPickConfidence = confidence;
+                topPickSystem = phrase.Text;
+            }
+            Debug.Write("dictateSystem: Possible system " + semantic + " (" + phrase.Confidence.ToString() + ", " + phrase.Text + ")");
         }
-        return null;
+        return topPickSystem;
     }
 }
 
