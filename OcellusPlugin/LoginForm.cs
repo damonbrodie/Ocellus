@@ -64,7 +64,14 @@ namespace Credentials
                     this.LoginResponse = loginResponse;
                     this.Close();
                 }
-                    
+                else
+                {
+                    MessageBox.Show("Invalid Credentials, please re-enter them and retry");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid Credentials, please re-enter them and retry");
             }
         }
 
