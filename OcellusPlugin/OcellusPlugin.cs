@@ -198,10 +198,6 @@ namespace OcellusPlugin
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
 
                         List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
-                        foreach (ushort code in scanCodes)
-                        {
-                            Debug.Write("scancode " + code.ToString());
-                        }
                         if (scanCodes == null)
                         {
                             booleanValues["VAEDkeyBindingError"] = true;
