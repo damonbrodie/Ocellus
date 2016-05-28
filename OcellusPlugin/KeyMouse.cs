@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading;
 
 
+// *************************************************************
+// *  Functions for pressing keys in game (works with DirectX  *
+// *************************************************************
 namespace OcellusPlugin
 {
     internal static class KeyMouse
@@ -52,7 +55,6 @@ namespace OcellusPlugin
             VK.VK_RMENU,
             VK.VK_RCONTROL,
             VK.VK_RSHIFT,
-            VK.VK_RETURN,
             VK.VK_INSERT,
             VK.VK_DELETE,
             VK.VK_PRIOR,
@@ -80,17 +82,17 @@ namespace OcellusPlugin
 
         public static void KeyPress(List<ushort> keyCodes, int duration = 40)
         {
-            KeyDown(keyCodes, duration);
+            KeyDown(keyCodes);
             Thread.Sleep(duration);
-            KeyUp(keyCodes, duration);
+            KeyUp(keyCodes);
         }
 
-        public static void KeyDown(List<ushort> keyCodes, int duration = 40)
+        public static void KeyDown(List<ushort> keyCodes)
         {
             SendInput((uint)keyCodes.Count, BuildInputs(keyCodes, true), Marshal.SizeOf(typeof(INPUT)));
         }
 
-        public static void KeyUp(List<ushort> keyCodes, int duration = 40)
+        public static void KeyUp(List<ushort> keyCodes)
         {
             SendInput((uint)keyCodes.Count, BuildInputs(keyCodes, false), Marshal.SizeOf(typeof(INPUT)));
         }

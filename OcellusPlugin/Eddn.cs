@@ -9,7 +9,6 @@ using System.Threading;
 // **************************************
 // *  Functions for doing EDDN updates  *
 // **************************************
-
 class Eddn
 {
     [DataContractAttribute]

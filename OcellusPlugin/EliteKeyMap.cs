@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 
+// ****************************
+// *  Scancodes for the binds *
+// ****************************
 namespace OcellusPlugin
 {
     internal partial class EliteBinds

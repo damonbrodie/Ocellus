@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
+
+// ********************************
+// *  Read the Elite Keybindings  *
+// ********************************
 namespace OcellusPlugin
 {
     internal partial class EliteBinds

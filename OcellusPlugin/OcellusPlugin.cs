@@ -10,7 +10,6 @@ using System.Speech.Recognition;
 // *****************************
 // *  Voice Attack functions   *
 // *****************************
-
 namespace OcellusPlugin
 {   
     public class OcellusPlugin
@@ -199,6 +198,10 @@ namespace OcellusPlugin
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
 
                         List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
+                        foreach (ushort code in scanCodes)
+                        {
+                            Debug.Write("scancode " + code.ToString());
+                        }
                         if (scanCodes == null)
                         {
                             booleanValues["VAEDkeyBindingError"] = true;
@@ -209,15 +212,15 @@ namespace OcellusPlugin
                         {
                             // For now we only "best effort" focus the game before keypressing.  Igorning the setFocus return code.
                             case "KEYPRESS":
-                                User32.setFocus(eliteWindowTitle);
+                                //User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyPress(scanCodes);
                                 break;
                             case "KEYUP":
-                                User32.setFocus(eliteWindowTitle);
+                                //User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyUp(scanCodes);
                                 break;
                             case "KEYDOWN":
-                                User32.setFocus(eliteWindowTitle);
+                                //User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyDown(scanCodes);
                                 break;
                             default:

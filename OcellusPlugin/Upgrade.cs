@@ -7,7 +7,6 @@ using System.Web.Script.Serialization;
 // ****************************************************
 // *  Functions for upgrading the plugin and profile  *
 // ****************************************************
-
 class Upgrade
 {
     private const string versionCheckURL = "http://ocellus.io/version";

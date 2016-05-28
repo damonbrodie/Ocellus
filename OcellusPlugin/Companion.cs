@@ -7,7 +7,6 @@ using System.Web.Script.Serialization;
 // **************************************************************************
 // *  Functions for accessing Frontier's Companion API for Elite Dangerous  *
 // **************************************************************************
-
 class Companion
 {
     private const string loginURL = "https://companion.orerve.net/user/login";
