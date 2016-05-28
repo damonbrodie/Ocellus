@@ -36,7 +36,6 @@ namespace OcellusPlugin
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
             // Setup Speech engine
-
             if (EliteGrammar.downloadGrammar())
             {
                 SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
