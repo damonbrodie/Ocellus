@@ -72,26 +72,40 @@ class EliteGrammar
         RecognitionResult result = recognitionEngine.Recognize(TimeSpan.FromSeconds(5));
         double topPickConfidence = 0.00;
         string topPickSystem = null;
-        foreach (RecognizedPhrase phrase in result.Alternates)
+        if (result == null)
         {
-            double confidence = (double)phrase.Confidence;
-            var grammar = phrase.Grammar.Name;
-            var rule = phrase.Grammar.RuleName;
-            var semantic = phrase.Semantics.Value;
-            
-            if (trackedSystems.Contains(phrase.Text))
-            {
-                confidence = confidence + (double)0.05;
-                Debug.Write("Bumping up " + phrase.Text + "by 5% confidence");
-            }
-            if (confidence > topPickConfidence)
-            {
-                topPickConfidence = confidence;
-                topPickSystem = phrase.Text;
-            }
-            Debug.Write("dictateSystem: Possible system " + semantic + " (" + phrase.Confidence.ToString() + ", " + phrase.Text + ")");
+            Debug.Write("dictate system:  No system matched");
+            return null;
         }
-        return topPickSystem;
+        if (result.Alternates != null)
+        {
+            foreach (RecognizedPhrase phrase in result.Alternates)
+            {
+                double confidence = (double)phrase.Confidence;
+                var grammar = phrase.Grammar.Name;
+                var rule = phrase.Grammar.RuleName;
+                var semantic = phrase.Semantics.Value;
+
+                if (trackedSystems.Contains(phrase.Text))
+                {
+                    confidence = confidence + (double)0.05;
+                    Debug.Write("Bumping up " + phrase.Text + "by 5% confidence");
+                }
+                if (confidence > topPickConfidence)
+                {
+                    topPickConfidence = confidence;
+                    topPickSystem = semantic.ToString();
+                }
+                Debug.Write("dictateSystem: Possible system " + semantic + " (" + phrase.Confidence.ToString() + ", " + phrase.Text + ")");
+            }
+            return topPickSystem;
+        }
+        if (result != null)
+        {
+            Debug.Write("dictateSystem: only a single match " + result.Semantics.Value.ToString());
+            return result.Semantics.Value.ToString();
+        }
+        return null;
     }
 }
 

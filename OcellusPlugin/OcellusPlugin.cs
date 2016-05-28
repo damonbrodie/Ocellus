@@ -15,7 +15,7 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.3";
+        public const string pluginVersion = "0.4";
         public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
 
         public static string VA_DisplayName()
@@ -207,15 +207,15 @@ namespace OcellusPlugin
                         {
                             // For now we only "best effort" focus the game before keypressing.  Igorning the setFocus return code.
                             case "KEYPRESS":
-                                //User32.setFocus(eliteWindowTitle);
+                                User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyPress(scanCodes);
                                 break;
                             case "KEYUP":
-                                //User32.setFocus(eliteWindowTitle);
+                                User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyUp(scanCodes);
                                 break;
                             case "KEYDOWN":
-                                //User32.setFocus(eliteWindowTitle);
+                                User32.setFocus(eliteWindowTitle);
                                 KeyMouse.KeyDown(scanCodes);
                                 break;
                             default:
