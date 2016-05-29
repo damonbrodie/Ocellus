@@ -196,8 +196,8 @@ namespace OcellusPlugin
                         }
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
 
-                        List<ushort> scanCodes = eliteBinds.GetCodes(parts[1]);
-                        if (scanCodes == null)
+                        List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1]));
+                        if (scanCodeExs == null)
                         {
                             booleanValues["VAEDkeyBindingError"] = true;
                             break;
@@ -208,15 +208,15 @@ namespace OcellusPlugin
                             // For now we only "best effort" focus the game before keypressing.  Igorning the setFocus return code.
                             case "KEYPRESS":
                                 User32.setFocus(eliteWindowTitle);
-                                KeyMouse.KeyPress(scanCodes);
+                                KeyMouse.KeyPress(scanCodeExs);
                                 break;
                             case "KEYUP":
                                 User32.setFocus(eliteWindowTitle);
-                                KeyMouse.KeyUp(scanCodes);
+                                KeyMouse.KeyUp(scanCodeExs);
                                 break;
                             case "KEYDOWN":
                                 User32.setFocus(eliteWindowTitle);
-                                KeyMouse.KeyDown(scanCodes);
+                                KeyMouse.KeyDown(scanCodeExs);
                                 break;
                             default:
                                 booleanValues["VAEDkeyBindingError"] = true;

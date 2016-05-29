@@ -30,11 +30,11 @@ namespace OcellusPlugin
             // TODO: look at version in file and balk if unknown
         }
 
-        public List<ushort> GetCodes(string command)
+        public List<uint> GetCodes(string command)
         {
             var keys = _bindList.ContainsKey(command) ? _bindList[command] : null;
             // TODO: throw exceptions rather than returning null
-            // TODO: die if key doesn't have scan code
+            // TODO: die if key doesn't have key code
             return keys == null ? null : (from key in keys where _keyMap.ContainsKey(key) select _keyMap[key]).ToList();
         }
 
@@ -52,8 +52,8 @@ namespace OcellusPlugin
             // Modifiers (shift, ctrl, alt) must be pressed before main key
             // Remove "Key_" prefix
             keys.AddRange(from element in bindNode.Elements()
-                where element.Attribute("Device").Value == "Keyboard"
-                select element.Attribute("Key").Value.Remove(0, 4));
+                          where element.Attribute("Device").Value == "Keyboard"
+                          select element.Attribute("Key").Value.Remove(0, 4));
             keys.Add(bindNode.Attribute("Key").Value.Remove(0, 4));
             return keys;
         }

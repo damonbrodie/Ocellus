@@ -7,7 +7,7 @@ namespace OcellusPlugin
 {
     internal partial class EliteBinds
     {
-        private readonly Dictionary<string, ushort> _keyMap = new Dictionary<string, ushort>
+        private readonly Dictionary<string, uint> _keyMap = new Dictionary<string, uint>
         {
             {"Backspace", 8},
             {"Tab", 9},
@@ -95,7 +95,7 @@ namespace OcellusPlugin
             {"F12", 123},
             {"NumLock", 144},
             {"ScrollLock", 145},
-            {"Numpad_Enter", 156},
+            {"Numpad_Enter", (13 | 0xE1000000)}, // hack
             {"LeftShift", 160},
             {"RightShift", 161},
             {"LeftControl", 162},

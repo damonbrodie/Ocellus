@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Linq;
 using System.Threading;
 
 
@@ -43,86 +43,117 @@ namespace OcellusPlugin
         private const uint MAPVK_VSC_TO_VK_EX = 3;
         private const uint MAPVK_VK_TO_VSC_EX = 4;
 
-        private static readonly HashSet<VK> VK_EXTENDED = new HashSet<VK>
+        /// <summary>
+        /// List of virtual keys that always require the extended bit. Note that VK_RETURN is available in both regular
+        /// and extended, where extended refers to the NumPad enter, so it is not present here.
+        /// </summary>
+        private static readonly List<VK> VK_EXTENDED = new List<VK>
         {
-            VK.VK_APPS,
             VK.VK_CANCEL,
-            VK.VK_SNAPSHOT,
-            VK.VK_DIVIDE,
-            VK.VK_NUMLOCK,
-            VK.VK_LWIN,
-            VK.VK_RWIN,
-            VK.VK_RMENU,
-            VK.VK_RCONTROL,
-            VK.VK_RSHIFT,
-            VK.VK_INSERT,
-            VK.VK_DELETE,
             VK.VK_PRIOR,
             VK.VK_NEXT,
-            VK.VK_HOME,
             VK.VK_END,
-            VK.VK_UP,
-            VK.VK_DOWN,
+            VK.VK_HOME,
             VK.VK_LEFT,
-            VK.VK_RIGHT
+            VK.VK_UP,
+            VK.VK_RIGHT,
+            VK.VK_DOWN,
+            VK.VK_SNAPSHOT,
+            VK.VK_INSERT,
+            VK.VK_DELETE,
+            VK.VK_LWIN,
+            VK.VK_RWIN,
+            VK.VK_APPS,
+            VK.VK_DIVIDE,
+            VK.VK_NUMLOCK,
+            VK.VK_RCONTROL,
+            VK.VK_RMENU
         };
 
-        // TODO: understand DllImport CharSet, ExactSpelling, CallingConvention, SetLastError
         [DllImport("user32.dll")]
         private static extern IntPtr GetMessageExtraInfo();
 
         [DllImport("user32.dll")]
         private static extern uint SendInput(uint nInputs, INPUT[] pInputs, int cbSize);
 
+        // MAPVK_VK_TO_VSC_EX parameter seems identical to MAPVK_VK_TO_VSC parameter, and system keyboard interpretation is
+        // sufficient, so no need for MapVirtualKeyEx.
         [DllImport("user32.dll")]
-        private static extern uint MapVirtualKeyEx(uint uCode, uint uMapType, IntPtr dwhkl = default(IntPtr));
+        private static extern uint MapVirtualKey(uint uCode, uint uMapType);
 
-        [DllImport("user32.dll")]
-        public static extern int GetKeyNameText(int lParam, [Out] StringBuilder lpString, int nSize);
-
-        public static void KeyPress(List<ushort> keyCodes, int duration = 40)
+        /// <summary>
+        /// Convert virtual key code to keyboard scan code using current system keyboard (including extended state). For
+        /// the enter on the number pad, use VK_RETURN & 0xe1000000.
+        /// </summary>
+        /// <param name="vkCode">Virtual key code (e.g. VK_SPACE)</param>
+        /// <returns>Keyboard scan code with high bit set if extended key</returns>
+        public static uint MapVkToScanCodeEx(uint vkCode)
         {
-            KeyDown(keyCodes);
+            var extended = VK_EXTENDED.Contains((VK)vkCode);
+            if ((vkCode & 0xe1000000) > 0)
+            {
+                extended = true;
+                vkCode &= 0xff;
+            }
+            var scanCode = MapVirtualKey(vkCode, MAPVK_VK_TO_VSC);
+            return extended ? scanCode | 0x80000000 : scanCode;
+        }
+
+        /// <summary>
+        /// Convert list of virtual key codes to keyboard scan codes using current system keyboard (including extended state).
+        /// For the enter on the number pad, use VK_RETURN & 0xe1000000.
+        /// </summary>
+        /// <param name="vkCodes">List of virtual key code (e.g. [VK_RSHIFT, VK_SPACE])</param>
+        /// <returns>List of keyboard scan codes with high bit set if extended key</returns>
+        public static List<uint> MapVkToScanCodeExs(IEnumerable<uint> vkCodes)
+        {
+            return vkCodes.Select(MapVkToScanCodeEx).ToList();
+        }
+
+        public static void KeyPress(IReadOnlyCollection<uint> scanCodesEx, int duration = 40)
+        {
+            KeyDown(scanCodesEx);
             Thread.Sleep(duration);
-            KeyUp(keyCodes);
+            KeyUp(scanCodesEx);
         }
 
-        public static void KeyDown(List<ushort> keyCodes)
+        public static void KeyDown(IReadOnlyCollection<uint> scanCodesEx)
         {
-            SendInput((uint)keyCodes.Count, BuildInputs(keyCodes, true), Marshal.SizeOf(typeof(INPUT)));
+            SendInput((uint)scanCodesEx.Count, BuildInputs(scanCodesEx, true), Marshal.SizeOf(typeof(INPUT)));
         }
 
-        public static void KeyUp(List<ushort> keyCodes)
+        public static void KeyUp(IReadOnlyCollection<uint> scanCodesEx)
         {
-            SendInput((uint)keyCodes.Count, BuildInputs(keyCodes, false), Marshal.SizeOf(typeof(INPUT)));
+            SendInput((uint)scanCodesEx.Count, BuildInputs(scanCodesEx, false), Marshal.SizeOf(typeof(INPUT)));
         }
 
-        private static INPUT[] BuildInputs(IReadOnlyCollection<ushort> keyCodes, bool keyDown)
+        private static INPUT[] BuildInputs(IReadOnlyCollection<uint> scanCodesEx, bool keyDown)
         {
-            var size = keyCodes.Count;
+            var size = scanCodesEx.Count;
             var i = 0;
             var inputs = new INPUT[size];
-            foreach (var keyCode in keyCodes)
+            foreach (var scanCodeEx in scanCodesEx)
             {
                 // reverse order for keyUp
-                inputs[keyDown ? i : size - i - 1] = BuildInput(keyCode, keyDown);
+                inputs[keyDown ? i : size - i - 1] = BuildInput(scanCodeEx, keyDown);
                 i++;
             }
             return inputs;
         }
 
-        private static INPUT BuildInput(ushort keyCode, bool keyDown)
+        private static INPUT BuildInput(uint scanCodeEx, bool keyDown)
         {
-            var KEY_IS_EXTENDED = VK_EXTENDED.Contains((VK) keyCode) ? KEYEVENTF_EXTENDEDKEY : 0;
+            var keyDownOrUp = keyDown ? 0 : KEYEVENTF_KEYUP;
+            var keyIsExtended = (scanCodeEx & 0x80000000) == 0 ? 0 : KEYEVENTF_EXTENDEDKEY;
             var keybdInput = new KEYBDINPUT
             {
                 wVk = 0,
-                wScan = (ushort) MapVirtualKeyEx(keyCode, MAPVK_VK_TO_VSC),
-                dwFlags = KEYEVENTF_SCANCODE | (keyDown ? 0 : KEYEVENTF_KEYUP) | KEY_IS_EXTENDED,
+                wScan = (ushort)(scanCodeEx & 0x000000FF),
+                dwFlags = KEYEVENTF_SCANCODE | keyDownOrUp | keyIsExtended,
                 dwExtraInfo = GetMessageExtraInfo()
             };
-            var inputUnion = new INPUT_UNION {ki = keybdInput};
-            return new INPUT {type = INPUT_KEYBOARD, u = inputUnion};
+            var inputUnion = new INPUT_UNION { ki = keybdInput };
+            return new INPUT { type = INPUT_KEYBOARD, u = inputUnion };
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -135,9 +166,12 @@ namespace OcellusPlugin
         [StructLayout(LayoutKind.Explicit)]
         private struct INPUT_UNION
         {
-            [FieldOffset(0)] public readonly MOUSEINPUT mi;
-            [FieldOffset(0)] public KEYBDINPUT ki;
-            [FieldOffset(0)] public readonly HARDWAREINPUT hi;
+            [FieldOffset(0)]
+            public readonly MOUSEINPUT mi;
+            [FieldOffset(0)]
+            public KEYBDINPUT ki;
+            [FieldOffset(0)]
+            public readonly HARDWAREINPUT hi;
         }
 
         [StructLayout(LayoutKind.Sequential)]
