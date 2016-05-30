@@ -15,7 +15,7 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.4";
+        public const string pluginVersion = "0.5";
         public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
 
         public static string VA_DisplayName()
@@ -35,12 +35,14 @@ namespace OcellusPlugin
 
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
+
+            Debug.Write("---------------------- Ocellus Plugin Initializing ----------------------");
             // Setup Speech engine
             if (EliteGrammar.downloadGrammar())
             {
                 SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
                 recognitionEngine.SetInputToDefaultAudioDevice();
-                Grammar grammar = new Grammar(Path.Combine(Config.Path(), "SystemsGrammar.xml"));
+                Grammar grammar = new Grammar(Path.Combine(Config.Path(), "systems_grammar.xml"));
                 Task.Run(() => recognitionEngine.LoadGrammar(grammar));
                 state.Add("VAEDrecognitionEngine", recognitionEngine);
             }
@@ -166,8 +168,9 @@ namespace OcellusPlugin
                         {
                             SpeechRecognitionEngine recognitionEngine = (SpeechRecognitionEngine)state["VAEDrecognitionEngine"];
 
-                            string system = EliteGrammar.dictateSystem(recognitionEngine, (List<String>)state["VAEDtrackedSystems"]);
-                            textValues["VAEDdictateSystem"] = system;
+                            Tuple<string,string> tSystemNames = EliteGrammar.dictateSystem(recognitionEngine, (List<String>)state["VAEDtrackedSystems"]);
+                            textValues["VAEDdictateSystem"] = tSystemNames.Item1;
+                            textValues["VAEDdictateSystemPhonetic"] = tSystemNames.Item2;
                             break;
                         }
                         else
@@ -175,6 +178,7 @@ namespace OcellusPlugin
                             Debug.Write("Error:  Speech Engine not yet Initialized.  (Possibly still loading)");
                         }
                         textValues["VAEDdictateSystem"] = null;
+                        textValues["VAEDdictateSystemPhonetic"] = null;
                         break;
                     case "press key bind":
                         // If the Binds file changes then reload the binds.
@@ -195,6 +199,8 @@ namespace OcellusPlugin
                             eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
                         }
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
+                        Debug.Write("Key part 0: " + parts[0]);
+                        Debug.Write("key part 1: " + parts[1]);
 
                         List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1]));
                         if (scanCodeExs == null)
@@ -233,9 +239,17 @@ namespace OcellusPlugin
                     case "export for coriolis":
                         Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         string json = Coriolis.createCoriolisJson(ref state);
-                        Clipboard.SetText(json);
-                        Debug.Write("------------------ Coriolis JSON Follows ---------------------");
-                        Debug.Write(json);
+                        if (json != null)
+                        {
+                            booleanValues["VAEDexportCoriolisError"] = false;
+                            Clipboard.SetText(json);
+                            Debug.Write("------------------ Coriolis JSON Follows ---------------------");
+                            Debug.Write(json);
+                            break;
+                        }
+                        Debug.Write("Error:  Unable to form Coriolis.io JSON");
+                        Clipboard.Clear();
+                        booleanValues["VAEDexportCoriolisError"] = true;
                         break;
                     case "edit web variable sources":
                         var webVarsForm = new WebVars.EditWebVars();
@@ -281,11 +295,7 @@ namespace OcellusPlugin
                             Web.WriteCookiesToDisk(Config.CookiePath(), verifyCookies);
                         }
                         break;
-                    case "update to eddn":
-                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
-                        Eddn.updateEddn(ref state);
-                        break;
-                    case "get variables from frontier":
+                    case "update profile and eddn":
                         if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                         {
                             Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);

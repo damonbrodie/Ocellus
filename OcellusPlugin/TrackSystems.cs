@@ -17,13 +17,13 @@ class TrackSystems
         {
             trackedSystems.Insert(0, system);
             state["VAEDtrackedSystems"] = trackedSystems;
-            string recentSystemsFile = Path.Combine(Config.Path(), "RecentSystems.txt");
+            string recentSystemsFile = Path.Combine(Config.Path(), "recent_systems.txt");
             File.WriteAllLines(recentSystemsFile, trackedSystems);
         }
     }
     public static void Load(ref Dictionary<string, object> state)
     {
-        string recentSystemsFile = Path.Combine(Config.Path(), "RecentSystems.txt");
+        string recentSystemsFile = Path.Combine(Config.Path(), "recent_systems.txt");
         List<string> trackedSystems = new List<string>();
         if (File.Exists(recentSystemsFile))
         {

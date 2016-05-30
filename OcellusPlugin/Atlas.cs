@@ -22,7 +22,7 @@ class Atlas
         {
             // Download the index once a week
             DateTime fileTime = File.GetLastWriteTime(atlasFile);
-            DateTime weekago = DateTime.Now.AddDays(-7);
+            DateTime weekago = DateTime.Now.AddDays(-1);
             if (fileTime > weekago)
             {
                 return true;
@@ -72,7 +72,7 @@ class Atlas
             {
                 state.Add("VAEDatlasIndex", atlasIndex);
             }
-            Debug.Write("EDDN data loaded.  "+ atlasIndex.Count.ToString() + " populated systems");
+            Debug.Write("EDDN data loaded.  "+ atlasIndex.Count.ToString() + " systems");
         }
         catch (Exception ex)
         {
@@ -115,7 +115,6 @@ class Atlas
             Debug.Write("Error:  From system '" + fromSystem + "' is not in the EDDN database");
             return -1;
         }
-        Debug.Write(toSystem);
         if (atlas.ContainsKey(toSystem))
         {
             toX = (double)atlas[toSystem]["x"];

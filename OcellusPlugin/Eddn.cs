@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using System.Threading;
+
 
 // **************************************
 // *  Functions for doing EDDN updates  *
@@ -176,28 +176,29 @@ class Eddn
                 break;
         }
         newCommodity.buyPrice = (int)currCommodity["buyPrice"];
-        string demandLevel = mapBracket((int)currCommodity["demandBracket"]);
-        if (demandLevel != null)
+        if (currCommodity["demandBracket"].GetType() == typeof(string) && (string)currCommodity["demandBracket"] != "")
         {
-            newCommodity.demandLevel = demandLevel;
+            string demandLevel = mapBracket((int)currCommodity["demandBracket"]);
+            if (demandLevel != null)
+            {
+                newCommodity.demandLevel = demandLevel;
+            }
         }
-        string supplyLevel = mapBracket((int)currCommodity["stockBracket"]);
-        if (supplyLevel != null)
+        if (currCommodity["stockBracket"].GetType() == typeof(string) && (string)currCommodity["stockBracket"] != "")
         {
-            newCommodity.supplyLevel = supplyLevel;
+            string supplyLevel = mapBracket((int)currCommodity["stockBracket"]);
+            if (supplyLevel != null)
+            {
+                newCommodity.supplyLevel = supplyLevel;
+            }
         }
         return newCommodity;
     }
 
-    private static Tuple<string, string, string> createEddnJson(ref Dictionary<string, object> state)
+    private static Tuple<string, string, string> createEddnJson(Dictionary<string, dynamic> companion)
     {
-        if (!state.ContainsKey("VAEDcompanionDict"))
-        {
-            Debug.Write("Error:  No Companion API data");
-            return Tuple.Create<string, string, string>(null, null, null);
-        }
-
-        Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
+        DateTime timestamp = DateTime.Now;
+        string companionTime = timestamp.ToString("yyyy-MM-dd") + "T" + timestamp.ToString("H:m:szzz");
 
         bool isDocked = companion["commander"]["docked"];
         if (!isDocked)
@@ -218,17 +219,17 @@ class Eddn
             eddnCommodities.header.uploaderID = companion["commander"]["name"];
             eddnCommodities.message.systemName = system;
             eddnCommodities.message.stationName = starport;
-            eddnCommodities.message.timestamp = state["VAEDcompanionTime"].ToString();
+            eddnCommodities.message.timestamp = companionTime;
 
             eddnOutfitting.header.uploaderID = companion["commander"]["name"];
             eddnOutfitting.message.systemName = system;
             eddnOutfitting.message.stationName = starport;
-            eddnOutfitting.message.timestamp = state["VAEDcompanionTime"].ToString();
+            eddnOutfitting.message.timestamp = companionTime;
 
             eddnShips.header.uploaderID = companion["commander"]["name"];
             eddnShips.message.systemName = system;
             eddnShips.message.stationName = starport;
-            eddnShips.message.timestamp = state["VAEDcompanionTime"].ToString();
+            eddnShips.message.timestamp = companionTime;
 
             string commodityJson = null;
             string outfittingJson = null;
@@ -314,15 +315,9 @@ class Eddn
             
     }
 
-    public static void updateEddn(ref Dictionary<string, object> state)
+    public static void updateEddn(Dictionary<string, dynamic> companion)
     {
-        int eddnCooldown = Utilities.isCoolingDown(ref state, "VAEDeddnCooldown");
-        if (eddnCooldown > 0)
-        {
-            Debug.Write("EDDN update is cooling down: " + eddnCooldown.ToString() + " seconds remain.");
-            return;
-        }
-        Tuple<string, string, string> tResponse = createEddnJson(ref state);
+        Tuple<string, string, string> tResponse = createEddnJson(companion);
         if (tResponse.Item3 != null)
         {
             Debug.Write("About to submit Shipyard to EDDN");

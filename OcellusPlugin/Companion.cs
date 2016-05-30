@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net;
+using System.IO;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
+using System.Threading.Tasks;
 
 
 // **************************************************************************
@@ -154,9 +156,7 @@ class Companion
             textValues["VAEDcurrentSystem"] = null;
             if (result.ContainsKey("lastSystem") && result["lastSystem"].ContainsKey("name"))
             {
-
                 textValues["VAEDcurrentSystem"] = result["lastSystem"]["name"];
-                TrackSystems.Add(ref state, result["lastSystem"]["name"]);
             }
             else
             {
@@ -166,7 +166,6 @@ class Companion
                 textValues["VAEDprofileStatus"] = "error";
                 return false;
             }
-
             // Null out ship locations
             string[] listOfShips = Elite.listOfShipVariableNames();
             foreach (string ship in listOfShips)
@@ -306,6 +305,7 @@ class Companion
 
             if (currentlyDocked)
             {
+                TrackSystems.Add(ref state, result["lastSystem"]["name"]);
                 if (result.ContainsKey("lastStarport") && result["lastStarport"].ContainsKey("name"))
                 {
                     textValues["VAEDcurrentStarport"] = result["lastStarport"]["name"];
@@ -326,6 +326,19 @@ class Companion
                 if (result["lastStarport"].ContainsKey("ships") && result["lastStarport"].ContainsKey("modules"))
                 {
                     booleanValues["VAEDstarportOutfitting"] = true;
+                }
+
+                // If we're docked, update the EDDN network.
+                
+                int eddnCooldown = Utilities.isCoolingDown(ref state, "VAEDeddnCooldown", 60 * 10); // Cool down 10 minutes
+                if (state.ContainsKey("VAEDlastStation") && (string)state["VAEDlastStation"] == textValues["VAEDcurrentStarport"] && eddnCooldown > 0)
+                {
+                    Debug.Write("EDDN update is cooling down: " + eddnCooldown.ToString() + " seconds remain.");
+                }
+                else
+                {
+                    state["VAEDlastStation"] = textValues["VAEDcurrentStarport"];
+                    Task.Run(() => Eddn.updateEddn(result));
                 }
             }
 
@@ -351,10 +364,11 @@ class Companion
             textValues["VAEDprofileStatus"] = "error";
             return false;
         }
-        DateTime timestamp = DateTime.Now;
-        state["VAEDcompanionTime"] = timestamp.ToString("yyyy-MM-dd") + "T" + timestamp.ToString("H:m:szzz");
-        Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
-        Debug.Write(htmlData);
+        string companionFile = Path.Combine(Config.Path(), "companion.json");
+        using (StreamWriter outputFile = new StreamWriter(companionFile))
+        {
+            outputFile.Write(htmlData);
+        }
         return true;
     }
 }

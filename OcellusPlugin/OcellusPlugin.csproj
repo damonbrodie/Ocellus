@@ -67,6 +67,7 @@
     <Compile Include="Coriolis.cs" />
     <Compile Include="Eddb.cs" />
     <Compile Include="Eddn.cs" />
+    <Compile Include="EDShipyard.cs" />
     <Compile Include="EliteBinds.cs" />
     <Compile Include="EliteKeyMap.cs" />
     <Compile Include="FileVars.cs" />

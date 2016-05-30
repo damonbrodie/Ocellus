@@ -719,26 +719,26 @@ class Coriolis
             foreach (KeyValuePair<string, dynamic> currModule in companion["ship"]["modules"])
             {
                 string currMapping = ModuleMap(currModule.Key);
-                Dictionary<string, dynamic> mod = null;
-                switch (currMapping)
+                try
                 {
-                    case "hardpoints":
-                        mod = currModule.Value["module"];
-                        addHardpoint(mod, ref coriolis);
-                        break;
-                    case "utility":
-                        mod = currModule.Value["module"];
-                        addUtility(mod, ref coriolis);
-                        break;
-                    case "internal":
-                        mod = currModule.Value["module"];
-                        addInternal(mod, ref coriolis);
-                        break;
-                    case "standard":
-                        mod = currModule.Value["module"];
-                        addStandard(mod, ref coriolis);
-                        break;
+                    Dictionary<string, dynamic> mod = currModule.Value["module"];
+                    switch (currMapping)
+                    {
+                        case "hardpoints":
+                            addHardpoint(mod, ref coriolis);
+                            break;
+                        case "utility":
+                            addUtility(mod, ref coriolis);
+                            break;
+                        case "internal":
+                            addInternal(mod, ref coriolis);
+                            break;
+                        case "standard":
+                            addStandard(mod, ref coriolis);
+                            break;
+                    }
                 }
+                catch { }
             }
 
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObject));

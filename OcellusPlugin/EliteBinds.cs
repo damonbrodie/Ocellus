@@ -20,13 +20,13 @@ namespace OcellusPlugin
             // TODO: do something if file not found
             var bindsTree = XElement.Load(bindsFile);
             _bindList = new Dictionary<string, List<string>>();
+
             foreach (var element in bindsTree.Elements())
             {
                 var keys = ParseBindControlNode(element);
                 if (keys == null) continue;
                 _bindList.Add(element.Name.LocalName, keys);
             }
-
             // TODO: look at version in file and balk if unknown
         }
 

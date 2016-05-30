@@ -11,30 +11,26 @@ using System.Collections.Generic;
 // ******************************************************************
 class EliteGrammar
 {
-    private const string grammarURL = "http://ocellus.io/data/SystemsGrammar.xml";
-
+    private const string grammarURL = "http://ocellus.io/data/systems_grammar.zip";
 
     public static bool downloadGrammar()
     {
-        string path = Config.Path();
-        string zipFile = Path.Combine(path, "SystemsGrammar.zip");
-        string grammarFile = Path.Combine(Config.Path(), "SystemsGrammar.xml");
-
+        string zipFile = Path.Combine(Config.Path(), "systems_grammar.zip");
+        string grammarFile = Path.Combine(Config.Path(), "systems_grammar.xml");
         if (File.Exists(grammarFile))
         {
             // Download the index once a week
             DateTime fileTime = File.GetLastWriteTime(grammarFile);
-            DateTime weekago = DateTime.Now.AddDays(-7);
+            DateTime weekago = DateTime.Now.AddDays(-1);
             if (fileTime > weekago)
             {
                 return true;
             }
         }
-
         if (Web.downloadFile(grammarURL, zipFile))
         {
             File.Delete(grammarFile);
-            ZipFile.ExtractToDirectory(zipFile, path);
+            ZipFile.ExtractToDirectory(zipFile, Config.Path());
             File.Delete(zipFile);
             return true;
         }
@@ -50,12 +46,11 @@ class EliteGrammar
         return true;
     }
 
-
     private static bool loadGrammar()
     {
         SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
         recognitionEngine.SetInputToDefaultAudioDevice();
-        Grammar grammar = new Grammar(Path.Combine(Config.Path(), "SystemsGrammar.xml"));
+        Grammar grammar = new Grammar(Path.Combine(Config.Path(), "systems_grammar.xml"));
         recognitionEngine.LoadGrammar(grammar);
         return true;
     }
@@ -65,17 +60,18 @@ class EliteGrammar
         return await Task.Run(() => loadGrammar());
     }
 
-    public static string dictateSystem(SpeechRecognitionEngine recognitionEngine, List<string> trackedSystems)
+    public static Tuple<String, String> dictateSystem(SpeechRecognitionEngine recognitionEngine, List<string> trackedSystems)
     {
         recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
         recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1);
         RecognitionResult result = recognitionEngine.Recognize(TimeSpan.FromSeconds(5));
         double topPickConfidence = 0.00;
         string topPickSystem = null;
+        string topPickPhonetic = null;
         if (result == null)
         {
             Debug.Write("dictate system:  No system matched");
-            return null;
+            return Tuple.Create<String, String>(null, null);
         }
         if (result.Alternates != null)
         {
@@ -95,17 +91,13 @@ class EliteGrammar
                 {
                     topPickConfidence = confidence;
                     topPickSystem = semantic.ToString();
+                    topPickPhonetic = phrase.Text.ToString();
                 }
                 Debug.Write("dictateSystem: Possible system " + semantic + " (" + phrase.Confidence.ToString() + ", " + phrase.Text + ")");
             }
-            return topPickSystem;
+            return Tuple.Create<String, String>(topPickSystem, topPickPhonetic);
         }
-        if (result != null)
-        {
-            Debug.Write("dictateSystem: only a single match " + result.Semantics.Value.ToString());
-            return result.Semantics.Value.ToString();
-        }
-        return null;
+        return Tuple.Create<String, String>(null, null);
     }
 }
 

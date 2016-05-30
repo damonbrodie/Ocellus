@@ -112,7 +112,14 @@ namespace OcellusPlugin
             {"LeftBracket", 219},
             {"BackSlash", 220},
             {"RightBracket", 221},
-            {"Apostrophe", 222}
+            {"Apostrophe", 222},
+
+            // Deal with en_ca
+
+            {"é", 191 },
+            {"¸", 221 },
+            {"Hash", 192 },
+            {"Circumflex", 219 }
         };
     }
 }
