@@ -179,20 +179,20 @@ class GetWebVars
             // XXX handle error return codes
             foreach (string key in tResponse.Item3.Keys)
             {
-                textValues.Add(key, tResponse.Item3[key]);
+                textValues[key] = tResponse.Item3[key];
                 textVariableNames.Add(key);
             }
             foreach (string key in tResponse.Item4.Keys)
             {
 
-                intValues.Add(key, tResponse.Item4[key]);
+                intValues[key] = tResponse.Item4[key];
                 intVariableNames.Add(key);
 
             }
             foreach (string key in tResponse.Item5.Keys)
             {
 
-                booleanValues.Add(key, tResponse.Item5[key]);
+                booleanValues[key] = tResponse.Item5[key];
                 boolVariableNames.Add(key);
             }
         }

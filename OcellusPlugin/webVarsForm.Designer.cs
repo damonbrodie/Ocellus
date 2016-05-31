@@ -47,22 +47,22 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtServerStatus = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabResponse = new System.Windows.Forms.TabPage();
+            this.txtNumVariables = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtWarnings = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabVariables = new System.Windows.Forms.TabPage();
             this.tabJson = new System.Windows.Forms.TabPage();
-            this.tabResponse = new System.Windows.Forms.TabPage();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtJson = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtJson = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtWarnings = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.txtNumVariables = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTest)).BeginInit();
             this.tabControl1.SuspendLayout();
+            this.tabResponse.SuspendLayout();
             this.tabVariables.SuspendLayout();
             this.tabJson.SuspendLayout();
-            this.tabResponse.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtJson1
@@ -249,6 +249,57 @@
             this.tabControl1.Size = new System.Drawing.Size(399, 467);
             this.tabControl1.TabIndex = 16;
             // 
+            // tabResponse
+            // 
+            this.tabResponse.Controls.Add(this.txtNumVariables);
+            this.tabResponse.Controls.Add(this.label7);
+            this.tabResponse.Controls.Add(this.txtWarnings);
+            this.tabResponse.Controls.Add(this.label6);
+            this.tabResponse.Controls.Add(this.txtServerStatus);
+            this.tabResponse.Controls.Add(this.label2);
+            this.tabResponse.Location = new System.Drawing.Point(4, 22);
+            this.tabResponse.Name = "tabResponse";
+            this.tabResponse.Size = new System.Drawing.Size(391, 441);
+            this.tabResponse.TabIndex = 2;
+            this.tabResponse.Text = "Response";
+            this.tabResponse.UseVisualStyleBackColor = true;
+            // 
+            // txtNumVariables
+            // 
+            this.txtNumVariables.Location = new System.Drawing.Point(103, 222);
+            this.txtNumVariables.Name = "txtNumVariables";
+            this.txtNumVariables.ReadOnly = true;
+            this.txtNumVariables.Size = new System.Drawing.Size(40, 20);
+            this.txtNumVariables.TabIndex = 19;
+            this.txtNumVariables.Text = " ";
+            // 
+            // label7
+            // 
+            this.label7.Location = new System.Drawing.Point(15, 225);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(82, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "# Variables:";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // txtWarnings
+            // 
+            this.txtWarnings.Location = new System.Drawing.Point(103, 144);
+            this.txtWarnings.Name = "txtWarnings";
+            this.txtWarnings.ReadOnly = true;
+            this.txtWarnings.Size = new System.Drawing.Size(253, 20);
+            this.txtWarnings.TabIndex = 17;
+            this.txtWarnings.Text = " ";
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(34, 147);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(63, 13);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Warnings:";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // tabVariables
             // 
             this.tabVariables.Controls.Add(this.dataGridTest);
@@ -272,20 +323,23 @@
             this.tabJson.Text = "JSON";
             this.tabJson.UseVisualStyleBackColor = true;
             // 
-            // tabResponse
+            // label5
             // 
-            this.tabResponse.Controls.Add(this.txtNumVariables);
-            this.tabResponse.Controls.Add(this.label7);
-            this.tabResponse.Controls.Add(this.txtWarnings);
-            this.tabResponse.Controls.Add(this.label6);
-            this.tabResponse.Controls.Add(this.txtServerStatus);
-            this.tabResponse.Controls.Add(this.label2);
-            this.tabResponse.Location = new System.Drawing.Point(4, 22);
-            this.tabResponse.Name = "tabResponse";
-            this.tabResponse.Size = new System.Drawing.Size(391, 441);
-            this.tabResponse.TabIndex = 2;
-            this.tabResponse.Text = "Response";
-            this.tabResponse.UseVisualStyleBackColor = true;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(13, 30);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(164, 17);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Source JSON Output:";
+            // 
+            // txtJson
+            // 
+            this.txtJson.Location = new System.Drawing.Point(16, 50);
+            this.txtJson.Multiline = true;
+            this.txtJson.Name = "txtJson";
+            this.txtJson.Size = new System.Drawing.Size(358, 370);
+            this.txtJson.TabIndex = 0;
             // 
             // label3
             // 
@@ -307,60 +361,6 @@
             this.label4.TabIndex = 18;
             this.label4.Text = "Use Web Variables with caution in your VoiceAttack Profile.";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txtJson
-            // 
-            this.txtJson.Location = new System.Drawing.Point(16, 50);
-            this.txtJson.Multiline = true;
-            this.txtJson.Name = "txtJson";
-            this.txtJson.Size = new System.Drawing.Size(358, 370);
-            this.txtJson.TabIndex = 0;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(13, 30);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(164, 17);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Source JSON Output:";
-            // 
-            // label6
-            // 
-            this.label6.Location = new System.Drawing.Point(34, 147);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(63, 13);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "Warnings:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // txtWarnings
-            // 
-            this.txtWarnings.Location = new System.Drawing.Point(103, 144);
-            this.txtWarnings.Name = "txtWarnings";
-            this.txtWarnings.ReadOnly = true;
-            this.txtWarnings.Size = new System.Drawing.Size(253, 20);
-            this.txtWarnings.TabIndex = 17;
-            this.txtWarnings.Text = " ";
-            // 
-            // label7
-            // 
-            this.label7.Location = new System.Drawing.Point(15, 225);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 13);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "# Variables:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // txtNumVariables
-            // 
-            this.txtNumVariables.Location = new System.Drawing.Point(103, 222);
-            this.txtNumVariables.Name = "txtNumVariables";
-            this.txtNumVariables.ReadOnly = true;
-            this.txtNumVariables.Size = new System.Drawing.Size(40, 20);
-            this.txtNumVariables.TabIndex = 19;
-            this.txtNumVariables.Text = " ";
             // 
             // EditWebVars
             // 
@@ -385,21 +385,22 @@
             this.Controls.Add(this.txtJson2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtJson1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EditWebVars";
-            this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ocellus Web Variables";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.EditWebVars_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridTest)).EndInit();
             this.tabControl1.ResumeLayout(false);
+            this.tabResponse.ResumeLayout(false);
+            this.tabResponse.PerformLayout();
             this.tabVariables.ResumeLayout(false);
             this.tabJson.ResumeLayout(false);
             this.tabJson.PerformLayout();
-            this.tabResponse.ResumeLayout(false);
-            this.tabResponse.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

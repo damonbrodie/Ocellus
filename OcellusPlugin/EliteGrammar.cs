@@ -63,8 +63,9 @@ class EliteGrammar
     public static Tuple<String, String> dictateSystem(SpeechRecognitionEngine recognitionEngine, List<string> trackedSystems)
     {
         recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
-        recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1);
-        RecognitionResult result = recognitionEngine.Recognize(TimeSpan.FromSeconds(5));
+        recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1.5);
+        recognitionEngine.BabbleTimeout = TimeSpan.FromSeconds(5);
+        RecognitionResult result = recognitionEngine.Recognize();
         double topPickConfidence = 0.00;
         string topPickSystem = null;
         string topPickPhonetic = null;

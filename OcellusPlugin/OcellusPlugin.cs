@@ -35,67 +35,73 @@ namespace OcellusPlugin
 
         public static void VA_Init1(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues, ref Dictionary<string, object> extendedValues)
         {
-
-            Debug.Write("---------------------- Ocellus Plugin Initializing ----------------------");
-            // Setup Speech engine
-            if (EliteGrammar.downloadGrammar())
+            try
             {
-                SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
-                recognitionEngine.SetInputToDefaultAudioDevice();
-                Grammar grammar = new Grammar(Path.Combine(Config.Path(), "systems_grammar.xml"));
-                Task.Run(() => recognitionEngine.LoadGrammar(grammar));
-                state.Add("VAEDrecognitionEngine", recognitionEngine);
-            }
-
-            // Setup plugin storage directory - used for cookies and debug logs
-            string appPath = Config.Path();
-            string cookieFile = Config.CookiePath();
-            string debugFile = Config.DebugPath();
-            textValues["VAEDdebugPath"] = debugFile;
-
-            // Determine Elite Dangerous directories
-            string gamePath = Elite.getGamePath();
-            string gameStartString = PluginRegistry.getStringValue("startPath");
-            string gameStartParams = PluginRegistry.getStringValue("startParams");
-            state.Add("VAEDgamePath", gamePath);
-            textValues["VAEDgameStartString"] = gameStartString;
-            textValues["VAEDgameStartParams"] = gameStartParams;
-
-            // Load EDDB Index into memory
-            Eddb.loadEddbIndex(ref state);
-
-            // Load Atlas Index into memory
-            Atlas.loadAtlasIndex(ref state);
-
-            Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
-     
-            // Load Tracked Systems into memory
-            TrackSystems.Load(ref state);
-
-            CookieContainer cookieJar = new CookieContainer();
-            if (File.Exists(cookieFile))
-            {
-                // If we have cookies then we are likely already logged in
-                cookieJar = Web.ReadCookiesFromDisk(cookieFile);
-                Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(cookieJar);
-                if (tAuthentication.Item2 == "ok")
+                Debug.Write("---------------------- Ocellus Plugin Initializing ----------------------");
+                // Setup Speech engine
+                if (EliteGrammar.downloadGrammar())
                 {
-                    cookieJar = tAuthentication.Item1;
-                    state.Add("VAEDcookieContainer", cookieJar);
-                    state["VAEDloggedIn"] = "ok";
+                    SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
+                    recognitionEngine.SetInputToDefaultAudioDevice();
+                    Grammar grammar = new Grammar(Path.Combine(Config.Path(), "systems_grammar.xml"));
+                    Task.Run(() => recognitionEngine.LoadGrammar(grammar));
+                    state.Add("VAEDrecognitionEngine", recognitionEngine);
                 }
-            }
-            else
-            {   
-                state.Add("VAEDloggedIn", "no");
-            }
 
-            EliteBinds eliteBinds = new EliteBinds();
-            state.Add("VAEDeliteBinds", eliteBinds);
-            string bindsFile = Elite.getBindsFilename();
-            DateTime fileTime = File.GetLastWriteTime(bindsFile);
-            state.Add("VAEDbindsFile", bindsFile);
-            state.Add("VAEDbindsTimestamp", fileTime);
+                // Setup plugin storage directory - used for cookies and debug logs
+                string appPath = Config.Path();
+                string cookieFile = Config.CookiePath();
+                string debugFile = Config.DebugPath();
+                textValues["VAEDdebugPath"] = debugFile;
+
+                // Determine Elite Dangerous directories
+                string gamePath = Elite.getGamePath();
+                string gameStartString = PluginRegistry.getStringValue("startPath");
+                string gameStartParams = PluginRegistry.getStringValue("startParams");
+                state.Add("VAEDgamePath", gamePath);
+                textValues["VAEDgameStartString"] = gameStartString;
+                textValues["VAEDgameStartParams"] = gameStartParams;
+
+                // Load EDDB Index into memory
+                Eddb.loadEddbIndex(ref state);
+
+                // Load Atlas Index into memory
+                Atlas.loadAtlasIndex(ref state);
+
+                Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
+
+                // Load Tracked Systems into memory
+                TrackSystems.Load(ref state);
+
+                CookieContainer cookieJar = new CookieContainer();
+                if (File.Exists(cookieFile))
+                {
+                    // If we have cookies then we are likely already logged in
+                    cookieJar = Web.ReadCookiesFromDisk(cookieFile);
+                    Tuple<CookieContainer, string> tAuthentication = Companion.loginToAPI(cookieJar);
+                    if (tAuthentication.Item2 == "ok")
+                    {
+                        cookieJar = tAuthentication.Item1;
+                        state.Add("VAEDcookieContainer", cookieJar);
+                        state["VAEDloggedIn"] = "ok";
+                    }
+                }
+                else
+                {
+                    state.Add("VAEDloggedIn", "no");
+                }
+
+                EliteBinds eliteBinds = new EliteBinds();
+                state.Add("VAEDeliteBinds", eliteBinds);
+                string bindsFile = Elite.getBindsFilename();
+                DateTime fileTime = File.GetLastWriteTime(bindsFile);
+                state.Add("VAEDbindsFile", bindsFile);
+                state.Add("VAEDbindsTimestamp", fileTime);
+            }
+            catch (Exception ex)
+            {
+                Debug.Write(ex.ToString());
+            }
         }
 
         public static void VA_Exit1(ref Dictionary<string, object> state)
@@ -252,8 +258,18 @@ namespace OcellusPlugin
                         booleanValues["VAEDexportCoriolisError"] = true;
                         break;
                     case "edit web variable sources":
-                        var webVarsForm = new WebVars.EditWebVars();
-                        webVarsForm.ShowDialog();
+                        bool foundWindow = false;
+                        foreach (Form form in Application.OpenForms)
+                            if (form.GetType().Name == "EditWebVars")
+                            {
+                                Debug.Write("Edit Web Variable Sources window is already open");
+                                foundWindow = true;
+                            }
+                        if (!foundWindow)
+                        {
+                            var webVarsForm = new WebVars.EditWebVars();
+                            webVarsForm.ShowDialog();
+                        }
                         break;
                     case "get web variables":
                         GetWebVars.readWebVars(ref state, ref textValues, ref intValues, ref booleanValues);
@@ -261,7 +277,7 @@ namespace OcellusPlugin
                     case "get file variables":
                         FileVar.readFileVars(ref state, ref textValues, ref intValues, ref booleanValues);
                         break;
-                    case "clipboard":
+                    case "get clipboard":
                         if (Clipboard.ContainsText(TextDataFormat.Text))
                         {
                             textValues.Add("VAEDclipboard", Clipboard.GetText());

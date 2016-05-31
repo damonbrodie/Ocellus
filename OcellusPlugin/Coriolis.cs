@@ -506,7 +506,7 @@ class Coriolis
     {
         string currName = currModule["name"].ToLower();
 
-        if (currName.Contains("engine"))
+        if (currName.Contains("mainengines"))
         {
             Thrusters newThrusters = new Thrusters();
             newThrusters.@class = mapClass(currName);
