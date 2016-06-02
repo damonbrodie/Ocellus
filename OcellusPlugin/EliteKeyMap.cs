@@ -119,7 +119,8 @@ namespace OcellusPlugin
             {"é", 191 },
             {"¸", 221 },
             {"Hash", 192 },
-            {"Circumflex", 219 }
+            {"Circumflex", 219 },
+            {"<", 220 }
         };
     }
 }

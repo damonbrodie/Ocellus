@@ -107,7 +107,16 @@ namespace OcellusPlugin
         /// <returns>List of keyboard scan codes with high bit set if extended key</returns>
         public static List<uint> MapVkToScanCodeExs(IEnumerable<uint> vkCodes)
         {
-            return vkCodes.Select(MapVkToScanCodeEx).ToList();
+            List < uint > scanCodes = new List<uint>();
+            try
+            {
+                scanCodes = vkCodes.Select(MapVkToScanCodeEx).ToList();
+            }
+            catch 
+            {
+                return scanCodes;
+            }
+            return scanCodes;
         }
 
         public static void KeyPress(IReadOnlyCollection<uint> scanCodesEx, int duration = 40)

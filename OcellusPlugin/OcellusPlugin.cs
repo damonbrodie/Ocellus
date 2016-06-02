@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Speech.Recognition;
@@ -209,8 +210,9 @@ namespace OcellusPlugin
                         Debug.Write("key part 1: " + parts[1]);
 
                         List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1]));
-                        if (scanCodeExs == null)
+                        if (scanCodeExs.Count == 0)
                         {
+                            Debug.Write("Warning: No key binding found for: " + textValues["VAEDkeyBinding"]);
                             booleanValues["VAEDkeyBindingError"] = true;
                             break;
                         }
@@ -242,16 +244,40 @@ namespace OcellusPlugin
                         string tempDebug = Debug.Path();
                         textValues["VAEDdebugFile"] = tempDebug;
                         break;
+                    case "export for ed shipyard":
+                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
+                        
+                        if (state.ContainsKey("VAEDshipObj"))
+                        {
+                            Ship.Components shipObj = (Ship.Components)state["VAEDshipObj"];
+                            StringBuilder export = EDShipyard.export(shipObj);
+                            if (export != null)
+                            {
+                                booleanValues["VAEDexportEDShipyardError"] = false;
+                                Clipboard.SetText(export.ToString());
+                                Debug.Write("------------------ ED Shipyard Export Follows ---------------------");
+                                Debug.Write(export.ToString());
+                                break;
+                            }
+                        }
+                        Debug.Write("Error:  Unable to form ED Shipyard.com Export");
+                        Clipboard.Clear();
+                        booleanValues["VAEDexportEDShipyuardError"] = true;
+                        break;
                     case "export for coriolis":
                         Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
-                        string json = Coriolis.createCoriolisJson(ref state);
-                        if (json != null)
+                        if (state.ContainsKey("VAEDshipObj"))
                         {
-                            booleanValues["VAEDexportCoriolisError"] = false;
-                            Clipboard.SetText(json);
-                            Debug.Write("------------------ Coriolis JSON Follows ---------------------");
-                            Debug.Write(json);
-                            break;
+                            Ship.Components shipObj = (Ship.Components)state["VAEDshipObj"];
+                            string json = Coriolis.export(shipObj);
+                            if (json != null)
+                            {
+                                booleanValues["VAEDexportCoriolisError"] = false;
+                                Clipboard.SetText(json);
+                                Debug.Write("------------------ Coriolis JSON Follows ---------------------");
+                                Debug.Write(json);
+                                break;
+                            }
                         }
                         Debug.Write("Error:  Unable to form Coriolis.io JSON");
                         Clipboard.Clear();

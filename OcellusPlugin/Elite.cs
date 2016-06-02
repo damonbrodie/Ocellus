@@ -225,7 +225,7 @@ class Elite
 
     public static string[] listOfShipsLongNames()
     {
-        // Ship names "official"
+        // Ship names "official", also for ED Shipyard
         string[] ships = {"Adder", "Anaconda", "Asp Explorer", "Asp Scout", "Cobra MkIII", "Cobra MkIV",
                 "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Dropship",
                 "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer-de-Lance", "Hauler",
@@ -237,7 +237,7 @@ class Elite
 
     public static string[] listofShipsFrontierNames()
     {
-        // Ship names as refered to in the API
+        // Ship names as refered to in the Frontier Companion API
         // XXX needs to be verified.
         string[] ships = {"Adder", "Anaconda", "Asp", "Asp_Scout", "CobraMkIII", "CobraMkIV",
                 "DiamondBackXL", "DiamondBack", "Eagle", "Federation_Dropship",
@@ -257,6 +257,18 @@ class Elite
                 "ImperialClipper", "ImperialCourier", "ImperialCutter", "ImperialEagle", "Keelback", "Orca",
                 "Python", "Sidewinder", "Type-6", "Type-7", "Type-9",
                 "ViperMkIII", "ViperMkIV", "Vulture" };
+        return ships;
+    }
+
+    public static string[] listOfCoriolisNames()
+    {
+        //Ship names for use with Coriolis
+        string[] ships = { "Adder" , "Anaconda" , "Asp Explorer" , "Asp Scout" , "Cobra Mk III" , "Cobra Mk IV",
+                "Diamondback Explorer", "Diamondback Scout", "Eagle",  "Federal Dropship",
+                "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer-de-Lance", "Hauler",
+                "Imperial Clipper", "Imperial Courier", "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca",
+                "Python", "Sidewinder", "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy",
+                "Viper", "Viper Mk IV", "Vulture" };
         return ships;
     }
 
@@ -291,6 +303,21 @@ class Elite
     }
 
     public static string frontierShipToPretty(string frontierShip)
+    {
+        int counter = 0;
+        string[] prettyShips = listOfShipsLongNames();
+        foreach (string ship in listofShipsFrontierNames())
+        {
+            if (ship == frontierShip)
+            {
+                return prettyShips[counter];
+            }
+            counter++;
+        }
+        return null;
+    }
+
+    public static string frontierShipToCoriolis(string frontierShip)
     {
         int counter = 0;
         string[] prettyShips = listOfShipsLongNames();

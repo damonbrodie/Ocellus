@@ -588,8 +588,7 @@ class Eddn
                 module.mount = "Turreted";
                 module.name = "Burst Laser";
                 break;
-            case "XXXXXXXX":
-            //case "128671449":
+            case "128671449":
                 module.@class = "1";
                 module.rating = "F";
                 module.category = "hardpoint";
@@ -740,8 +739,7 @@ class Eddn
                 module.mount = "Turreted";
                 module.name = "Fragment Cannon";
                 break;
-            case "xXxXxX":
-            //case "128671343":
+            case "128671343":
                 module.@class = "3";
                 module.rating = "C";
                 module.category = "hardpoint";
@@ -831,8 +829,7 @@ class Eddn
                 module.name = "Missile Rack";
                 module.guidance = "Seeker";
                 break;
-            case "XXXXXXXXXXX":
-            //case "128671344":
+            case "128671344":
                 module.@class = "2";
                 module.rating = "B";
                 module.category = "hardpoint";
@@ -914,8 +911,7 @@ class Eddn
                 module.mount = "Fixed";
                 module.name = "Plasma Accelerator";
                 break;
-            case "XXXXXXXXXXXXX":
-            //case "128671339":
+            case "128671339":
                 module.@class = "3";
                 module.rating = "B";
                 module.category = "hardpoint";
@@ -1011,7 +1007,7 @@ class Eddn
                 module.mount = "Fixed";
                 module.name = "Rail Gun";
                 break;
-            case "XXXXXXXXXXXX":
+            case "128671341":
             //case "128671341":
                 module.@class = "1";
                 module.rating = "D";

@@ -288,6 +288,16 @@ class Companion
             textValues["VAEDphoneticShip"] = Elite.frontierShipToPhonetic(currentShip).ToLower();
             intValues["VAEDcargoCapacity"] = cargoCapacity;
             intValues["VAEDquantityInCargo"] = quantityInCargo;
+            Ship.Components shipObj = Ship.decode(result);
+            state["VAEDshipObj"] = shipObj;
+            booleanValues["VAEDshipHasCargoScanner"] = shipObj.attributes.hasCargoScanner;
+            booleanValues["VAEDshipHasFrameShiftWakeScanner"] = shipObj.attributes.hasFrameShiftWakeScanner;
+            booleanValues["VAEDshipHasKillWarrantScanner"] = shipObj.attributes.hasKillWarrantScanner;
+            booleanValues["VAEDshipHasShieldBooster"] = shipObj.attributes.hasShieldBooster;
+            booleanValues["VAEDshipHasChaffLauncher"] = shipObj.attributes.hasChaffLauncher;
+            booleanValues["VAEDshipHasElectronicCountermeasures"] = shipObj.attributes.hasElectronicCountermeasures;
+            booleanValues["VAEDshipHasHeatSinkLauncher"] = shipObj.attributes.hasHeatSinkLauncher;
+            booleanValues["VAEDshipHasPointDefenct"] = shipObj.attributes.hasPointDefence;
         }
         catch (Exception ex)
         {
