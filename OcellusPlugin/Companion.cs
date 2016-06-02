@@ -297,7 +297,29 @@ class Companion
             booleanValues["VAEDshipHasChaffLauncher"] = shipObj.attributes.hasChaffLauncher;
             booleanValues["VAEDshipHasElectronicCountermeasures"] = shipObj.attributes.hasElectronicCountermeasures;
             booleanValues["VAEDshipHasHeatSinkLauncher"] = shipObj.attributes.hasHeatSinkLauncher;
-            booleanValues["VAEDshipHasPointDefenct"] = shipObj.attributes.hasPointDefence;
+            booleanValues["VAEDshipHasPointDefence"] = shipObj.attributes.hasPointDefence;
+            textValues["VAEDshipBulkheads"] = shipObj.standard.bulkheads;
+            intValues["VAEDshipPowerPlantClass"] = shipObj.standard.powerPlant.@class;
+            textValues["VAEDshipPowerPlantRating"] = shipObj.standard.powerPlant.rating;
+
+            textValues["VAEDshipThrustersRating"] = shipObj.standard.thrusters.rating;
+            intValues["VAEDshipThrustersClass"] = shipObj.standard.thrusters.@class;
+        
+            textValues["VAEDshipFrameShiftDriveRating"] = shipObj.standard.frameShiftDrive.rating;
+            intValues["VAEDshipFrameShiftDriveClass"] = shipObj.standard.frameShiftDrive.@class;
+
+            textValues["VAEDshipLifeSupportRating"] = shipObj.standard.lifeSupport.rating;
+            intValues["VAEDshipLifeSupportClass"] = shipObj.standard.lifeSupport.@class;
+
+            textValues["VAEDshipPowerDistributorRating"] = shipObj.standard.powerDistributor.rating;
+            intValues["VAEDshipPowerDistributorClass"] = shipObj.standard.powerDistributor.@class;
+
+            textValues["VAEDshipSensorsRating"] = shipObj.standard.sensors.rating;
+            intValues["VAEDshipSensorsClass"] = shipObj.standard.sensors.@class;
+
+            textValues["VAEDshipFuelTankRating"] = shipObj.standard.fuelTank.rating;
+            intValues["VAEDshipFuelTankClass"] = shipObj.standard.fuelTank.@class;
+
         }
         catch (Exception ex)
         {

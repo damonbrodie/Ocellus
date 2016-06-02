@@ -27,6 +27,12 @@ namespace OcellusPlugin
                 if (keys == null) continue;
                 _bindList.Add(element.Name.LocalName, keys);
             }
+            _bindList.Add("HUD", new List < string >{ "LeftControl", "LeftAlt", "G" } );
+            _bindList.Add("FrameRate", new List<string> { "LeftControl", "F" });
+            _bindList.Add("ConnectionStatus", new List<string> { "LeftControl", "B" });
+            _bindList.Add("Snapshot", new List<string> { "F10" });
+            _bindList.Add("HighResSnapshot", new List<string> { "LeftAlt", "F10" });
+            _bindList.Add("CloseQuickComms", new List<string> { "Esc" });
             // TODO: look at version in file and balk if unknown
         }
 

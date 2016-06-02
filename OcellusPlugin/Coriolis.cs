@@ -37,8 +37,9 @@ class Coriolis
             coriolis.components.utility = shipObj.utility;
             coriolis.components.@internal = shipObj.@internal;
 
-            coriolis.name = Elite.frontierShipToCoriolis(shipObj.attributes.shiptype);
-            coriolis.ship = coriolis.name;
+            string shipType = Elite.frontierShipToCoriolis(shipObj.attributes.shiptype);
+            coriolis.name = "Ocellus - " + shipType;
+            coriolis.ship = shipType;
 
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(CoriolisObj));
             MemoryStream stream = new MemoryStream();
