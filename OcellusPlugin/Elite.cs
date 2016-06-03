@@ -230,7 +230,7 @@ class Elite
                 "Diamondback Explorer", "Diamondback Scout", "Eagle", "Federal Dropship",
                 "Federal Assault Ship", "Federal Corvette", "Federal Gunship", "Fer-de-Lance", "Hauler",
                 "Imperial Clipper", "Imperial Courier", "Imperial Cutter", "Imperial Eagle", "Keelback", "Orca",
-                "Python", "Sidewinder MkI", "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy",
+                "Python", "Sidewinder", "Type-6 Transporter", "Type-7 Transporter", "Type-9 Heavy",
                 "Viper MkIII", "ViperMkIV", "Vulture" };
         return ships;
     }

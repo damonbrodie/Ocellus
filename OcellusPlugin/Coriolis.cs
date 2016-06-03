@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
-using System.Linq;
 
 
 // **********************************************************
@@ -11,8 +11,6 @@ using System.Linq;
 // **********************************************************
 class Coriolis
 {
-
-
     [DataContract]
     public class CoriolisObj
     {
@@ -33,9 +31,43 @@ class Coriolis
             CoriolisObj coriolis = new CoriolisObj();
 
             coriolis.components.standard = shipObj.standard;
-            coriolis.components.hardpoints = shipObj.hardpoints;
-            coriolis.components.utility = shipObj.utility;
-            coriolis.components.@internal = shipObj.@internal;
+            List<Ship.Hardpoint> sortedHardpoints = shipObj.hardpoints.OrderBy(o => o.slotSize).ToList();
+            foreach(Ship.Hardpoint hardpoint in sortedHardpoints)
+            {
+                if (hardpoint.rating == null)
+                {
+                    coriolis.components.hardpoints.Add(null);
+                }
+                else
+                {
+                    coriolis.components.hardpoints.Add(hardpoint);
+                }
+            }
+            List<Ship.Internal> sortedInternals = shipObj.@internal.OrderByDescending(o => o.slotSize).ToList();
+            foreach (Ship.Internal @internal in sortedInternals)
+            {
+                if (@internal.rating == null)
+                {
+                    coriolis.components.@internal.Add(null);
+                }
+                else
+                {
+                    coriolis.components.@internal.Add(@internal);
+                }
+            }
+            List<Ship.Utility> sortedUtilities = shipObj.utility.OrderBy(o => o.slot).ToList();
+            foreach (Ship.Utility utility in sortedUtilities)
+            {
+                if (utility.rating == null)
+                {
+                    coriolis.components.utility.Add(null);
+                }
+                else
+                {
+                    coriolis.components.utility.Add(utility);
+                }
+            }
+
 
             string shipType = Elite.frontierShipToCoriolis(shipObj.attributes.shiptype);
             coriolis.name = "Ocellus - " + shipType;

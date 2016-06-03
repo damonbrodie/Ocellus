@@ -64,7 +64,7 @@ class Eddb
             Dictionary<string, dynamic> eddbIndex = new Dictionary<string, dynamic>();
             string[] lines = File.ReadAllLines(eddbIndexFile);
             eddbIndex = serializer.Deserialize<Dictionary<string, dynamic>>(lines[0]);
-
+            Debug.Write(eddbIndex.Count.ToString() + " systems in Index.");
             if (state.ContainsKey("VAEDeddbIndex"))
             {
                 state["VAEDeddbIndex"] = eddbIndex;

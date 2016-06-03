@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 
 // *************************************************************
 // *  Functions for displaying ship on EDShipyard.com website  *
@@ -16,38 +16,44 @@ class EDShipyard
         List<Ship.Hardpoint> sortedHardpoints = shipObj.hardpoints.OrderByDescending(o => o.slotSize).ToList();
         foreach (Ship.Hardpoint hardpoint in sortedHardpoints)
         {
-            string name = "";
-            if (hardpoint.name != null)
+            if (hardpoint.rating != null)
             {
-                name = hardpoint.name + " ";
+                string name = "";
+                if (hardpoint.name != null)
+                {
+                    name = hardpoint.name + " ";
+                }
+                EDShipyardExport.AppendLine(
+                    hardpoint.slotSize.Substring(0, 1) + ": " +
+                    hardpoint.@class.ToString() +
+                    hardpoint.rating + "/" +
+                    hardpoint.mount.Substring(0, 1) + " " +
+                    name +
+                    hardpoint.group
+               );
             }
-            EDShipyardExport.AppendLine(
-                hardpoint.slotSize.Substring(0,1) + ": " +
-                hardpoint.@class.ToString() +
-                hardpoint.rating + "/" +
-                hardpoint.mount.Substring(0,1) + " " +
-                name +
-                hardpoint.group
-           );
         }
         List<Ship.Utility> sortedUtilities = shipObj.utility.OrderByDescending(o => o.slot).ToList();
         foreach (Ship.Utility utility in sortedUtilities)
         {
-            string name = "";
-            if (utility.name == null)
+            if (utility.rating != null)
             {
-                name = utility.group;
+                string name = "";
+                if (utility.name == null)
+                {
+                    name = utility.group;
+                }
+                else
+                {
+                    name = utility.name;
+                }
+                EDShipyardExport.AppendLine(
+                    "U: " +
+                    utility.@class.ToString() +
+                    utility.rating + " " +
+                    name
+               );
             }
-            else
-            {
-                name = utility.name;
-            }
-            EDShipyardExport.AppendLine(
-                "U: " +
-                utility.@class.ToString() +
-                utility.rating + " " +
-                name
-           );
         }
         EDShipyardExport.AppendLine("");
         EDShipyardExport.AppendLine("BH: 1I " + shipObj.standard.bulkheads);
@@ -62,27 +68,30 @@ class EDShipyard
         List<Ship.Internal> sortedInternals = shipObj.@internal.OrderByDescending(o => o.slotSize).ToList();
         foreach (Ship.Internal @internal in sortedInternals)
         {
-            string name = "";
-            if (@internal.name == null)
+            if (@internal.rating != null)
             {
-                name = @internal.group;
-                if (@internal.capacity != 0)
+                string name = "";
+                if (@internal.name == null)
                 {
-                    name += " (Capacity: " + @internal.capacity.ToString() + ")";
+                    name = @internal.group;
+                    if (@internal.capacity != 0)
+                    {
+                        name += " (Capacity: " + @internal.capacity.ToString() + ")";
+                    }
                 }
-            }
-            else
-            {
-                name = @internal.name;
+                else
+                {
+                    name = @internal.name;
 
-            }
-            EDShipyardExport.AppendLine(
-                @internal.slotSize.ToString() + ": " +
-                @internal.@class.ToString() +
-                @internal.rating + " " +
-                name
+                }
+                EDShipyardExport.AppendLine(
+                    @internal.slotSize.ToString() + ": " +
+                    @internal.@class.ToString() +
+                    @internal.rating + " " +
+                    name
 
-           );
+                );
+            }
         }
         return EDShipyardExport;
     }

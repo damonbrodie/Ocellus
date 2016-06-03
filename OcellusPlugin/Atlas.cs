@@ -72,7 +72,6 @@ class Atlas
             {
                 state.Add("VAEDatlasIndex", atlasIndex);
             }
-            Debug.Write("EDDN data loaded.  "+ atlasIndex.Count.ToString() + " systems");
         }
         catch (Exception ex)
         {

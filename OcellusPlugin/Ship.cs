@@ -130,7 +130,7 @@ class Ship
     }
 
     [DataContractAttribute]
-    public struct Hardpoint
+    public class Hardpoint
     {
         [DataMemberAttribute(Order = 1)]
         public int @class { get; set; }
@@ -314,9 +314,14 @@ class Ship
         }; // XXX Add Advanced Plasma Accelerator, Cytoscrambler Burst Laser, Pacifier Frag-Cannon, Mining Lance Beam Laser, Enforcer Cannon
 
         Hardpoint newHardpoint = new Hardpoint();
-        string currName = currModule["name"].ToLower();
         newHardpoint.slotSize = slotSize;
         newHardpoint.slotOrder = slotPos;
+        if (currModule == null)
+        {
+            shipObj.hardpoints.Add(newHardpoint);
+            return;
+        }
+        string currName = currModule["name"].ToLower();
         foreach (string currWeapon in weaponMap.Keys)
         {
             if (currName.Contains(currWeapon))
@@ -408,6 +413,7 @@ class Ship
         newUtility.slot = slotPos;
         if (currModule == null)
         {
+            shipObj.utility.Add(newUtility);
             return;
         }
         else 
@@ -507,44 +513,51 @@ class Ship
         };
 
         Internal newInternal = new Internal();
-
-        string currName = currModule["name"].ToLower();
         newInternal.slot = slot;
         newInternal.slotSize = slotSize;
-        newInternal.rating = mapRating(currName);
-        newInternal.@class = mapClass(currName);
-        newInternal.priority = mapPriority(currModule["priority"]);
-        newInternal.enabled = currModule["on"];
-
-        foreach (string currInternal in mapInternalName.Keys)
+        if (currModule == null)
         {
-            if (currName.Contains(currInternal))
-            {
-                newInternal.group = mapInternalName[currInternal];
-                if (newInternal.group == "Fuel Tank")
-                {
-                    newInternal.capacity = mapFuelCapacity(newInternal.@class);
-                }
-                else if (newInternal.group == "Cargo Rack")
-                {
-                    newInternal.capacity = mapCargoCapacity(newInternal.@class);
-                }
-                shipObj.@internal.Add(newInternal);
-                return;
-            }
+            shipObj.@internal.Add(newInternal);
+            return;
         }
-
-        foreach (string currScanner in mapScanner.Keys)
+        else
         {
-            if (currName.Contains(currScanner))
+            string currName = currModule["name"].ToLower();
+            newInternal.rating = mapRating(currName);
+            newInternal.@class = mapClass(currName);
+            newInternal.priority = mapPriority(currModule["priority"]);
+            newInternal.enabled = currModule["on"];
+
+            foreach (string currInternal in mapInternalName.Keys)
             {
-                newInternal.name = mapScanner[currScanner];
-                newInternal.group = "Scanner";
-                shipObj.@internal.Add(newInternal);
-                return;
+                if (currName.Contains(currInternal))
+                {
+                    newInternal.group = mapInternalName[currInternal];
+                    if (newInternal.group == "Fuel Tank")
+                    {
+                        newInternal.capacity = mapFuelCapacity(newInternal.@class);
+                    }
+                    else if (newInternal.group == "Cargo Rack")
+                    {
+                        newInternal.capacity = mapCargoCapacity(newInternal.@class);
+                    }
+                    shipObj.@internal.Add(newInternal);
+                    return;
+                }
             }
+
+            foreach (string currScanner in mapScanner.Keys)
+            {
+                if (currName.Contains(currScanner))
+                {
+                    newInternal.name = mapScanner[currScanner];
+                    newInternal.group = "Scanner";
+                    shipObj.@internal.Add(newInternal);
+                    return;
+                }
+            }
+            Debug.Write("Error:  Unable to map to ShipObj internal: " + currModule["name"]);
         }
-        Debug.Write("Error:  Unable to map to ShipObj internal: " + currModule["name"]);
     }
 
     private static string mapBulkhead(string currName)
@@ -639,7 +652,8 @@ class Ship
             { "detailedsurfacescanner", 1 },
             { "heatsinklauncher", 0 },
             { "chafflauncher", 0 },
-            { "plasmapointdefence", 0 }
+            { "plasmapointdefence", 0 },
+            { "electroniccountermeasure", 0 }
         };
 
         foreach (string currClass in dictClass.Keys)
