@@ -104,25 +104,32 @@ class Companion
         }
 
         textValues["VAEDprofileStatus"] = "ok";
+        string htmlData = "";
 
-        CookieContainer profileCookies = (CookieContainer)state["VAEDcookieContainer"];
-
-        Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
-
-        state["VAEDcookieContainer"] = tRespon.Item1;
-        Web.WriteCookiesToDisk(Config.CookiePath(), tRespon.Item1);
-        string htmlData = tRespon.Item2;
-
-        if (htmlData.Contains("Please correct the following") || htmlData == "")
+        // Load debug companion JSON if it is present.
+        string debugJson = Path.Combine(Config.Path(), "debug_companion.json");
+        if (File.Exists(debugJson))
         {
-            textValues["VAEDprofileStatus"] = "error";
-            return false;
+            htmlData = File.ReadAllText(debugJson);
         }
+        else
+        {
+            CookieContainer profileCookies = (CookieContainer)state["VAEDcookieContainer"];
+            Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
 
+            state["VAEDcookieContainer"] = tRespon.Item1;
+            Web.WriteCookiesToDisk(Config.CookiePath(), tRespon.Item1);
+            htmlData = tRespon.Item2;
+            if (htmlData.Contains("Please correct the following") || htmlData == "")
+            {
+                textValues["VAEDprofileStatus"] = "error";
+                return false;
+            }
+        }
         JavaScriptSerializer serializer = new JavaScriptSerializer();
+        var result = new Dictionary<string, dynamic>();
 
         bool currentlyDocked = false;
-        var result = new Dictionary<string, dynamic>();
         try
         {
             result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
@@ -149,8 +156,6 @@ class Companion
             int quantityInCargo = result["ship"]["cargo"]["qty"];
             string currentShip = result["ships"][currentShipId]["name"];
             result["commander"]["currentShip"] = currentShip;
-
-
 
             //Set current System
             textValues["VAEDcurrentSystem"] = null;

@@ -499,9 +499,7 @@ class Ship
             { "repairer", "Auto Field-Maintenance Unit" },
             { "resourcesiphon", "Hatch Breaker Limpet Controller" },
             { "shieldcellbank", "Shield Cell Bank" },
-            { "shieldgenerator", "Shield Generator" },
-            { "dockingcomputer", "Standard Docking Computer" }
-
+            { "shieldgenerator", "Shield Generator" }
         }; // XXX add Bi-Weave, Prismatic
 
         Dictionary<string, string> mapScanner = new Dictionary<string, string>
@@ -511,6 +509,12 @@ class Ship
             { "stellarbodydiscoveryscanner_standard", "Basic Discovery Scanner" },
             { "detailedsurfacescanner", "Detailed Surface Scanner" }
         };
+
+        Dictionary<string, string> mapComputer = new Dictionary<string, string>
+        {
+            { "dockingcomputer_standard", "Standard Docking Computer" },
+        };
+
 
         Internal newInternal = new Internal();
         newInternal.slot = slot;
@@ -552,6 +556,16 @@ class Ship
                 {
                     newInternal.name = mapScanner[currScanner];
                     newInternal.group = "Scanner";
+                    shipObj.@internal.Add(newInternal);
+                    return;
+                }
+            }
+            foreach (string currComputer in mapComputer.Keys)
+            {
+                if (currName.Contains(currComputer))
+                {
+                    newInternal.name = mapComputer[currComputer];
+                    newInternal.group = "Docking Computer";
                     shipObj.@internal.Add(newInternal);
                     return;
                 }
@@ -650,6 +664,7 @@ class Ship
             { "size8", 8 },
             { "stellarbodydiscoveryscanner", 1 },
             { "detailedsurfacescanner", 1 },
+            { "dockingcomputer", 1 },
             { "heatsinklauncher", 0 },
             { "chafflauncher", 0 },
             { "plasmapointdefence", 0 },
