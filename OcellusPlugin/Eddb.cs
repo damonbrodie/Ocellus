@@ -23,7 +23,7 @@ class Eddb
         {
             // Download the index once a week
             DateTime fileTime = File.GetLastWriteTime(eddbIndexFile);
-            DateTime weekago = DateTime.Now.AddDays(-1);
+            DateTime weekago = DateTime.Now.AddDays(-7);
             if (fileTime > weekago)
             {
                 return true;

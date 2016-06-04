@@ -206,9 +206,6 @@ namespace OcellusPlugin
                             eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
                         }
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
-                        Debug.Write("Key part 0: " + parts[0]);
-                        Debug.Write("key part 1: " + parts[1]);
-
                         List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1]));
                         if (scanCodeExs.Count == 0)
                         {
@@ -255,8 +252,6 @@ namespace OcellusPlugin
                             {
                                 booleanValues["VAEDexportEDShipyardError"] = false;
                                 Clipboard.SetText(export.ToString());
-                                Debug.Write("------------------ ED Shipyard Export Follows ---------------------");
-                                Debug.Write(export.ToString());
                                 break;
                             }
                         }
@@ -274,8 +269,6 @@ namespace OcellusPlugin
                             {
                                 booleanValues["VAEDexportCoriolisError"] = false;
                                 Clipboard.SetText(json);
-                                Debug.Write("------------------ Coriolis JSON Follows ---------------------");
-                                Debug.Write(json);
                                 break;
                             }
                         }

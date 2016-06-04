@@ -21,7 +21,7 @@ class EliteGrammar
         {
             // Download the index once a week
             DateTime fileTime = File.GetLastWriteTime(grammarFile);
-            DateTime weekago = DateTime.Now.AddDays(-1);
+            DateTime weekago = DateTime.Now.AddDays(-7);
             if (fileTime > weekago)
             {
                 return true;
