@@ -150,12 +150,28 @@ class Companion
 
             string powerPlayRank = Elite.powerPlayRankToString(result["commander"]["rank"]["power"]);
 
-            Dictionary<string, object> allShips = result["ships"];
+            string currentShip = "";
+            Dictionary<string, dynamic> allShips = new Dictionary<string, dynamic>();
+            if (result["ships"].GetType() == typeof(System.Collections.ArrayList))
+            {
+                for (int counter = 0; counter < result["ships"].Count; counter += 1)
+                {
+                    string id = result["ships"][counter]["id"].ToString();
+                    allShips.Add(id, result["ships"][counter]);
+                    if (id == currentShipId)
+                    {
+                        currentShip = result["ships"][counter]["name"];
+                    }
+                }
+            }
+            else
+            {
+                allShips = result["ships"];
+                currentShip = result["ships"][currentShipId]["name"];
+            }
             int howManyShips = allShips.Count;
             int cargoCapacity = result["ship"]["cargo"]["capacity"];
             int quantityInCargo = result["ship"]["cargo"]["qty"];
-            string currentShip = result["ships"][currentShipId]["name"];
-            result["commander"]["currentShip"] = currentShip;
 
             //Set current System
             textValues["VAEDcurrentSystem"] = null;
@@ -183,11 +199,11 @@ class Companion
             Dictionary<string, dynamic> theShips = new Dictionary<string, dynamic>();
             foreach (string key in keys)
             {
-                string tempShip = result["ships"][key]["name"];
+                string tempShip = allShips[key]["name"];
                 string tempSystem = null;
-                if (result["ships"][key].ContainsKey("starsystem"))
+                if (allShips[key].ContainsKey("starsystem"))
                 {
-                    tempSystem = result["ships"][key]["starsystem"]["name"];
+                    tempSystem = allShips[key]["starsystem"]["name"];
                 }
                 int currDistance = -1;
                 if ( tempSystem != null)
@@ -199,12 +215,12 @@ class Companion
 
             foreach (string key in keys)
             {
-                string tempShip = result["ships"][key]["name"];
+                string tempShip =allShips[key]["name"];
 
                 string tempSystem = null;
-                if (result["ships"][key].ContainsKey("starsystem"))
+                if (allShips[key].ContainsKey("starsystem"))
                 {
-                    tempSystem = result["ships"][key]["starsystem"]["name"];
+                    tempSystem = allShips[key]["starsystem"]["name"];
                 }
                 string variableShipName = Elite.frontierShipToVariable(tempShip);
                 string shipCounterString = "VAEDshipCounter-" + variableShipName;
@@ -248,7 +264,7 @@ class Companion
             {
                 if (textValues["VAEDship-DiamondbackScout-1"] != null)
                 {
-                    textValues["VAEDambiguousDiamondback"] = textValues["VAEDship-DiamondBackScout-1"];
+                    textValues["VAEDambiguousDiamondback"] = textValues["VAEDship-DiamondbackScout-1"];
                 }
                 else
                 {

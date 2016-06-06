@@ -242,7 +242,7 @@ class Elite
         string[] ships = {"Adder", "Anaconda", "Asp", "Asp_Scout", "CobraMkIII", "CobraMkIV",
                 "DiamondBackXL", "DiamondBack", "Eagle", "Federation_Dropship",
                 "Federation_Dropship_MkII", "Federation_Corvette", "Federation_Gunship", "FerDeLance",
-                "Hauler", "Empire_Trader", "Empire_Courier", "Imperial Cutter", "Empire_Eagle",
+                "Hauler", "Empire_Trader", "Empire_Courier", "Cutter", "Empire_Eagle",
                 "Independant_Trader", "Orca", "Python", "SideWinder", "Type6", "Type7", "Type9",
                 "Viper", "Viper_MkIV", "Vulture" };
         return ships;

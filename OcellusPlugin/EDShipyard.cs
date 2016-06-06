@@ -27,7 +27,8 @@ class EDShipyard
                     hardpoint.slotSize.Substring(0, 1) + ": " +
                     hardpoint.@class.ToString() +
                     hardpoint.rating + "/" +
-                    hardpoint.mount.Substring(0, 1) + " " +
+                    hardpoint.mount.Substring(0, 1) +
+                    hardpoint.missile + " " +
                     name +
                     hardpoint.group
                );

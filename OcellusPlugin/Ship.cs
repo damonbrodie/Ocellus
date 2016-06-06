@@ -146,6 +146,8 @@ class Ship
         public string name { get; set; }
         [DataMemberAttribute(Order = 7)]
         public string mount { get; set; }
+        [DataMemberAttribute(EmitDefaultValue = false, IsRequired = false, Order = 8)]
+        public string missile { get; set; }
         public int slotOrder { get; set; }
         public string slotSize { get; set; }
     }
@@ -229,10 +231,10 @@ class Ship
     {
         Dictionary<string, Hardpoint> weaponMap = new Dictionary<string, Hardpoint>
         {
-            { "hpt_advancedtorppylon_fixed_small", new Hardpoint { @class=1, rating="I", group="Torpedo Pylon", mount="Fixed" } },
-            { "hpt_advancedtorppylon_fixed_medium", new Hardpoint { @class=2, rating="I", group="Torpedo Pylon", mount="Fixed" } },
-            { "hpt_basicmissilerack_fixed_small", new Hardpoint { @class=1, rating="B", group="Missle Rack", mount="Fixed" } },
-            { "hpt_basicmissilerack_fixed_medium" , new Hardpoint { @class=2, rating="B", group="Missle Rack", mount="Fixed" } },
+            { "hpt_advancedtorppylon_fixed_small", new Hardpoint { @class=1, rating="I", group="Torpedo Pylon", mount="Fixed", missile="S" } },
+            { "hpt_advancedtorppylon_fixed_medium", new Hardpoint { @class=2, rating="I", group="Torpedo Pylon", mount="Fixed", missile="S" } },
+            { "hpt_basicmissilerack_fixed_small", new Hardpoint { @class=1, rating="B", group="Missile Rack", mount="Fixed", missile="S" } },
+            { "hpt_basicmissilerack_fixed_medium" , new Hardpoint { @class=2, rating="B", group="Missile Rack", mount="Fixed", missile="S" } },
             { "hpt_beamlaser_fixed_small", new Hardpoint { @class=1, rating="E", group="Beam Laser", mount="Fixed" } },
             { "hpt_beamlaser_fixed_medium", new Hardpoint { @class=2, rating="D", group="Beam Laer", mount="Fixed" } },
             { "hpt_beamlaser_fixed_large", new Hardpoint { @class=3, rating="C", group="Beam Laser", mount="Fixed" } },
@@ -255,9 +257,9 @@ class Ship
             { "hpt_cannon_turret_small", new Hardpoint { @class=1, rating="F", group="Cannon", mount="Turret" } },
             { "hpt_cannon_turret_medium", new Hardpoint { @class=2, rating="E", group="Cannon", mount="Turret" } },
             { "hpt_cannon_turret_large", new Hardpoint { @class=3, rating="D", group="Cannon", mount="Turret" } },
-            { "hpt_drunkmissilerack_fixed_medium", new Hardpoint { @class=2, rating="B", group="Pack-Hound Missle Rack", mount="Fixed" } },
-            { "hpt_dumbfiremissilerack_fixed_small", new Hardpoint { @class=1, rating="B", group="Missle Rack", mount="Fixed" } },
-            { "hpt_dumbfiremissilerack_fixed_medium", new Hardpoint { @class=2, rating="B", group="Missle Rack", mount="Fixed" } },
+            { "hpt_drunkmissilerack_fixed_medium", new Hardpoint { @class=2, rating="B", group="Missile Rack", name= "Pack-Hound", mount="Fixed", missile="S" } },
+            { "hpt_dumbfiremissilerack_fixed_small", new Hardpoint { @class=1, rating="B", group="Missile Rack", mount="Fixed", missile="D" } },
+            { "hpt_dumbfiremissilerack_fixed_medium", new Hardpoint { @class=2, rating="B", group="Missile Rack", mount="Fixed", missile="D" } },
             { "hpt_minelauncher_fixed_small", new Hardpoint { @class=1, rating="I", group="Mine Launcher", mount="Fixed" } },
             { "hpt_minelauncher_fixed_medium", new Hardpoint { @class=2, rating="I", group="Mine Launcher", mount="Fixed" } },
             { "hpt_mininglaser_fixed_small", new Hardpoint { @class=1, rating="D", group="Mining Laser", mount="Fixed" } },
@@ -307,7 +309,6 @@ class Ship
             { "hpt_xxx2", new Hardpoint { @class=1, rating="E", group="Beam Laser", mount="Fixed", name="Retributor" } },
             { "hpt_xxx3", new Hardpoint { @class=1, rating="F", group="Multi-cannon", mount="Fixed", name="Enforder" } },
             { "hpt_xxx4", new Hardpoint { @class=2, rating="C", group="Pulse Laser", mount="Fixed", name="Disruptor" } },
-            { "hpt_xxx5", new Hardpoint { @class=2, rating="B", group="Missle Rack", mount="Fixed", name="Pack-Hound" } },
             { "hpt_xxx6", new Hardpoint { @class=1, rating="I", group="Mine Launcher", mount="Fixed", name="Shock Mine Launcher" } },
             { "hpt_xxx7", new Hardpoint { @class=1, rating="F", group="Burst Laser", mount="Fixed", name="Cytoscrambler" } },
             { "hpt_xxx8", new Hardpoint { @class=1, rating="D", group="Mining Laser", mount="Fixed", name="Mining Lance" } },
@@ -330,6 +331,7 @@ class Ship
                 newHardpoint.rating = weaponMap[currWeapon].rating;
                 newHardpoint.@class = weaponMap[currWeapon].@class;
                 newHardpoint.mount = weaponMap[currWeapon].mount;
+                newHardpoint.missile = weaponMap[currWeapon].missile;
                 newHardpoint.enabled = currModule["on"];
                 newHardpoint.name = weaponMap[currWeapon].name;
                 newHardpoint.priority = mapPriority(currModule["priority"]);
@@ -694,12 +696,10 @@ class Ship
             {
                 Debug.Write("Companion JSON is missing ship information");
                 return null;
-            }
+            }      
 
-            int shipId = companion["commander"]["currentShipId"];
-            string currentShipId = shipId.ToString();
-            string currentShip = companion["ships"][currentShipId]["name"];
-
+            string currentShip = companion["ship"]["name"];
+            
             // Store in Frontier format, helper methods will expect that.
             shipObj.attributes.shiptype = currentShip;
 

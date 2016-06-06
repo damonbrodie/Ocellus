@@ -5,7 +5,6 @@ using Microsoft.Win32;
 // ***********************************************************
 // *  Functions for accessing the plugin's registry entries  *
 // ***********************************************************
-
 class PluginRegistry
 {
     private const string pluginRegistryPath = @"SOFTWARE\OcellusPlugin";
@@ -34,7 +33,7 @@ class PluginRegistry
             RegistryKey keyTest = Registry.CurrentUser.OpenSubKey(pluginRegistryPath);
             if (keyTest == null)
             {
-                setStringValue("webVar1", "http://ocellus/webvars/communitygoals.json");
+                setStringValue("webVar1", "http://ocellus.io/webvars_test");
             }
             return Registry.GetValue(@"HKEY_CURRENT_USER\" + pluginRegistryPath, attribute, null).ToString();
         }
