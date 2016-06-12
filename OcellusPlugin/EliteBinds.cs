@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System;
+using System.IO;
 
 
 // ********************************
@@ -12,12 +14,63 @@ namespace OcellusPlugin
     {
         private readonly Dictionary<string, List<string>> _bindList;
 
-        public EliteBinds()
+        private static Boolean needsBindsReload(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, bool?> booleanValues)
         {
-            // TODO: move hard-coded file names to defines or similar
-            var bindsFile = Elite.getBindsFilename();
+            if (!state.ContainsKey("VAEDbindsFile") || !state.ContainsKey("VAEDbindsPreset") || !state.ContainsKey("VAEDlastPresetTimestamp") || !state.ContainsKey("VAEDlastBindsTimestamp"))
+            {
+                return true;
+            }
 
-            // TODO: do something if file not found
+            DateTime lastPresetTimestamp = (DateTime)state["VAEDlastPresetTimestamp"];
+            DateTime lastBindsTimestamp = (DateTime)state["VAEDlastBindsTimestamp"];
+            string bindsPreset = (string)state["VAEDbindsPreset"];
+            string bindsFile = (string)state["VAEDbindsFile"];
+
+            DateTime currentBindsTimestamp = File.GetLastWriteTime(bindsFile);
+            DateTime currentPresetTimestamp = File.GetLastWriteTime(bindsPreset);
+
+            if (lastPresetTimestamp != currentPresetTimestamp || lastBindsTimestamp != currentBindsTimestamp)
+            {
+                return true;
+            }
+            
+           return false;
+        }
+
+        public static EliteBinds getBinds(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, bool?> booleanValues)
+        {
+           
+            EliteBinds eliteBinds = null;
+
+            if (needsBindsReload(ref state, ref textValues, ref booleanValues) == true)
+            {
+                Tuple<string, string> tResponse = Elite.getBindsFilename();
+                string bindsPreset = tResponse.Item1;
+                string bindsFile = tResponse.Item2;
+
+                if (bindsPreset != null && bindsFile != null)
+                {
+
+                    state["VAEDbindsFile"] = bindsFile;
+                    state["VAEDbindsPreset"] = bindsPreset;
+                    state["VAEDlastPresetTimestamp"] = File.GetLastWriteTime(bindsPreset);
+                    state["VAEDlastBindsTimestamp"] = File.GetLastWriteTime(bindsFile);
+
+
+                    eliteBinds = new EliteBinds(bindsFile);
+                    state["VAEDeliteBinds"] = eliteBinds;
+                }
+            }
+            else
+            {
+                eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
+            }
+            return eliteBinds;
+        }
+
+        public EliteBinds(string bindsFile)
+        {
+            Debug.Write("Debug:  In EliteBinds - binds file is " + bindsFile);
             var bindsTree = XElement.Load(bindsFile);
             _bindList = new Dictionary<string, List<string>>();
 

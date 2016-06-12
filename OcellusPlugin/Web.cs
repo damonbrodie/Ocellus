@@ -9,7 +9,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 // *************************************************************
 // *  Functions for handling cookies and retrieving web pages  *
 // *************************************************************
-
 class Web
 {
     private static List<string> cookieStringsFromHeader(string header)

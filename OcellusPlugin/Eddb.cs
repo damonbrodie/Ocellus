@@ -8,7 +8,6 @@ using System.Web.Script.Serialization;
 // *************************************************************
 // *  Functions for displaying System/Station on EDDB website  *
 // *************************************************************
-
 class Eddb
 {
     private const string indexURL = "http://ocellus.io/data/eddb_index.zip";

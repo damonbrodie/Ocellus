@@ -64,6 +64,12 @@
     <Compile Include="Atlas.cs" />
     <Compile Include="Companion.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="ConfigureForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigureForm.Designer.cs">
+      <DependentUpon>ConfigureForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Coriolis.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="Eddb.cs" />
@@ -74,18 +80,13 @@
     <Compile Include="FileVars.cs" />
     <Compile Include="EliteGrammar.cs" />
     <Compile Include="KeyMouse.cs" />
-    <Compile Include="LoginForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LoginForm.Designer.cs">
-      <DependentUpon>LoginForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="PluginRegistry.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TextToSpeech.cs" />
     <Compile Include="TrackSystems.cs" />
     <Compile Include="WebVars.cs" />
     <Compile Include="Upgrade.cs" />
@@ -114,8 +115,8 @@
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LoginForm.resx">
-      <DependentUpon>LoginForm.cs</DependentUpon>
+    <EmbeddedResource Include="ConfigureForm.resx">
+      <DependentUpon>ConfigureForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

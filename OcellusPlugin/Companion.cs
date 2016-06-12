@@ -85,27 +85,9 @@ class Companion
         }
     }
 
-    private static Tuple<CookieContainer, string> getProfile(CookieContainer cookieContainer)
+    public static Dictionary<string, dynamic> getProfile(Elite.MessageBus messageBus)
     {
-        Tuple<bool, string, CookieContainer, string> tRespon = Web.sendRequest(profileURL, cookieContainer);
-        // XXX handle error messages
-        return Tuple.Create(tRespon.Item3, tRespon.Item4);
-    }
-
-    public static bool updateProfile(ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues)
-    {
-
-
-        int profileCooldown = Utilities.isCoolingDown(ref state, "VAEDprofileCooldown", 30);
-        if (profileCooldown > 0)
-        {
-            Debug.Write("Get Profile is cooling down: " + profileCooldown.ToString() + " seconds remain.");
-            return true;
-        }
-
-        textValues["VAEDprofileStatus"] = "ok";
         string htmlData = "";
-
         // Load debug companion JSON if it is present.
         string debugJson = Path.Combine(Config.Path(), "debug_companion.json");
         if (File.Exists(debugJson))
@@ -114,25 +96,72 @@ class Companion
         }
         else
         {
-            CookieContainer profileCookies = (CookieContainer)state["VAEDcookieContainer"];
-            Tuple<CookieContainer, string> tRespon = Companion.getProfile(profileCookies);
+            if (messageBus.profileLastUpdate != null)
+            {
+                int secondsAgo = -60;
 
-            state["VAEDcookieContainer"] = tRespon.Item1;
-            Web.WriteCookiesToDisk(Config.CookiePath(), tRespon.Item1);
-            htmlData = tRespon.Item2;
+
+                DateTime lastRun = messageBus.profileLastUpdate;
+                DateTime compareTime = DateTime.Now.AddSeconds(secondsAgo);
+
+                double diffSeconds = (lastRun - compareTime).TotalSeconds;
+
+                if (diffSeconds > 0)
+                {
+                    Debug.Write("Companion API cooldown in progress. " + diffSeconds.ToString() + " seconds remaining.");
+                    return messageBus.companion;
+                }
+            }
+            messageBus.profileLastUpdate = DateTime.Now;
+            Debug.Write("Downloading Profile from Frontier Companion API");
+            Tuple<bool, string, CookieContainer, string> tRespon = Web.sendRequest(profileURL, messageBus.cookies);
+
+            messageBus.cookies = tRespon.Item3;
+            Web.WriteCookiesToDisk(Config.CookiePath(), tRespon.Item3);
+            htmlData = tRespon.Item4;
             if (htmlData.Contains("Please correct the following") || htmlData == "")
             {
-                textValues["VAEDprofileStatus"] = "error";
-                return false;
+                messageBus.loggedinState = "error";
+                return null;
             }
         }
-        JavaScriptSerializer serializer = new JavaScriptSerializer();
-        var result = new Dictionary<string, dynamic>();
+        string companionFile = Path.Combine(Config.Path(), "companion.json");
+        using (StreamWriter outputFile = new StreamWriter(companionFile))
+        {
+            outputFile.Write(htmlData);
+        }
 
-        bool currentlyDocked = false;
+        JavaScriptSerializer serializer = new JavaScriptSerializer();
+
+        Dictionary<string, dynamic> result = new Dictionary<string, dynamic>();
         try
         {
             result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
+        }
+        catch
+        {
+            // Something's not right with the data
+            Debug.Write("ERROR: Unable to deserialize Companion API output");
+            return null;
+        }
+        messageBus.companion = result;
+        return result;
+    }
+
+    public static bool updateProfile(Elite.MessageBus messageBus, ref Dictionary<string, object> state, ref Dictionary<string, Int16?> shortIntValues, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, decimal?> decimalValues, ref Dictionary<string, bool?> booleanValues)
+    {
+
+        Dictionary<string, dynamic> result = getProfile(messageBus);
+        if (result == null)
+        {
+            textValues["VAEDprofileStatus"] = "error";
+            return false;
+        }
+        
+        bool currentlyDocked = false;
+        try
+        {
+            textValues["VAEDprofileStatus"] = "ok";
             state["VAEDcompanionDict"] = result;
             string cmdr = result["commander"]["name"];
             int credits = result["commander"]["credits"];
@@ -178,12 +207,17 @@ class Companion
             if (result.ContainsKey("lastSystem") && result["lastSystem"].ContainsKey("name"))
             {
                 textValues["VAEDcurrentSystem"] = result["lastSystem"]["name"];
+                if (messageBus.currentSystem != result["lastSystem"]["name"])
+                {
+                    messageBus.currentSystem = result["lastSystem"]["name"];
+                    messageBus.currentX = -9999.99;
+                    messageBus.currentY = -9999.99;
+                    messageBus.currentY = -9999.99;
+                }
             }
             else
             {
                 Debug.Write("ERROR: Companion API doesn't have current location ");
-                Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
-                Debug.Write(htmlData);
                 textValues["VAEDprofileStatus"] = "error";
                 return false;
             }
@@ -209,7 +243,7 @@ class Companion
                 if ( tempSystem != null)
                 {
                     Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
-                    currDistance = Atlas.calcDistance(ref tempAtlas, textValues["VAEDcurrentSystem"], tempSystem);
+                    currDistance = Atlas.calcDistanceFromHere(ref tempAtlas, messageBus, tempSystem);
                 }
             }
 
@@ -345,8 +379,6 @@ class Companion
         catch (Exception ex)
         {
             Debug.Write("ERROR: Unable to parse Companion API output " + ex.ToString());
-            Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
-            Debug.Write(htmlData);
             textValues["VAEDprofileStatus"] = "error";
             return false;
         }
@@ -380,19 +412,11 @@ class Companion
                 {
                     booleanValues["VAEDstarportOutfitting"] = true;
                 }
-
-                // If we're docked, update the EDDN network.
-                
-                int eddnCooldown = Utilities.isCoolingDown(ref state, "VAEDeddnCooldown", 60 * 10); // Cool down 10 minutes
-                if (state.ContainsKey("VAEDlastStation") && (string)state["VAEDlastStation"] == textValues["VAEDcurrentStarport"] && eddnCooldown > 0)
-                {
-                    Debug.Write("EDDN update is cooling down: " + eddnCooldown.ToString() + " seconds remain.");
-                }
-                else
-                {
-                    state["VAEDlastStation"] = textValues["VAEDcurrentStarport"];
-                    Task.Run(() => Eddn.updateEddn(result));
-                }
+                Task.Run(() => Eddn.updateEddn(messageBus));
+            }
+            else
+            {
+                Debug.Write("Not docked, skipping EDDN update");
             }
 
             if (state.ContainsKey("VAEDeddbIndex"))
@@ -411,16 +435,9 @@ class Companion
         }
         catch (Exception ex)
         {
-            Debug.Write("----------------FRONTIER COMPANION DATA--------------------");
-            Debug.Write(htmlData);
             Debug.Write(ex.ToString());
             textValues["VAEDprofileStatus"] = "error";
             return false;
-        }
-        string companionFile = Path.Combine(Config.Path(), "companion.json");
-        using (StreamWriter outputFile = new StreamWriter(companionFile))
-        {
-            outputFile.Write(htmlData);
         }
         return true;
     }

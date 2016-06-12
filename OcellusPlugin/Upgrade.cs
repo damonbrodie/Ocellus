@@ -13,6 +13,7 @@ class Upgrade
 
     private static Tuple<double, string, string> checkServerVersion()
     {
+        Debug.Write("Checking server for Ocellus plugin updates.");
         Tuple<bool, string, CookieContainer, string> tResponse = Web.sendRequest(versionCheckURL);
         string htmlData = tResponse.Item4;
         JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -33,7 +34,19 @@ class Upgrade
         return Tuple.Create<double, string, string>(-1.0, null, null);
     }
 
-    public static bool needUpgrade(ref Dictionary<string, object> state)
+    public static bool needUpgrade()
+    {
+        Tuple<double, string, string> tResponse = checkServerVersion();
+        double serverVer = tResponse.Item1;
+        double myVer = double.Parse(OcellusPlugin.OcellusPlugin.pluginVersion);
+        if (myVer < serverVer)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static bool needUpgradeWithCooldown(ref Dictionary<string, object> state)
     {
         int upgradeCooldown = Utilities.isCoolingDown(ref state, "VAEDupgradeCooldown", 3600);
         if (upgradeCooldown > 0)
@@ -46,20 +59,13 @@ class Upgrade
             return false;
             
         }
-        Tuple<double, string, string> tResponse = checkServerVersion();
-        double serverVer = tResponse.Item1;
-        double myVer = double.Parse(OcellusPlugin.OcellusPlugin.pluginVersion);
-        if (myVer < serverVer)
-        {
-            return true;
-        }
-        return false;
+        return needUpgrade();
     }
 
     public static bool downloadUpdate()
     {
         Tuple<double, string, string> tResponse = checkServerVersion();
-        // XXX download the update file
+
         return true;
     }
 }

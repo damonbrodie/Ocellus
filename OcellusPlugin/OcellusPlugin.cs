@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Speech.Recognition;
 
-
 // *****************************
 // *  Voice Attack functions   *
 // *****************************
@@ -16,8 +15,9 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.8";
+        public const string pluginVersion = "0.9";
         public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
+        public const string ttsConfig = "TextToSpeechConfig.txt";
 
         public static string VA_DisplayName()
         {
@@ -56,10 +56,8 @@ namespace OcellusPlugin
                 textValues["VAEDdebugPath"] = debugFile;
 
                 // Determine Elite Dangerous directories
-                string gamePath = Elite.getGamePath();
                 string gameStartString = PluginRegistry.getStringValue("startPath");
                 string gameStartParams = PluginRegistry.getStringValue("startParams");
-                state.Add("VAEDgamePath", gamePath);
                 textValues["VAEDgameStartString"] = gameStartString;
                 textValues["VAEDgameStartParams"] = gameStartParams;
 
@@ -83,8 +81,12 @@ namespace OcellusPlugin
                     if (tAuthentication.Item2 == "ok")
                     {
                         cookieJar = tAuthentication.Item1;
-                        state.Add("VAEDcookieContainer", cookieJar);
+                        state["VAEDcookieContainer"] = cookieJar;
                         state["VAEDloggedIn"] = "ok";
+                    }
+                    else
+                    {
+                        state.Add("VAEDloggedIn", "no");
                     }
                 }
                 else
@@ -92,12 +94,33 @@ namespace OcellusPlugin
                     state.Add("VAEDloggedIn", "no");
                 }
 
-                EliteBinds eliteBinds = new EliteBinds();
-                state.Add("VAEDeliteBinds", eliteBinds);
-                string bindsFile = Elite.getBindsFilename();
-                DateTime fileTime = File.GetLastWriteTime(bindsFile);
-                state.Add("VAEDbindsFile", bindsFile);
-                state.Add("VAEDbindsTimestamp", fileTime);
+                // These were added after the initial public release, so add them to the registry if they don't exist:
+
+                if (PluginRegistry.getStringValue("updateAvailableText") == null)
+                {
+                    PluginRegistry.setStringValue("updateAvailableText", "An update is available on Ocellus dot i o");
+                }
+                if (PluginRegistry.getStringValue("eddnUpdateText") == null)
+                {
+                    PluginRegistry.setStringValue("eddnUpdateText", "Updating Data Network");
+                }
+                if (PluginRegistry.getStringValue("startupText") == null)
+                {
+                    PluginRegistry.setStringValue("startupText", "Welcome back Commander!");
+                }
+
+                EliteBinds.getBinds(ref state, ref textValues, ref booleanValues);
+
+                Elite.MessageBus messageBus = new Elite.MessageBus();
+                messageBus.cookies = cookieJar;
+                messageBus.loggedinState = (string)state["VAEDloggedIn"];
+
+                state["VAEDmessageBus"] = messageBus;
+
+                //Watch the netlog for docked and system change information
+                Task.Run(() => Elite.tailNetLog(messageBus));
+
+                Task.Run(() => TextToSpeech.announcements());
             }
             catch (Exception ex)
             {
@@ -114,11 +137,17 @@ namespace OcellusPlugin
         {
             try
             {
+                Elite.MessageBus messageBus = (Elite.MessageBus)state["VAEDmessageBus"];
+                messageBus.loggedinState = (string)state["VAEDloggedIn"];
+                if (state.ContainsKey("VAEDcookieContainer"))
+                {
+                    messageBus.cookies = (CookieContainer)state["VAEDcookieContainer"];
+                }
                 Debug.Write("COMMAND:  " + context);
                 switch (context.ToLower())
                 {
                     case "check for upgrade":
-                        if (Upgrade.needUpgrade(ref state))
+                        if (Upgrade.needUpgradeWithCooldown(ref state))
                         {
                             booleanValues["VAEDupgradeAvailable"] = true;
                             state["VAEDupgradeAvailable"] = true;
@@ -130,43 +159,43 @@ namespace OcellusPlugin
                         }
                         break;
                     case "distance from here":
-                        bool worked = Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
-                        decimalValues["VAEDdecimalDistance"] = null;
-                        decimalValues["VAEDintDistance"] = null;
-                        if (worked)
+                        string currentSystem = messageBus.currentSystem;
+                        if (currentSystem == null) // If we don't have it from netlog then go get it from the profile
                         {
-                            if (state.ContainsKey("VAEDcompanionDict") && textValues.ContainsKey("VAEDtargetSystem"))
+                            Dictionary<string, dynamic> companion = Companion.getProfile((messageBus));
+                            if (companion.ContainsKey("lastSystem") && companion["lastSystem"].ContainsKey("name"))
                             {
-                                Dictionary<string, dynamic> companion = (Dictionary<string, dynamic>)state["VAEDcompanionDict"];
-                                string currentSystem = "";
-                                if (companion.ContainsKey("lastSystem") && companion["lastSystem"].ContainsKey("name"))
-                                {
-                                    currentSystem = companion["lastSystem"]["name"];
-                                }
-                                else
-                                {
-                                    Debug.Write("Error:  Could not determine current location for command 'distance from here'");
-                                    booleanValues["VAEDerrorSourceSystem"] = true;
-                                    break;
-                                }
-                                Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
-
-                                int distance = Atlas.calcDistance(ref tempAtlas, currentSystem, textValues["VAEDtargetSystem"]);
-                                if (distance < 0)
-                                {
-                                    //Cound not find destination system
-                                    Debug.Write("Error:  Could not determine distance to target system");
-                                    booleanValues["VAEDerrorTargetSystem"] = true;
-                                    break;
-                                }
-                                // Found the system - return distance
-                                intValues["VAEDintDistance"] = distance;
-                                booleanValues["VAEDerrorTargetSystem"] = false;
-                                booleanValues["VAEDerrorSourceSystem"] = false;
-                                break;
+                                currentSystem = currentSystem = companion["lastSystem"]["name"];
+                                messageBus.currentSystem = currentSystem;
+                                // We didn't have current system from netlog, so erase out x,y,z
+                                messageBus.currentX = -9999.99;
+                                messageBus.currentY = -9999.99;
+                                messageBus.currentZ = -9999.99;
                             }
                         }
+
+                        decimalValues["VAEDdecimalDistance"] = null;
+                        decimalValues["VAEDintDistance"] = null;
+                        if (currentSystem != null)
+                        {
+                            Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
+
+                            int distance = Atlas.calcDistanceFromHere(ref tempAtlas, messageBus, textValues["VAEDtargetSystem"]);
+                            if (distance < 0)
+                            {
+                                //Cound not find destination system
+                                Debug.Write("Error:  Could not determine distance to target system");
+                                booleanValues["VAEDerrorTargetSystem"] = true;
+                                break;
+                            }
+                            // Found the system - return distance
+                            intValues["VAEDintDistance"] = distance;
+                            booleanValues["VAEDerrorTargetSystem"] = false;
+                            booleanValues["VAEDerrorSourceSystem"] = false;
+                            break;
+                        }
                         //Can't find the System
+                        Debug.Write("Error:  Could not determine current location for command 'distance from here'");
                         booleanValues["VAEDerrorSourceSystem"] = true;
                         booleanValues["VAEDerrorDestinationSystem"] = false;
                         break;
@@ -189,49 +218,47 @@ namespace OcellusPlugin
                         break;
                     case "press key bind":
                         // If the Binds file changes then reload the binds.
-                        string bindsFile = (string)state["VAEDbindsFile"];
-                        DateTime oldTimestamp = (DateTime)state["VAEDbindsTimestamp"];
 
-                        DateTime newTimestamp = File.GetLastWriteTime(bindsFile);
-                        EliteBinds eliteBinds;
-                        if (oldTimestamp != newTimestamp)
+                        string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
+                        EliteBinds eliteBinds = EliteBinds.getBinds(ref state, ref textValues, ref booleanValues);
+                        if (eliteBinds != null)
                         {
-                            Debug.Write("Binds file change:  reloading");
-                            eliteBinds = new EliteBinds();
-                            state["VAEDbindsTimestamp"] = newTimestamp;
-                            state["VAEDeliteBinds"] = eliteBinds;
+                            List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1]));
+                            if (scanCodeExs.Count == 0)
+                            {
+                                Debug.Write("Warning: No key binding found for: " + textValues["VAEDkeyBinding"]);
+                                booleanValues["VAEDkeyBindingError"] = true;
+                                break;
+                            }
+                            switch (parts[0])
+                            {
+                                // For now we only "best effort" focus the game before keypressing.  Igorning the setFocus return code.
+                                case "KEYPRESS":
+                                    Debug.Write("Key Press " + parts[1]);
+                                    User32.setFocus(eliteWindowTitle);
+                                    KeyMouse.KeyPress(scanCodeExs);
+                                    booleanValues["VAEDkeyBindingError"] = false;
+                                    break;
+                                case "KEYUP":
+                                    Debug.Write("Key up " + parts[1]);
+                                    User32.setFocus(eliteWindowTitle);
+                                    KeyMouse.KeyUp(scanCodeExs);
+                                    booleanValues["VAEDkeyBindingError"] = false;
+                                    break;
+                                case "KEYDOWN":
+                                    Debug.Write("Key down " + parts[1]);
+                                    User32.setFocus(eliteWindowTitle);
+                                    KeyMouse.KeyDown(scanCodeExs);
+                                    booleanValues["VAEDkeyBindingError"] = false;
+                                    break;
+                                default:
+                                    booleanValues["VAEDkeyBindingError"] = true;
+                                    break;
+                            }
                         }
                         else
                         {
-                            eliteBinds = (EliteBinds)state["VAEDeliteBinds"];
-                        }
-                        string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
-                        List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1]));
-                        if (scanCodeExs.Count == 0)
-                        {
-                            Debug.Write("Warning: No key binding found for: " + textValues["VAEDkeyBinding"]);
-                            booleanValues["VAEDkeyBindingError"] = true;
-                            break;
-                        }
-                        booleanValues["VAEDkeyBindingError"] = false; 
-                        switch (parts[0])
-                        {
-                            // For now we only "best effort" focus the game before keypressing.  Igorning the setFocus return code.
-                            case "KEYPRESS":
-                                User32.setFocus(eliteWindowTitle);
-                                KeyMouse.KeyPress(scanCodeExs);
-                                break;
-                            case "KEYUP":
-                                User32.setFocus(eliteWindowTitle);
-                                KeyMouse.KeyUp(scanCodeExs);
-                                break;
-                            case "KEYDOWN":
-                                User32.setFocus(eliteWindowTitle);
-                                KeyMouse.KeyDown(scanCodeExs);
-                                break;
-                            default:
-                                booleanValues["VAEDkeyBindingError"] = true;
-                                break;
+                            Debug.Write("Error:  Binds not loaded, unable to perform keypress");
                         }
                         break;
                     case "clear debug":
@@ -242,7 +269,7 @@ namespace OcellusPlugin
                         textValues["VAEDdebugFile"] = tempDebug;
                         break;
                     case "export for ed shipyard":
-                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
+                        Companion.updateProfile(messageBus, ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         
                         if (state.ContainsKey("VAEDshipObj"))
                         {
@@ -260,7 +287,7 @@ namespace OcellusPlugin
                         booleanValues["VAEDexportEDShipyuardError"] = true;
                         break;
                     case "export for coriolis":
-                        Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
+                        Companion.updateProfile(messageBus, ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         if (state.ContainsKey("VAEDshipObj"))
                         {
                             Ship.Components shipObj = (Ship.Components)state["VAEDshipObj"];
@@ -303,11 +330,11 @@ namespace OcellusPlugin
                         }
                         break;
                     case "get frontier credentials":
-                        var credentialsForm = new Credentials.Login();
-                        credentialsForm.ShowDialog();
-                        CookieContainer loginCookies = credentialsForm.Cookie;
+                        var configureForm = new ConfigureForm.Login();
+                        configureForm.ShowDialog();
+                        CookieContainer loginCookies = configureForm.Cookie;
                         state["VAEDcookieContainer"] = loginCookies;
-                        string loginResponse = credentialsForm.LoginResponse;
+                        string loginResponse = configureForm.LoginResponse;
                         Debug.Write("LoginResponse: " + loginResponse);
                         textValues["VAEDloggedIn"] = loginResponse;
                         break;
@@ -333,7 +360,7 @@ namespace OcellusPlugin
                     case "update profile and eddn":
                         if (state["VAEDloggedIn"].ToString() == "ok" && state.ContainsKey("VAEDcookieContainer"))
                         {
-                            Companion.updateProfile(ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
+                            Companion.updateProfile(messageBus, ref state, ref shortIntValues, ref textValues, ref intValues, ref decimalValues, ref booleanValues);
                         }
                         else // Not logged in
                         {

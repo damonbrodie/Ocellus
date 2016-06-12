@@ -5,7 +5,6 @@ using System.IO;
 // ********************************************************
 // *  Functions for handling the plugin config directory  *
 // ********************************************************
-
 class Config
 {
     public static string Path()

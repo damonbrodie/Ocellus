@@ -3,6 +3,10 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
+
+// **************************************************
+// *  Data structures for holding ship information  *
+// **************************************************
 class Ship
 {
     [DataContractAttribute]
@@ -581,7 +585,7 @@ class Ship
         Dictionary<string, string> dictBulkhead = new Dictionary<string, string>
         {
             { "grade1", "Lightweight Alloy" },
-            { "grade2", "Reinforced Allow" },
+            { "grade2", "Reinforced Alloy" },
             { "grade3", "Military Grade Composite" },
             { "mirrored", "Mirrored Surface Composite" },
             { "reactive", "Reactive Surface Composite" }

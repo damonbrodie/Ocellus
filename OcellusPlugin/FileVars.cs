@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 // ***********************************
 // *  Functions for File Variables   *
 // ***********************************
-
 class FileVar
 {
     private static void removeFileVars(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, int?> intValues, ref Dictionary<string, bool?> booleanValues)

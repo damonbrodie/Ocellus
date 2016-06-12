@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading;
 
 
+// *******************************
+// *  Utility Windows functions  *
+// *******************************
 public class User32
 {
     /// <summary>

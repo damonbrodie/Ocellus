@@ -80,7 +80,7 @@ class Atlas
 
     }
 
-    public static int calcDistance(ref Dictionary<string, dynamic> atlas, string fromSystem, string toSystem)
+    public static int calcDistanceFromHere(ref Dictionary<string, dynamic> atlas, Elite.MessageBus messageBus, string toSystem)
     {
         double fromX;
         double fromY;
@@ -89,7 +89,7 @@ class Atlas
         double toX;
         double toY;
         double toZ;
-        if (fromSystem == "" || fromSystem == null)
+        if (messageBus.currentSystem == "" || messageBus.currentSystem == null)
         {
             Debug.Write("Error:  calcDistance - fromSystem not specified");
             return -1;
@@ -99,19 +99,25 @@ class Atlas
             Debug.Write("Error:  calcDistance - toSystem not specified");
             return -1;
         }
-        if (fromSystem == toSystem)
+        if (messageBus.currentSystem == toSystem)
         {
             return 0;
         }
-        if (atlas.ContainsKey(fromSystem))
+        if (messageBus.currentX != -9999.99)
         {
-            fromX = (double)atlas[fromSystem]["x"];
-            fromY = (double)atlas[fromSystem]["y"];
-            fromZ = (double)atlas[fromSystem]["z"];
+            fromX = messageBus.currentX;
+            fromY = messageBus.currentY;
+            fromZ = messageBus.currentZ;
+        }
+        else if (atlas.ContainsKey(messageBus.currentSystem))
+        {
+            fromX = (double)atlas[messageBus.currentSystem]["x"];
+            fromY = (double)atlas[messageBus.currentSystem]["y"];
+            fromZ = (double)atlas[messageBus.currentSystem]["z"];
         }
         else
         {
-            Debug.Write("Error:  From system '" + fromSystem + "' is not in the EDDN database");
+            Debug.Write("Error:  Unable to determine your current coordinates in system '" + messageBus.currentSystem +"'");
             return -1;
         }
         if (atlas.ContainsKey(toSystem))

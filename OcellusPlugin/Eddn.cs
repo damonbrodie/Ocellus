@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Media;
+using System.Speech.Synthesis;
 
 
 // **************************************
@@ -315,8 +317,45 @@ class Eddn
             
     }
 
-    public static void updateEddn(Dictionary<string, dynamic> companion)
+    public static void updateEddn(Elite.MessageBus messageBus)
     {
+        // If we're docked, update the EDDN network.
+        Dictionary<string, dynamic> companion = messageBus.companion;
+        
+        if (!companion.ContainsKey("lastStarport") || ! companion["lastStarport"].ContainsKey("name"))
+        {
+            Debug.Write("Error:  Companion API doesn't have Starport");
+            return;
+        }
+
+        string currentStarport = companion["lastStarport"]["name"];
+
+        if (!companion["commander"]["docked"])
+        {
+            Debug.Write("Warning:  Companion API reports we are not docked - can't update EDDN");
+            return;
+        }
+
+        if (messageBus.eddnLastUpdate != null &&  currentStarport == messageBus.eddnLastStation)
+        {
+            int secondsAgo = -600;
+
+            DateTime lastRun = messageBus.eddnLastUpdate;
+            DateTime compareTime = DateTime.Now.AddSeconds(secondsAgo);
+
+            double diffSeconds = (lastRun - compareTime).TotalSeconds;
+
+            if (diffSeconds > 0)
+            {
+                Debug.Write("EDDN update cooldown in progress. " + diffSeconds.ToString() + " seconds remaining.");
+                return;
+            }
+        }
+        messageBus.eddnLastStation = currentStarport;
+        messageBus.eddnLastUpdate = DateTime.Now;
+
+        Debug.Write("Submitting station information to EDDN");
+
         Tuple<string, string, string> tResponse = createEddnJson(companion);
         if (tResponse.Item3 != null)
         {
