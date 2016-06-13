@@ -116,19 +116,16 @@ class Elite
                         currentX = Double.Parse(match.Groups[2].Value);
                         currentY = Double.Parse(match.Groups[3].Value);
                         currentZ = Double.Parse(match.Groups[4].Value);
-                        Debug.Write("netlog: " + currentSystem + " (" + currentX.ToString() + "," + currentY.ToString() + "," + currentZ.ToString() + ")");
                     }
                     match = dockedRegex.Match(currentLine);
                     if (match.Success)
                     {
                         currentlyDocked = 1;
-                        Debug.Write("netlog:  Now docked");
                     }
                     match = undockedRegex.Match(currentLine);
                     if (match.Success)
                     {
                         currentlyDocked = 0;
-                        Debug.Write("netlog:  Now undocked");
                     }
                 }
 
