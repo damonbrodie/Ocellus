@@ -15,7 +15,7 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.9";
+        public const string pluginVersion = "0.9.1";
         public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
         public const string ttsConfig = "TextToSpeechConfig.txt";
 
@@ -132,6 +132,10 @@ namespace OcellusPlugin
                 Debug.Write("COMMAND:  " + context);
                 switch (context.ToLower())
                 {
+                    case "test":
+                        double currentX = Double.Parse("-80.75");
+                        Debug.Write("test " + currentX.ToString());
+                        break;
                     case "check for upgrade":
                         if (Upgrade.needUpgradeWithCooldown(ref state))
                         {
@@ -186,6 +190,7 @@ namespace OcellusPlugin
                         booleanValues["VAEDerrorDestinationSystem"] = false;
                         break;
                     case "dictate system":
+                        booleanValues["VAEDrecognitionNotLoaded"] = false;
                         if (state.ContainsKey("VAEDrecognitionEngine"))
                         {
                             SpeechRecognitionEngine recognitionEngine = (SpeechRecognitionEngine)state["VAEDrecognitionEngine"];
@@ -197,6 +202,7 @@ namespace OcellusPlugin
                         }
                         else
                         {
+                            booleanValues["VAEDrecognitionNotLoaded"] = true;
                             Debug.Write("Error:  Speech Engine not yet Initialized.  (Possibly still loading)");
                         }
                         textValues["VAEDdictateSystem"] = null;

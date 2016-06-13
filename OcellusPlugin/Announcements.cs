@@ -42,6 +42,12 @@ class Announcements
         }
     }
 
+    public static void errorAnnouncement(string error)
+    {
+        string voice = PluginRegistry.getStringValue("errorVoice");
+        read(error, voice);
+    }
+
     public static void updateAnnouncement()
     {
         string announcementType = PluginRegistry.getStringValue("updateNotification");

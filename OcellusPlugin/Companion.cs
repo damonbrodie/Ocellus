@@ -92,6 +92,7 @@ class Companion
         string debugJson = Path.Combine(Config.Path(), "debug_companion.json");
         if (File.Exists(debugJson))
         {
+            Debug.Write("-------------- Loading debug companion json --------------");
             htmlData = File.ReadAllText(debugJson);
         }
         else

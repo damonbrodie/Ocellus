@@ -48,10 +48,13 @@ class EliteGrammar
 
     private static bool loadGrammar()
     {
+        string grammarFile = Path.Combine(Config.Path(), "systems_grammar.xml");
+
         SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
         recognitionEngine.SetInputToDefaultAudioDevice();
-        Grammar grammar = new Grammar(Path.Combine(Config.Path(), "systems_grammar.xml"));
+        Grammar grammar = new Grammar(grammarFile);
         recognitionEngine.LoadGrammar(grammar);
+   
         return true;
     }
 

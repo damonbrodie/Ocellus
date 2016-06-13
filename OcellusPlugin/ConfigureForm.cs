@@ -37,11 +37,13 @@ namespace ConfigureForm
             string startupVoice = PluginRegistry.getStringValue("startupVoice");
             string eddnVoice = PluginRegistry.getStringValue("eddnVoice");
             string updateVoice = PluginRegistry.getStringValue("updateVoice");
+            string errorVoice = PluginRegistry.getStringValue("errorVoice");
 
             int counter = 0;
             bool foundStartup = false;
             bool foundEddn = false;
             bool foundUpdate = false;
+            bool foundError = false;
             SpeechSynthesizer reader = new SpeechSynthesizer();
             foreach (InstalledVoice voice in reader.GetInstalledVoices())
             {
@@ -66,7 +68,12 @@ namespace ConfigureForm
                         cmbUpdateVoice.SelectedIndex = counter;
                         foundUpdate = true;
                     }
-                    counter++;
+                    if (errorVoice == voice.VoiceInfo.Name)
+                    {
+                        cmbErrorVoice.SelectedIndex = counter;
+                        foundError = true;
+                    }
+                        counter++;
                 }
                 catch
                 {
@@ -85,6 +92,10 @@ namespace ConfigureForm
             if (!foundUpdate)
             {
                 cmbUpdateVoice.SelectedIndex = 0;
+            }
+            if (!foundError)
+            {
+                cmbErrorVoice.SelectedIndex = 0;
             }
 
             txt_email.Text = PluginRegistry.getStringValue("email");
@@ -237,6 +248,7 @@ namespace ConfigureForm
                     PluginRegistry.setStringValue("updateSound", txtUpdateSoundFile.Text);
                     PluginRegistry.setStringValue("updateVoice", cmbUpdateVoice.SelectedItem.ToString());
 
+                    PluginRegistry.setStringValue("errorVoice", cmbErrorVoice.SelectedItem.ToString());
 
                     this.Close();
                 }
@@ -308,6 +320,8 @@ namespace ConfigureForm
             PluginRegistry.setStringValue("updateText", txtUpdateTTS.Text);
             PluginRegistry.setStringValue("updateSound", txtUpdateSoundFile.Text);
             PluginRegistry.setStringValue("updateVoice", cmbUpdateVoice.SelectedItem.ToString());
+
+            PluginRegistry.setStringValue("errorVoice", cmbErrorVoice.SelectedItem.ToString());
 
             this.Close();
         }
