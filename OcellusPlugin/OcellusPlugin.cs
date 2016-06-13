@@ -39,6 +39,7 @@ namespace OcellusPlugin
             try
             {
                 Debug.Write("---------------------- Ocellus Plugin Initializing ----------------------");
+                int registryCheck = PluginRegistry.checkRegistry();
                 // Setup Speech engine
                 if (EliteGrammar.downloadGrammar())
                 {
@@ -94,21 +95,6 @@ namespace OcellusPlugin
                     state.Add("VAEDloggedIn", "no");
                 }
 
-                // These were added after the initial public release, so add them to the registry if they don't exist:
-
-                if (PluginRegistry.getStringValue("updateAvailableText") == null)
-                {
-                    PluginRegistry.setStringValue("updateAvailableText", "An update is available on Ocellus dot i o");
-                }
-                if (PluginRegistry.getStringValue("eddnUpdateText") == null)
-                {
-                    PluginRegistry.setStringValue("eddnUpdateText", "Updating Data Network");
-                }
-                if (PluginRegistry.getStringValue("startupText") == null)
-                {
-                    PluginRegistry.setStringValue("startupText", "Welcome back Commander!");
-                }
-
                 EliteBinds.getBinds(ref state, ref textValues, ref booleanValues);
 
                 Elite.MessageBus messageBus = new Elite.MessageBus();
@@ -117,10 +103,10 @@ namespace OcellusPlugin
 
                 state["VAEDmessageBus"] = messageBus;
 
+                Task.Run(() => Announcements.startupNotifications(registryCheck));
+
                 //Watch the netlog for docked and system change information
                 Task.Run(() => Elite.tailNetLog(messageBus));
-
-                Task.Run(() => TextToSpeech.announcements());
             }
             catch (Exception ex)
             {
@@ -330,12 +316,12 @@ namespace OcellusPlugin
                         }
                         break;
                     case "get frontier credentials":
-                        var configureForm = new ConfigureForm.Login();
+                        var configureForm = new ConfigureForm.Configuration((string)state["VAEDloggedIn"]);
                         configureForm.ShowDialog();
                         CookieContainer loginCookies = configureForm.Cookie;
                         state["VAEDcookieContainer"] = loginCookies;
                         string loginResponse = configureForm.LoginResponse;
-                        Debug.Write("LoginResponse: " + loginResponse);
+                        Debug.Write("Frontier Login Response: " + loginResponse);
                         textValues["VAEDloggedIn"] = loginResponse;
                         break;
                     case "get frontier verification":

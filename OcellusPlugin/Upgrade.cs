@@ -11,7 +11,7 @@ class Upgrade
 {
     private const string versionCheckURL = "http://ocellus.io/version";
 
-    private static Tuple<double, string, string> checkServerVersion()
+    private static Tuple<string, string, string> checkServerVersion()
     {
         Debug.Write("Checking server for Ocellus plugin updates.");
         Tuple<bool, string, CookieContainer, string> tResponse = Web.sendRequest(versionCheckURL);
@@ -21,28 +21,35 @@ class Upgrade
         {
             var result = serializer.Deserialize<Dictionary<string, dynamic>>(htmlData);
             
-            double serverVer = double.Parse(result["version"]);
+            string serverVer = result["version"];
             string profileURL = result["profile"];
             string pluginURL = result["plugin"];
 
-            return Tuple.Create<double, string, string>(serverVer, profileURL, pluginURL);
+            return Tuple.Create<string, string, string>(serverVer, profileURL, pluginURL);
         }
         catch
         {
-            Debug.Write("ERROR:  Unable to parse version check resposne");
+            Debug.Write("ERROR:  Unable to parse version check response");
         }
-        return Tuple.Create<double, string, string>(-1.0, null, null);
+        return Tuple.Create<string, string, string>("0.1", null, null);
     }
 
     public static bool needUpgrade()
     {
-        Tuple<double, string, string> tResponse = checkServerVersion();
-        double serverVer = tResponse.Item1;
-        double myVer = double.Parse(OcellusPlugin.OcellusPlugin.pluginVersion);
-        if (myVer < serverVer)
+        Tuple<string, string, string> tResponse = checkServerVersion();
+        string serverVer = tResponse.Item1;
+        
+
+        var serverVersion = new Version(serverVer);
+        var localVersion = new Version(OcellusPlugin.OcellusPlugin.pluginVersion);
+
+        var result = serverVersion.CompareTo(localVersion);
+        if (result > 0)
         {
+            Debug.Write("Ocellus Update Available at ocellus.io");
             return true;
         }
+        Debug.Write("Ocellus is up-to-date");
         return false;
     }
 
@@ -60,12 +67,5 @@ class Upgrade
             
         }
         return needUpgrade();
-    }
-
-    public static bool downloadUpdate()
-    {
-        Tuple<double, string, string> tResponse = checkServerVersion();
-
-        return true;
     }
 }

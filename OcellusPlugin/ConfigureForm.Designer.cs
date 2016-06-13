@@ -1,6 +1,6 @@
 ﻿namespace ConfigureForm
 {
-    partial class Login
+    partial class Configuration
     {
         /// <summary>
         /// Required designer variable.
@@ -28,120 +28,70 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
-            this.label1 = new System.Windows.Forms.Label();
-            this.txt_email = new System.Windows.Forms.TextBox();
-            this.txt_password = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.btnSubmit = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lbl_validation_email = new System.Windows.Forms.Label();
-            this.lbl_validation_password = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Configuration));
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.cmb_Voice = new System.Windows.Forms.ComboBox();
+            this.cmbStartupVoice = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.txt_Startup = new System.Windows.Forms.TextBox();
-            this.txt_EDDN_Updates = new System.Windows.Forms.TextBox();
-            this.txt_Updates = new System.Windows.Forms.TextBox();
+            this.txtStartupTTS = new System.Windows.Forms.TextBox();
+            this.txtEddnTTS = new System.Windows.Forms.TextBox();
+            this.txtUpdateTTS = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.tabOptions = new System.Windows.Forms.TabControl();
+            this.tabCredentials = new System.Windows.Forms.TabPage();
+            this.txtCurrentStatus = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txt_email = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txt_password = new System.Windows.Forms.TextBox();
+            this.btnLogin = new System.Windows.Forms.Button();
+            this.lbl_validation_email = new System.Windows.Forms.Label();
+            this.lbl_validation_password = new System.Windows.Forms.Label();
+            this.tabStartup = new System.Windows.Forms.TabPage();
+            this.btnPreviewStartupTTS = new System.Windows.Forms.Button();
+            this.btnStartupSoundPreview = new System.Windows.Forms.Button();
+            this.rdoStartupNoNotification = new System.Windows.Forms.RadioButton();
+            this.rdoStartupSound = new System.Windows.Forms.RadioButton();
+            this.rdoStartupTTS = new System.Windows.Forms.RadioButton();
+            this.txtStartupSoundFile = new System.Windows.Forms.TextBox();
+            this.btnStartupSoundSelect = new System.Windows.Forms.Button();
+            this.tabEddnUpdate = new System.Windows.Forms.TabPage();
+            this.btnPreviewEddnTTS = new System.Windows.Forms.Button();
+            this.btnEddnSoundPreview = new System.Windows.Forms.Button();
+            this.txtEddnSoundFile = new System.Windows.Forms.TextBox();
+            this.btnEddnSoundSelect = new System.Windows.Forms.Button();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.rdoEddnNoNotification = new System.Windows.Forms.RadioButton();
+            this.rdoEddnSound = new System.Windows.Forms.RadioButton();
+            this.rdoEddnTTS = new System.Windows.Forms.RadioButton();
+            this.cmbEddnVoice = new System.Windows.Forms.ComboBox();
+            this.tabUpdateNotification = new System.Windows.Forms.TabPage();
+            this.btnPreviewUpdateTTS = new System.Windows.Forms.Button();
+            this.btnUpdateSoundPreview = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.rdoUpdateNoNotification = new System.Windows.Forms.RadioButton();
+            this.rdoUpdateSound = new System.Windows.Forms.RadioButton();
+            this.rdoUpdateTTS = new System.Windows.Forms.RadioButton();
+            this.txtUpdateSoundFile = new System.Windows.Forms.TextBox();
+            this.btnUpdateSoundSelect = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.cmbUpdateVoice = new System.Windows.Forms.ComboBox();
+            this.dlgFile = new System.Windows.Forms.OpenFileDialog();
+            this.btnConfigurationSave = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.tabOptions.SuspendLayout();
+            this.tabCredentials.SuspendLayout();
+            this.tabStartup.SuspendLayout();
+            this.tabEddnUpdate.SuspendLayout();
+            this.tabUpdateNotification.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(38, 488);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Email Address:";
-            // 
-            // txt_email
-            // 
-            this.txt_email.Location = new System.Drawing.Point(41, 504);
-            this.txt_email.Name = "txt_email";
-            this.txt_email.Size = new System.Drawing.Size(398, 20);
-            this.txt_email.TabIndex = 4;
-            // 
-            // txt_password
-            // 
-            this.txt_password.Location = new System.Drawing.Point(41, 580);
-            this.txt_password.Name = "txt_password";
-            this.txt_password.PasswordChar = '*';
-            this.txt_password.Size = new System.Drawing.Size(398, 20);
-            this.txt_password.TabIndex = 5;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(38, 564);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Password:";
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Location = new System.Drawing.Point(279, 640);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(97, 21);
-            this.btnSubmit.TabIndex = 7;
-            this.btnSubmit.Text = "Save";
-            this.btnSubmit.UseVisualStyleBackColor = true;
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
-            // btnCancel
-            // 
-            this.btnCancel.CausesValidation = false;
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(103, 640);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(80, 21);
-            this.btnCancel.TabIndex = 6;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(37, 408);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(245, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Log in with your Elite: Dangerous account";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lbl_validation_email
-            // 
-            this.lbl_validation_email.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_validation_email.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_validation_email.Location = new System.Drawing.Point(41, 527);
-            this.lbl_validation_email.Name = "lbl_validation_email";
-            this.lbl_validation_email.Size = new System.Drawing.Size(398, 19);
-            this.lbl_validation_email.TabIndex = 7;
-            this.lbl_validation_email.Text = "Invalid Email Address";
-            this.lbl_validation_email.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbl_validation_email.Visible = false;
-            // 
-            // lbl_validation_password
-            // 
-            this.lbl_validation_password.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_validation_password.ForeColor = System.Drawing.Color.DarkRed;
-            this.lbl_validation_password.Location = new System.Drawing.Point(41, 603);
-            this.lbl_validation_password.Name = "lbl_validation_password";
-            this.lbl_validation_password.Size = new System.Drawing.Size(398, 18);
-            this.lbl_validation_password.TabIndex = 8;
-            this.lbl_validation_password.Text = "Enter your password";
-            this.lbl_validation_password.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lbl_validation_password.Visible = false;
             // 
             // pictureBox1
             // 
@@ -157,166 +107,705 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(34, 93);
+            this.label4.Location = new System.Drawing.Point(18, 12);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(293, 13);
+            this.label4.Size = new System.Drawing.Size(163, 13);
             this.label4.TabIndex = 9;
-            this.label4.Text = "Most text to speech is done inside of VoiceAttack.";
+            this.label4.Text = "Ocellus Startup Notification";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label5
+            // cmbStartupVoice
             // 
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(34, 118);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(439, 32);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "There are however a few places where things happen independently of voice command" +
-    "s.  Set the text for these Text-to-Speech actions here.";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // cmb_Voice
-            // 
-            this.cmb_Voice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmb_Voice.FormattingEnabled = true;
-            this.cmb_Voice.Location = new System.Drawing.Point(37, 178);
-            this.cmb_Voice.Name = "cmb_Voice";
-            this.cmb_Voice.Size = new System.Drawing.Size(401, 21);
-            this.cmb_Voice.TabIndex = 0;
+            this.cmbStartupVoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbStartupVoice.FormattingEnabled = true;
+            this.cmbStartupVoice.Location = new System.Drawing.Point(39, 104);
+            this.cmbStartupVoice.Name = "cmbStartupVoice";
+            this.cmbStartupVoice.Size = new System.Drawing.Size(378, 21);
+            this.cmbStartupVoice.TabIndex = 2;
+            this.cmbStartupVoice.SelectedIndexChanged += new System.EventHandler(this.cmb_StartupVoice_SelectedIndexChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(37, 162);
+            this.label6.Location = new System.Drawing.Point(41, 88);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(37, 13);
+            this.label6.Size = new System.Drawing.Size(113, 13);
             this.label6.TabIndex = 12;
-            this.label6.Text = "Voice:";
+            this.label6.Text = "Text-to-Speech Voice:";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(37, 220);
+            this.label7.Location = new System.Drawing.Point(41, 140);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(133, 13);
             this.label7.TabIndex = 13;
-            this.label7.Text = "Text to Speech on startup:";
+            this.label7.Text = "Text-to-Speech on startup:";
             // 
-            // txt_Startup
+            // txtStartupTTS
             // 
-            this.txt_Startup.Location = new System.Drawing.Point(37, 236);
-            this.txt_Startup.Name = "txt_Startup";
-            this.txt_Startup.Size = new System.Drawing.Size(401, 20);
-            this.txt_Startup.TabIndex = 1;
+            this.txtStartupTTS.Location = new System.Drawing.Point(144, 156);
+            this.txtStartupTTS.Name = "txtStartupTTS";
+            this.txtStartupTTS.Size = new System.Drawing.Size(273, 20);
+            this.txtStartupTTS.TabIndex = 3;
+            this.txtStartupTTS.TextChanged += new System.EventHandler(this.txt_StartupTTS_TextChanged);
             // 
-            // txt_EDDN_Updates
+            // txtEddnTTS
             // 
-            this.txt_EDDN_Updates.Location = new System.Drawing.Point(37, 292);
-            this.txt_EDDN_Updates.Name = "txt_EDDN_Updates";
-            this.txt_EDDN_Updates.Size = new System.Drawing.Size(401, 20);
-            this.txt_EDDN_Updates.TabIndex = 2;
+            this.txtEddnTTS.Location = new System.Drawing.Point(144, 156);
+            this.txtEddnTTS.Name = "txtEddnTTS";
+            this.txtEddnTTS.Size = new System.Drawing.Size(273, 20);
+            this.txtEddnTTS.TabIndex = 3;
+            this.txtEddnTTS.TextChanged += new System.EventHandler(this.txtEddnTTS_TextChanged);
             // 
-            // txt_Updates
+            // txtUpdateTTS
             // 
-            this.txt_Updates.Location = new System.Drawing.Point(37, 347);
-            this.txt_Updates.Name = "txt_Updates";
-            this.txt_Updates.Size = new System.Drawing.Size(401, 20);
-            this.txt_Updates.TabIndex = 3;
+            this.txtUpdateTTS.Location = new System.Drawing.Point(144, 156);
+            this.txtUpdateTTS.Name = "txtUpdateTTS";
+            this.txtUpdateTTS.Size = new System.Drawing.Size(273, 20);
+            this.txtUpdateTTS.TabIndex = 3;
+            this.txtUpdateTTS.TextChanged += new System.EventHandler(this.txtUpdateTTS_TextChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(37, 276);
+            this.label8.Location = new System.Drawing.Point(41, 140);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(175, 13);
+            this.label8.Size = new System.Drawing.Size(235, 13);
             this.label8.TabIndex = 17;
-            this.label8.Text = "Text to Speech for EDDN Updates:";
+            this.label8.Text = "Text to Speech for background EDDN Updates:";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(37, 331);
+            this.label9.Location = new System.Drawing.Point(41, 140);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(224, 13);
             this.label9.TabIndex = 18;
             this.label9.Text = "Text to Speech for available Ocellus Updates:";
             // 
+            // tabOptions
+            // 
+            this.tabOptions.Controls.Add(this.tabCredentials);
+            this.tabOptions.Controls.Add(this.tabStartup);
+            this.tabOptions.Controls.Add(this.tabEddnUpdate);
+            this.tabOptions.Controls.Add(this.tabUpdateNotification);
+            this.tabOptions.Location = new System.Drawing.Point(12, 88);
+            this.tabOptions.Name = "tabOptions";
+            this.tabOptions.SelectedIndex = 0;
+            this.tabOptions.Size = new System.Drawing.Size(452, 310);
+            this.tabOptions.TabIndex = 10;
+            // 
+            // tabCredentials
+            // 
+            this.tabCredentials.Controls.Add(this.txtCurrentStatus);
+            this.tabCredentials.Controls.Add(this.label12);
+            this.tabCredentials.Controls.Add(this.label3);
+            this.tabCredentials.Controls.Add(this.label10);
+            this.tabCredentials.Controls.Add(this.label1);
+            this.tabCredentials.Controls.Add(this.txt_email);
+            this.tabCredentials.Controls.Add(this.label2);
+            this.tabCredentials.Controls.Add(this.txt_password);
+            this.tabCredentials.Controls.Add(this.btnLogin);
+            this.tabCredentials.Controls.Add(this.lbl_validation_email);
+            this.tabCredentials.Controls.Add(this.lbl_validation_password);
+            this.tabCredentials.Location = new System.Drawing.Point(4, 22);
+            this.tabCredentials.Name = "tabCredentials";
+            this.tabCredentials.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCredentials.Size = new System.Drawing.Size(444, 284);
+            this.tabCredentials.TabIndex = 0;
+            this.tabCredentials.Text = "Frontier Credentials";
+            this.tabCredentials.UseVisualStyleBackColor = true;
+            // 
+            // txtCurrentStatus
+            // 
+            this.txtCurrentStatus.Location = new System.Drawing.Point(105, 247);
+            this.txtCurrentStatus.Name = "txtCurrentStatus";
+            this.txtCurrentStatus.ReadOnly = true;
+            this.txtCurrentStatus.Size = new System.Drawing.Size(116, 20);
+            this.txtCurrentStatus.TabIndex = 21;
+            this.txtCurrentStatus.TabStop = false;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(22, 250);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(77, 13);
+            this.label12.TabIndex = 20;
+            this.label12.Text = "Current Status:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(18, 12);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(245, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Log in with your Elite: Dangerous account";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // label10
             // 
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(37, 434);
+            this.label10.Location = new System.Drawing.Point(18, 39);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(401, 50);
             this.label10.TabIndex = 19;
             this.label10.Text = "These credentials are stored only on this computer and are used only to log into " +
-    "the Official Fronter Companion API server.  Your credentials are never shared wi" +
-    "th Ocellus.io or anyone else.";
+    "the Official Frontier Companion API server.  Your credentials are never shared w" +
+    "ith Ocellus.io or anyone else.";
             // 
-            // Login
+            // label1
             // 
-            this.AcceptButton = this.btnSubmit;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(19, 101);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(76, 13);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Email Address:";
+            // 
+            // txt_email
+            // 
+            this.txt_email.Location = new System.Drawing.Point(22, 117);
+            this.txt_email.Name = "txt_email";
+            this.txt_email.Size = new System.Drawing.Size(398, 20);
+            this.txt_email.TabIndex = 0;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(19, 158);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(56, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Password:";
+            // 
+            // txt_password
+            // 
+            this.txt_password.Location = new System.Drawing.Point(22, 176);
+            this.txt_password.Name = "txt_password";
+            this.txt_password.PasswordChar = '*';
+            this.txt_password.Size = new System.Drawing.Size(398, 20);
+            this.txt_password.TabIndex = 1;
+            // 
+            // btnLogin
+            // 
+            this.btnLogin.Location = new System.Drawing.Point(270, 246);
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.Size = new System.Drawing.Size(149, 21);
+            this.btnLogin.TabIndex = 2;
+            this.btnLogin.Text = "Login && Verify Credentials";
+            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
+            // 
+            // lbl_validation_email
+            // 
+            this.lbl_validation_email.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_validation_email.ForeColor = System.Drawing.Color.DarkRed;
+            this.lbl_validation_email.Location = new System.Drawing.Point(22, 138);
+            this.lbl_validation_email.Name = "lbl_validation_email";
+            this.lbl_validation_email.Size = new System.Drawing.Size(398, 19);
+            this.lbl_validation_email.TabIndex = 7;
+            this.lbl_validation_email.Text = "Invalid email address";
+            this.lbl_validation_email.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_validation_email.Visible = false;
+            // 
+            // lbl_validation_password
+            // 
+            this.lbl_validation_password.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_validation_password.ForeColor = System.Drawing.Color.DarkRed;
+            this.lbl_validation_password.Location = new System.Drawing.Point(22, 197);
+            this.lbl_validation_password.Name = "lbl_validation_password";
+            this.lbl_validation_password.Size = new System.Drawing.Size(398, 18);
+            this.lbl_validation_password.TabIndex = 8;
+            this.lbl_validation_password.Text = "Enter your password";
+            this.lbl_validation_password.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbl_validation_password.Visible = false;
+            // 
+            // tabStartup
+            // 
+            this.tabStartup.Controls.Add(this.btnPreviewStartupTTS);
+            this.tabStartup.Controls.Add(this.btnStartupSoundPreview);
+            this.tabStartup.Controls.Add(this.rdoStartupNoNotification);
+            this.tabStartup.Controls.Add(this.rdoStartupSound);
+            this.tabStartup.Controls.Add(this.rdoStartupTTS);
+            this.tabStartup.Controls.Add(this.txtStartupSoundFile);
+            this.tabStartup.Controls.Add(this.btnStartupSoundSelect);
+            this.tabStartup.Controls.Add(this.label4);
+            this.tabStartup.Controls.Add(this.cmbStartupVoice);
+            this.tabStartup.Controls.Add(this.label6);
+            this.tabStartup.Controls.Add(this.label7);
+            this.tabStartup.Controls.Add(this.txtStartupTTS);
+            this.tabStartup.Location = new System.Drawing.Point(4, 22);
+            this.tabStartup.Name = "tabStartup";
+            this.tabStartup.Padding = new System.Windows.Forms.Padding(3);
+            this.tabStartup.Size = new System.Drawing.Size(444, 284);
+            this.tabStartup.TabIndex = 1;
+            this.tabStartup.Text = "Startup Notification";
+            this.tabStartup.UseVisualStyleBackColor = true;
+            // 
+            // btnPreviewStartupTTS
+            // 
+            this.btnPreviewStartupTTS.CausesValidation = false;
+            this.btnPreviewStartupTTS.Location = new System.Drawing.Point(39, 156);
+            this.btnPreviewStartupTTS.Name = "btnPreviewStartupTTS";
+            this.btnPreviewStartupTTS.Size = new System.Drawing.Size(99, 21);
+            this.btnPreviewStartupTTS.TabIndex = 4;
+            this.btnPreviewStartupTTS.Text = "Preview TTS";
+            this.btnPreviewStartupTTS.UseVisualStyleBackColor = true;
+            this.btnPreviewStartupTTS.Click += new System.EventHandler(this.btnPreviewStartupTTS_Click);
+            // 
+            // btnStartupSoundPreview
+            // 
+            this.btnStartupSoundPreview.CausesValidation = false;
+            this.btnStartupSoundPreview.Location = new System.Drawing.Point(39, 243);
+            this.btnStartupSoundPreview.Name = "btnStartupSoundPreview";
+            this.btnStartupSoundPreview.Size = new System.Drawing.Size(99, 21);
+            this.btnStartupSoundPreview.TabIndex = 7;
+            this.btnStartupSoundPreview.Text = "Preview Sound";
+            this.btnStartupSoundPreview.UseVisualStyleBackColor = true;
+            this.btnStartupSoundPreview.Click += new System.EventHandler(this.btnStartupSoundPreview_Click);
+            // 
+            // rdoStartupNoNotification
+            // 
+            this.rdoStartupNoNotification.AutoSize = true;
+            this.rdoStartupNoNotification.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.rdoStartupNoNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoStartupNoNotification.Location = new System.Drawing.Point(20, 43);
+            this.rdoStartupNoNotification.Name = "rdoStartupNoNotification";
+            this.rdoStartupNoNotification.Size = new System.Drawing.Size(55, 17);
+            this.rdoStartupNoNotification.TabIndex = 0;
+            this.rdoStartupNoNotification.TabStop = true;
+            this.rdoStartupNoNotification.Text = "None";
+            this.rdoStartupNoNotification.UseVisualStyleBackColor = true;
+            // 
+            // rdoStartupSound
+            // 
+            this.rdoStartupSound.AutoSize = true;
+            this.rdoStartupSound.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.rdoStartupSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoStartupSound.Location = new System.Drawing.Point(20, 191);
+            this.rdoStartupSound.Name = "rdoStartupSound";
+            this.rdoStartupSound.Size = new System.Drawing.Size(104, 17);
+            this.rdoStartupSound.TabIndex = 5;
+            this.rdoStartupSound.TabStop = true;
+            this.rdoStartupSound.Text = "Play a Sound:";
+            this.rdoStartupSound.UseVisualStyleBackColor = true;
+            // 
+            // rdoStartupTTS
+            // 
+            this.rdoStartupTTS.AutoSize = true;
+            this.rdoStartupTTS.Checked = true;
+            this.rdoStartupTTS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoStartupTTS.Location = new System.Drawing.Point(20, 66);
+            this.rdoStartupTTS.Name = "rdoStartupTTS";
+            this.rdoStartupTTS.Size = new System.Drawing.Size(142, 17);
+            this.rdoStartupTTS.TabIndex = 1;
+            this.rdoStartupTTS.TabStop = true;
+            this.rdoStartupTTS.Text = "Use Text-to-Speech:";
+            this.rdoStartupTTS.UseVisualStyleBackColor = true;
+            // 
+            // txtStartupSoundFile
+            // 
+            this.txtStartupSoundFile.Location = new System.Drawing.Point(144, 216);
+            this.txtStartupSoundFile.Name = "txtStartupSoundFile";
+            this.txtStartupSoundFile.ReadOnly = true;
+            this.txtStartupSoundFile.Size = new System.Drawing.Size(273, 20);
+            this.txtStartupSoundFile.TabIndex = 25;
+            this.txtStartupSoundFile.TabStop = false;
+            // 
+            // btnStartupSoundSelect
+            // 
+            this.btnStartupSoundSelect.CausesValidation = false;
+            this.btnStartupSoundSelect.Location = new System.Drawing.Point(39, 216);
+            this.btnStartupSoundSelect.Name = "btnStartupSoundSelect";
+            this.btnStartupSoundSelect.Size = new System.Drawing.Size(99, 21);
+            this.btnStartupSoundSelect.TabIndex = 6;
+            this.btnStartupSoundSelect.Text = "Select Sound";
+            this.btnStartupSoundSelect.UseVisualStyleBackColor = true;
+            this.btnStartupSoundSelect.Click += new System.EventHandler(this.btnStartupSoundSelect_Click);
+            // 
+            // tabEddnUpdate
+            // 
+            this.tabEddnUpdate.Controls.Add(this.btnPreviewEddnTTS);
+            this.tabEddnUpdate.Controls.Add(this.btnEddnSoundPreview);
+            this.tabEddnUpdate.Controls.Add(this.txtEddnSoundFile);
+            this.tabEddnUpdate.Controls.Add(this.btnEddnSoundSelect);
+            this.tabEddnUpdate.Controls.Add(this.label11);
+            this.tabEddnUpdate.Controls.Add(this.label5);
+            this.tabEddnUpdate.Controls.Add(this.rdoEddnNoNotification);
+            this.tabEddnUpdate.Controls.Add(this.rdoEddnSound);
+            this.tabEddnUpdate.Controls.Add(this.rdoEddnTTS);
+            this.tabEddnUpdate.Controls.Add(this.cmbEddnVoice);
+            this.tabEddnUpdate.Controls.Add(this.txtEddnTTS);
+            this.tabEddnUpdate.Controls.Add(this.label8);
+            this.tabEddnUpdate.Location = new System.Drawing.Point(4, 22);
+            this.tabEddnUpdate.Name = "tabEddnUpdate";
+            this.tabEddnUpdate.Size = new System.Drawing.Size(444, 284);
+            this.tabEddnUpdate.TabIndex = 2;
+            this.tabEddnUpdate.Text = "EDDN Notification";
+            this.tabEddnUpdate.UseVisualStyleBackColor = true;
+            // 
+            // btnPreviewEddnTTS
+            // 
+            this.btnPreviewEddnTTS.CausesValidation = false;
+            this.btnPreviewEddnTTS.Location = new System.Drawing.Point(39, 156);
+            this.btnPreviewEddnTTS.Name = "btnPreviewEddnTTS";
+            this.btnPreviewEddnTTS.Size = new System.Drawing.Size(99, 21);
+            this.btnPreviewEddnTTS.TabIndex = 4;
+            this.btnPreviewEddnTTS.Text = "Preview TTS";
+            this.btnPreviewEddnTTS.UseVisualStyleBackColor = true;
+            this.btnPreviewEddnTTS.Click += new System.EventHandler(this.btnPreviewEddnTTS_Click);
+            // 
+            // btnEddnSoundPreview
+            // 
+            this.btnEddnSoundPreview.CausesValidation = false;
+            this.btnEddnSoundPreview.Location = new System.Drawing.Point(39, 243);
+            this.btnEddnSoundPreview.Name = "btnEddnSoundPreview";
+            this.btnEddnSoundPreview.Size = new System.Drawing.Size(99, 21);
+            this.btnEddnSoundPreview.TabIndex = 7;
+            this.btnEddnSoundPreview.Text = "Preview Sound";
+            this.btnEddnSoundPreview.UseVisualStyleBackColor = true;
+            this.btnEddnSoundPreview.Click += new System.EventHandler(this.btnEddnSoundPreview_Click);
+            // 
+            // txtEddnSoundFile
+            // 
+            this.txtEddnSoundFile.Location = new System.Drawing.Point(144, 216);
+            this.txtEddnSoundFile.Name = "txtEddnSoundFile";
+            this.txtEddnSoundFile.ReadOnly = true;
+            this.txtEddnSoundFile.Size = new System.Drawing.Size(273, 20);
+            this.txtEddnSoundFile.TabIndex = 34;
+            // 
+            // btnEddnSoundSelect
+            // 
+            this.btnEddnSoundSelect.CausesValidation = false;
+            this.btnEddnSoundSelect.Location = new System.Drawing.Point(39, 216);
+            this.btnEddnSoundSelect.Name = "btnEddnSoundSelect";
+            this.btnEddnSoundSelect.Size = new System.Drawing.Size(99, 21);
+            this.btnEddnSoundSelect.TabIndex = 6;
+            this.btnEddnSoundSelect.Text = "Select Sound";
+            this.btnEddnSoundSelect.UseVisualStyleBackColor = true;
+            this.btnEddnSoundSelect.Click += new System.EventHandler(this.btnEddnSoundSelect_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(41, 88);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(113, 13);
+            this.label11.TabIndex = 32;
+            this.label11.Text = "Text-to-Speech Voice:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(18, 12);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(246, 13);
+            this.label5.TabIndex = 31;
+            this.label5.Text = "Notification of background EDDN updates";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // rdoEddnNoNotification
+            // 
+            this.rdoEddnNoNotification.AutoSize = true;
+            this.rdoEddnNoNotification.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.rdoEddnNoNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoEddnNoNotification.Location = new System.Drawing.Point(20, 43);
+            this.rdoEddnNoNotification.Name = "rdoEddnNoNotification";
+            this.rdoEddnNoNotification.Size = new System.Drawing.Size(55, 17);
+            this.rdoEddnNoNotification.TabIndex = 0;
+            this.rdoEddnNoNotification.TabStop = true;
+            this.rdoEddnNoNotification.Text = "None";
+            this.rdoEddnNoNotification.UseVisualStyleBackColor = true;
+            // 
+            // rdoEddnSound
+            // 
+            this.rdoEddnSound.AutoSize = true;
+            this.rdoEddnSound.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.rdoEddnSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoEddnSound.Location = new System.Drawing.Point(20, 191);
+            this.rdoEddnSound.Name = "rdoEddnSound";
+            this.rdoEddnSound.Size = new System.Drawing.Size(104, 17);
+            this.rdoEddnSound.TabIndex = 5;
+            this.rdoEddnSound.TabStop = true;
+            this.rdoEddnSound.Text = "Play a Sound:";
+            this.rdoEddnSound.UseVisualStyleBackColor = true;
+            // 
+            // rdoEddnTTS
+            // 
+            this.rdoEddnTTS.AutoSize = true;
+            this.rdoEddnTTS.Checked = true;
+            this.rdoEddnTTS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoEddnTTS.Location = new System.Drawing.Point(20, 66);
+            this.rdoEddnTTS.Name = "rdoEddnTTS";
+            this.rdoEddnTTS.Size = new System.Drawing.Size(142, 17);
+            this.rdoEddnTTS.TabIndex = 1;
+            this.rdoEddnTTS.TabStop = true;
+            this.rdoEddnTTS.Text = "Use Text-to-Speech:";
+            this.rdoEddnTTS.UseVisualStyleBackColor = true;
+            // 
+            // cmbEddnVoice
+            // 
+            this.cmbEddnVoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbEddnVoice.FormattingEnabled = true;
+            this.cmbEddnVoice.Location = new System.Drawing.Point(39, 104);
+            this.cmbEddnVoice.Name = "cmbEddnVoice";
+            this.cmbEddnVoice.Size = new System.Drawing.Size(378, 21);
+            this.cmbEddnVoice.TabIndex = 2;
+            this.cmbEddnVoice.SelectedIndexChanged += new System.EventHandler(this.cmbEddnVoice_SelectedIndexChanged);
+            // 
+            // tabUpdateNotification
+            // 
+            this.tabUpdateNotification.Controls.Add(this.btnPreviewUpdateTTS);
+            this.tabUpdateNotification.Controls.Add(this.btnUpdateSoundPreview);
+            this.tabUpdateNotification.Controls.Add(this.label14);
+            this.tabUpdateNotification.Controls.Add(this.rdoUpdateNoNotification);
+            this.tabUpdateNotification.Controls.Add(this.rdoUpdateSound);
+            this.tabUpdateNotification.Controls.Add(this.rdoUpdateTTS);
+            this.tabUpdateNotification.Controls.Add(this.txtUpdateSoundFile);
+            this.tabUpdateNotification.Controls.Add(this.btnUpdateSoundSelect);
+            this.tabUpdateNotification.Controls.Add(this.label13);
+            this.tabUpdateNotification.Controls.Add(this.cmbUpdateVoice);
+            this.tabUpdateNotification.Controls.Add(this.label9);
+            this.tabUpdateNotification.Controls.Add(this.txtUpdateTTS);
+            this.tabUpdateNotification.Location = new System.Drawing.Point(4, 22);
+            this.tabUpdateNotification.Name = "tabUpdateNotification";
+            this.tabUpdateNotification.Size = new System.Drawing.Size(444, 284);
+            this.tabUpdateNotification.TabIndex = 3;
+            this.tabUpdateNotification.Text = "Update Notification";
+            this.tabUpdateNotification.UseVisualStyleBackColor = true;
+            // 
+            // btnPreviewUpdateTTS
+            // 
+            this.btnPreviewUpdateTTS.CausesValidation = false;
+            this.btnPreviewUpdateTTS.Location = new System.Drawing.Point(39, 156);
+            this.btnPreviewUpdateTTS.Name = "btnPreviewUpdateTTS";
+            this.btnPreviewUpdateTTS.Size = new System.Drawing.Size(99, 21);
+            this.btnPreviewUpdateTTS.TabIndex = 4;
+            this.btnPreviewUpdateTTS.Text = "Preview TTS";
+            this.btnPreviewUpdateTTS.UseVisualStyleBackColor = true;
+            this.btnPreviewUpdateTTS.Click += new System.EventHandler(this.btnPreviewUpdateTTS_Click);
+            // 
+            // btnUpdateSoundPreview
+            // 
+            this.btnUpdateSoundPreview.CausesValidation = false;
+            this.btnUpdateSoundPreview.Location = new System.Drawing.Point(39, 243);
+            this.btnUpdateSoundPreview.Name = "btnUpdateSoundPreview";
+            this.btnUpdateSoundPreview.Size = new System.Drawing.Size(99, 21);
+            this.btnUpdateSoundPreview.TabIndex = 7;
+            this.btnUpdateSoundPreview.Text = "Preview Sound";
+            this.btnUpdateSoundPreview.UseVisualStyleBackColor = true;
+            this.btnUpdateSoundPreview.Click += new System.EventHandler(this.btnUpdateSoundPreview_Click);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(41, 88);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(113, 13);
+            this.label14.TabIndex = 34;
+            this.label14.Text = "Text-to-Speech Voice:";
+            // 
+            // rdoUpdateNoNotification
+            // 
+            this.rdoUpdateNoNotification.AutoSize = true;
+            this.rdoUpdateNoNotification.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.rdoUpdateNoNotification.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoUpdateNoNotification.Location = new System.Drawing.Point(20, 43);
+            this.rdoUpdateNoNotification.Name = "rdoUpdateNoNotification";
+            this.rdoUpdateNoNotification.Size = new System.Drawing.Size(55, 17);
+            this.rdoUpdateNoNotification.TabIndex = 0;
+            this.rdoUpdateNoNotification.TabStop = true;
+            this.rdoUpdateNoNotification.Text = "None";
+            this.rdoUpdateNoNotification.UseVisualStyleBackColor = true;
+            // 
+            // rdoUpdateSound
+            // 
+            this.rdoUpdateSound.AutoSize = true;
+            this.rdoUpdateSound.CheckAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.rdoUpdateSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoUpdateSound.Location = new System.Drawing.Point(20, 191);
+            this.rdoUpdateSound.Name = "rdoUpdateSound";
+            this.rdoUpdateSound.Size = new System.Drawing.Size(104, 17);
+            this.rdoUpdateSound.TabIndex = 5;
+            this.rdoUpdateSound.TabStop = true;
+            this.rdoUpdateSound.Text = "Play a Sound:";
+            this.rdoUpdateSound.UseVisualStyleBackColor = true;
+            // 
+            // rdoUpdateTTS
+            // 
+            this.rdoUpdateTTS.AutoSize = true;
+            this.rdoUpdateTTS.Checked = true;
+            this.rdoUpdateTTS.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rdoUpdateTTS.Location = new System.Drawing.Point(20, 66);
+            this.rdoUpdateTTS.Name = "rdoUpdateTTS";
+            this.rdoUpdateTTS.Size = new System.Drawing.Size(142, 17);
+            this.rdoUpdateTTS.TabIndex = 1;
+            this.rdoUpdateTTS.TabStop = true;
+            this.rdoUpdateTTS.Text = "Use Text-to-Speech:";
+            this.rdoUpdateTTS.UseVisualStyleBackColor = true;
+            // 
+            // txtUpdateSoundFile
+            // 
+            this.txtUpdateSoundFile.Location = new System.Drawing.Point(144, 216);
+            this.txtUpdateSoundFile.Name = "txtUpdateSoundFile";
+            this.txtUpdateSoundFile.ReadOnly = true;
+            this.txtUpdateSoundFile.Size = new System.Drawing.Size(273, 20);
+            this.txtUpdateSoundFile.TabIndex = 32;
+            // 
+            // btnUpdateSoundSelect
+            // 
+            this.btnUpdateSoundSelect.CausesValidation = false;
+            this.btnUpdateSoundSelect.Location = new System.Drawing.Point(39, 216);
+            this.btnUpdateSoundSelect.Name = "btnUpdateSoundSelect";
+            this.btnUpdateSoundSelect.Size = new System.Drawing.Size(99, 21);
+            this.btnUpdateSoundSelect.TabIndex = 6;
+            this.btnUpdateSoundSelect.Text = "Select Sound";
+            this.btnUpdateSoundSelect.UseVisualStyleBackColor = true;
+            this.btnUpdateSoundSelect.Click += new System.EventHandler(this.btnUpdateSoundSelect_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(18, 12);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(223, 13);
+            this.label13.TabIndex = 28;
+            this.label13.Text = "Notification of Ocellus Plugin Updates";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cmbUpdateVoice
+            // 
+            this.cmbUpdateVoice.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbUpdateVoice.FormattingEnabled = true;
+            this.cmbUpdateVoice.Location = new System.Drawing.Point(39, 104);
+            this.cmbUpdateVoice.Name = "cmbUpdateVoice";
+            this.cmbUpdateVoice.Size = new System.Drawing.Size(378, 21);
+            this.cmbUpdateVoice.TabIndex = 2;
+            this.cmbUpdateVoice.SelectedIndexChanged += new System.EventHandler(this.cmbUpdateVoice_SelectedIndexChanged);
+            // 
+            // dlgFile
+            // 
+            this.dlgFile.InitialDirectory = "c:\\Windows\\Media\\";
+            this.dlgFile.ShowReadOnly = true;
+            this.dlgFile.Title = "Select Sound File";
+            // 
+            // btnConfigurationSave
+            // 
+            this.btnConfigurationSave.Location = new System.Drawing.Point(251, 421);
+            this.btnConfigurationSave.Name = "btnConfigurationSave";
+            this.btnConfigurationSave.Size = new System.Drawing.Size(97, 21);
+            this.btnConfigurationSave.TabIndex = 9;
+            this.btnConfigurationSave.Text = "Save";
+            this.btnConfigurationSave.UseVisualStyleBackColor = true;
+            this.btnConfigurationSave.Click += new System.EventHandler(this.btnConfigurationSave_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(115, 421);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(97, 21);
+            this.btnCancel.TabIndex = 8;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // Configuration
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(479, 685);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.txt_Updates);
-            this.Controls.Add(this.txt_EDDN_Updates);
-            this.Controls.Add(this.txt_Startup);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.cmb_Voice);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.lbl_validation_password);
-            this.Controls.Add(this.lbl_validation_email);
-            this.Controls.Add(this.label3);
+            this.ClientSize = new System.Drawing.Size(477, 458);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnSubmit);
-            this.Controls.Add(this.txt_password);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.txt_email);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.tabOptions);
+            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.btnConfigurationSave);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Login";
+            this.Name = "Configuration";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ocellus Assistant Settings";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Login_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.tabOptions.ResumeLayout(false);
+            this.tabCredentials.ResumeLayout(false);
+            this.tabCredentials.PerformLayout();
+            this.tabStartup.ResumeLayout(false);
+            this.tabStartup.PerformLayout();
+            this.tabEddnUpdate.ResumeLayout(false);
+            this.tabEddnUpdate.PerformLayout();
+            this.tabUpdateNotification.ResumeLayout(false);
+            this.tabUpdateNotification.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txt_email;
-        private System.Windows.Forms.TextBox txt_password;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnSubmit;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label lbl_validation_email;
-        private System.Windows.Forms.Label lbl_validation_password;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ComboBox cmb_Voice;
+        private System.Windows.Forms.ComboBox cmbStartupVoice;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox txt_Startup;
-        private System.Windows.Forms.TextBox txt_EDDN_Updates;
-        private System.Windows.Forms.TextBox txt_Updates;
+        private System.Windows.Forms.TextBox txtStartupTTS;
+        private System.Windows.Forms.TextBox txtEddnTTS;
+        private System.Windows.Forms.TextBox txtUpdateTTS;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TabControl tabOptions;
+        private System.Windows.Forms.TabPage tabCredentials;
+        private System.Windows.Forms.TabPage tabStartup;
+        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txt_email;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txt_password;
+        private System.Windows.Forms.Button btnLogin;
+        private System.Windows.Forms.Label lbl_validation_email;
+        private System.Windows.Forms.Label lbl_validation_password;
+        private System.Windows.Forms.TextBox txtStartupSoundFile;
+        private System.Windows.Forms.Button btnStartupSoundSelect;
+        private System.Windows.Forms.RadioButton rdoStartupSound;
+        private System.Windows.Forms.RadioButton rdoStartupTTS;
+        private System.Windows.Forms.OpenFileDialog dlgFile;
+        private System.Windows.Forms.TabPage tabEddnUpdate;
+        private System.Windows.Forms.ComboBox cmbEddnVoice;
+        private System.Windows.Forms.TabPage tabUpdateNotification;
+        private System.Windows.Forms.ComboBox cmbUpdateVoice;
+        private System.Windows.Forms.RadioButton rdoStartupNoNotification;
+        private System.Windows.Forms.TextBox txtEddnSoundFile;
+        private System.Windows.Forms.Button btnEddnSoundSelect;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.RadioButton rdoEddnNoNotification;
+        private System.Windows.Forms.RadioButton rdoEddnSound;
+        private System.Windows.Forms.RadioButton rdoEddnTTS;
+        private System.Windows.Forms.Button btnConfigurationSave;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.TextBox txtCurrentStatus;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.RadioButton rdoUpdateNoNotification;
+        private System.Windows.Forms.RadioButton rdoUpdateSound;
+        private System.Windows.Forms.RadioButton rdoUpdateTTS;
+        private System.Windows.Forms.TextBox txtUpdateSoundFile;
+        private System.Windows.Forms.Button btnUpdateSoundSelect;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button btnStartupSoundPreview;
+        private System.Windows.Forms.Button btnEddnSoundPreview;
+        private System.Windows.Forms.Button btnUpdateSoundPreview;
+        private System.Windows.Forms.Button btnPreviewStartupTTS;
+        private System.Windows.Forms.Button btnPreviewEddnTTS;
+        private System.Windows.Forms.Button btnPreviewUpdateTTS;
     }
 }

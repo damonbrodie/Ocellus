@@ -86,7 +86,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TextToSpeech.cs" />
+    <Compile Include="Announcements.cs" />
     <Compile Include="TrackSystems.cs" />
     <Compile Include="WebVars.cs" />
     <Compile Include="Upgrade.cs" />

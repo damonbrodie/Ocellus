@@ -29,12 +29,6 @@ class PluginRegistry
     {
         try
         {
-            // Create the plugins registry key and an initial variable if it doesn't exist (typically first run)
-            RegistryKey keyTest = Registry.CurrentUser.OpenSubKey(pluginRegistryPath);
-            if (keyTest == null)
-            {
-                setStringValue("webVar1", "http://ocellus.io/webvars_test");
-            }
             return Registry.GetValue(@"HKEY_CURRENT_USER\" + pluginRegistryPath, attribute, null).ToString();
         }
         catch
@@ -54,5 +48,40 @@ class PluginRegistry
         {
             Debug.Write("can't delete key: " + ex.ToString());
         }
+    }
+
+    public static int checkRegistry()
+    {
+        int check = 0;
+        // Create the plugins registry key and an initial variable if it doesn't exist (typically first run)
+        RegistryKey keyTest = Registry.CurrentUser.OpenSubKey(pluginRegistryPath);
+        if (keyTest == null)
+        {
+            check = 1; // Registry is completely empty
+            setStringValue("webVar1", "http://ocellus.io/webvars_test");
+        }
+        // These were added after the initial public release, so add them to the registry if they don't exist:
+
+        if (getStringValue("updateText") == null)
+        {
+            if (check == 0)
+            {
+                check = 2; // Registry doesn't have notification entries
+            }
+            setStringValue("updateNotification", "tts");
+            setStringValue("updateText", "An update is available on Ocellus dot i o");
+            
+        }
+        if (getStringValue("eddnText") == null)
+        {
+            setStringValue("eddnNotification", "tts");
+            setStringValue("eddnText", "Updating Data Network");
+        }
+        if (getStringValue("startupText") == null)
+        {
+            setStringValue("startupNotification", "tts");
+            setStringValue("startupText", "Welcome back Commander!");
+        }
+        return check;
     }
 }

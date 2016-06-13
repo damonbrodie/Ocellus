@@ -38,7 +38,6 @@ class Elite
 
     public static Tuple<string, string> getBindsFilename()
     {
-        Debug.Write("Entering getBindsFilename");
         var bindsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             @"Frontier Developments\Elite Dangerous\Options\Bindings");
 
@@ -194,21 +193,19 @@ class Elite
                     Debug.Write("Current System:  " + messageBus.currentSystem + "(" + messageBus.currentX.ToString() + "," + messageBus.currentY.ToString() + "," + messageBus.currentZ.ToString() + ")");
                     lastSystem = messageBus.currentSystem;
                 }
-                if (messageBus.isDocked == 1 && lastDockedStatus != messageBus.isDocked)
+                if (lastDockedStatus != messageBus.isDocked)
                 {   
                     Debug.Write("Docked Status changed to:  " + messageBus.isDocked.ToString());
-                    Thread.Sleep(7000);
-                    try
+                    if (messageBus.isDocked == 1)
                     {
+                        Thread.Sleep(7000);
+
                         if (messageBus.loggedinState == "ok")
                         {
                             Companion.getProfile(messageBus);
+                            Announcements.eddnAnnouncement();
                             Eddn.updateEddn(messageBus);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Write(ex.ToString());
                     }
                     lastDockedStatus = messageBus.isDocked;
                 }
