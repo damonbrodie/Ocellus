@@ -82,6 +82,16 @@ class PluginRegistry
             setStringValue("startupNotification", "tts");
             setStringValue("startupText", "Welcome back Commander!");
         }
+
+        if (getStringValue("engineText") == null)
+        {
+            if (check == 0)
+            {
+                check = 3; //Registry doesn't have recognition engine entries
+            }
+            setStringValue("engineNotification", "sound");
+            setStringValue("engineSound", @"c:\windows\media\Windows Balloon.wav");
+        }
         return check;
     }
 }

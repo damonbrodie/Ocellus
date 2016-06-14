@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System.Speech.Recognition;
 
 
 // **********************************************
@@ -17,6 +18,11 @@ class Elite
     const string uninstallRegistryPath64bit = @"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall";
     const string uninstallRegistryPath32bit = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
 
+    public class Speech
+    {
+        public string text = null;
+        public string voice = null;
+    }
     public class MessageBus
     {
         public string currentSystem = null;
@@ -34,6 +40,9 @@ class Elite
         public string upgradeTTS = null;
         public string updateEddnTTS = null;
         public string startupTTS = null;
+        public bool grammarLoaded = false;
+        public SpeechRecognitionEngine recognitionEngine;
+        public List<Speech> spokenAnnouncements = new List<Speech>();
     }
 
     public static Tuple<string, string> getBindsFilename()
@@ -200,7 +209,7 @@ class Elite
                         if (messageBus.loggedinState == "ok")
                         {
                             Companion.getProfile(messageBus);
-                            Announcements.eddnAnnouncement();
+                            Announcements.eddnAnnouncement(messageBus);
                             Eddn.updateEddn(messageBus);
                         }
                     }

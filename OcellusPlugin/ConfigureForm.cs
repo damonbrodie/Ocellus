@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Net;
-using System.Media;
 using System.Windows.Forms;
 using System.Speech.Synthesis;
+
 
 namespace ConfigureForm
 {
@@ -37,12 +36,14 @@ namespace ConfigureForm
             string startupVoice = PluginRegistry.getStringValue("startupVoice");
             string eddnVoice = PluginRegistry.getStringValue("eddnVoice");
             string updateVoice = PluginRegistry.getStringValue("updateVoice");
+            string engineVoice = PluginRegistry.getStringValue("engineVoice");
             string errorVoice = PluginRegistry.getStringValue("errorVoice");
 
             int counter = 0;
             bool foundStartup = false;
             bool foundEddn = false;
             bool foundUpdate = false;
+            bool foundEngine = false;
             bool foundError = false;
             SpeechSynthesizer reader = new SpeechSynthesizer();
             foreach (InstalledVoice voice in reader.GetInstalledVoices())
@@ -53,6 +54,8 @@ namespace ConfigureForm
                     cmbStartupVoice.Items.Add(voice.VoiceInfo.Name);
                     cmbEddnVoice.Items.Add(voice.VoiceInfo.Name);
                     cmbUpdateVoice.Items.Add(voice.VoiceInfo.Name);
+                    cmbEngineVoice.Items.Add(voice.VoiceInfo.Name);
+                    cmbErrorVoice.Items.Add(voice.VoiceInfo.Name);
                     if (startupVoice == voice.VoiceInfo.Name)
                     {
                         cmbStartupVoice.SelectedIndex = counter;
@@ -67,6 +70,11 @@ namespace ConfigureForm
                     {
                         cmbUpdateVoice.SelectedIndex = counter;
                         foundUpdate = true;
+                    }
+                    if (engineVoice == voice.VoiceInfo.Name)
+                    {
+                        cmbEngineVoice.SelectedIndex = counter;
+                        foundEngine = true;
                     }
                     if (errorVoice == voice.VoiceInfo.Name)
                     {
@@ -92,6 +100,10 @@ namespace ConfigureForm
             if (!foundUpdate)
             {
                 cmbUpdateVoice.SelectedIndex = 0;
+            }
+            if (!foundEngine)
+            {
+                cmbEngineVoice.SelectedIndex = 0;
             }
             if (!foundError)
             {
@@ -142,6 +154,22 @@ namespace ConfigureForm
             {
                 rdoUpdateSound.Checked = true;
                 txtUpdateSoundFile.Text = PluginRegistry.getStringValue("updateSound");
+            }
+            else //None
+            {
+                rdoUpdateNoNotification.Checked = true;
+            }
+
+
+            if (PluginRegistry.getStringValue("engineNotification") == "tts")
+            {
+                rdoEngineTTS.Checked = true;
+                txtEngineTTS.Text = PluginRegistry.getStringValue("engineText");
+            }
+            else if (PluginRegistry.getStringValue("engineNotification") == "sound")
+            {
+                rdoEngineSound.Checked = true;
+                txtEngineSoundFile.Text = PluginRegistry.getStringValue("engineSound");
             }
             else //None
             {
@@ -248,6 +276,22 @@ namespace ConfigureForm
                     PluginRegistry.setStringValue("updateSound", txtUpdateSoundFile.Text);
                     PluginRegistry.setStringValue("updateVoice", cmbUpdateVoice.SelectedItem.ToString());
 
+                    if (rdoEngineNoNotification.Checked)
+                    {
+                        PluginRegistry.setStringValue("engineNotification", "none");
+                    }
+                    else if (rdoUpdateTTS.Checked)
+                    {
+                        PluginRegistry.setStringValue("engineNotification", "tts");
+                    }
+                    else if (rdoUpdateSound.Checked)
+                    {
+                        PluginRegistry.setStringValue("engineNotification", "sound");
+                    }
+                    PluginRegistry.setStringValue("engineText", txtEngineTTS.Text);
+                    PluginRegistry.setStringValue("engineSound", txtEngineSoundFile.Text);
+                    PluginRegistry.setStringValue("engineVoice", cmbEngineVoice.SelectedItem.ToString());
+
                     PluginRegistry.setStringValue("errorVoice", cmbErrorVoice.SelectedItem.ToString());
 
                     this.Close();
@@ -321,6 +365,23 @@ namespace ConfigureForm
             PluginRegistry.setStringValue("updateSound", txtUpdateSoundFile.Text);
             PluginRegistry.setStringValue("updateVoice", cmbUpdateVoice.SelectedItem.ToString());
 
+
+            if (rdoEngineNoNotification.Checked)
+            {
+                PluginRegistry.setStringValue("engineNotification", "none");
+            }
+            else if (rdoEngineTTS.Checked)
+            {
+                PluginRegistry.setStringValue("engineNotification", "tts");
+            }
+            else if (rdoEngineSound.Checked)
+            {
+                PluginRegistry.setStringValue("engineNotification", "sound");
+            }
+            PluginRegistry.setStringValue("engineText", txtEngineTTS.Text);
+            PluginRegistry.setStringValue("engineSound", txtEngineSoundFile.Text);
+            PluginRegistry.setStringValue("engineVoice", cmbEngineVoice.SelectedItem.ToString());
+
             PluginRegistry.setStringValue("errorVoice", cmbErrorVoice.SelectedItem.ToString());
 
             this.Close();
@@ -355,17 +416,17 @@ namespace ConfigureForm
 
         private void btnPreviewStartupTTS_Click(object sender, EventArgs e)
         {
-            Announcements.read(txtStartupTTS.Text, cmbStartupVoice.SelectedItem.ToString());
+            Announcements.read(txtStartupTTS.Text, cmbStartupVoice.SelectedItem.ToString(), true);
         }
 
         private void btnPreviewEddnTTS_Click(object sender, EventArgs e)
         {
-            Announcements.read(txtEddnTTS.Text, cmbEddnVoice.SelectedItem.ToString());
+            Announcements.read(txtEddnTTS.Text, cmbEddnVoice.SelectedItem.ToString(),true);
         }
 
         private void btnPreviewUpdateTTS_Click(object sender, EventArgs e)
         {
-            Announcements.read(txtUpdateTTS.Text, cmbUpdateVoice.SelectedItem.ToString());
+            Announcements.read(txtUpdateTTS.Text, cmbUpdateVoice.SelectedItem.ToString(), true);
         }
 
         private void btnUpdateSoundPreview_Click(object sender, EventArgs e)
@@ -420,6 +481,38 @@ namespace ConfigureForm
         private void txtUpdateTTS_TextChanged(object sender, EventArgs e)
         {
             rdoUpdateTTS.Checked = true;
+        }
+
+        private void cmbEngineVoice_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            rdoEngineTTS.Checked = true;
+        }
+
+        private void btnPreviewEngineTTS_Click(object sender, EventArgs e)
+        {
+            Announcements.read(txtEngineTTS.Text, cmbEngineVoice.SelectedItem.ToString(), true);
+        }
+
+        private void txtEngineTTS_TextChanged(object sender, EventArgs e)
+        {
+            rdoEngineTTS.Checked = true;
+        }
+
+        private void btnEngineSoundSelect_Click(object sender, EventArgs e)
+        {
+            rdoEngineSound.Checked = true;
+
+            var result = dlgFile.ShowDialog(this);
+
+            if (result == DialogResult.OK)
+            {
+                txtEngineSoundFile.Text = dlgFile.FileName;
+            }
+        }
+
+        private void btnEngineSoundPreview_Click(object sender, EventArgs e)
+        {
+            Announcements.playSound(txtEngineSoundFile.Text);
         }
     }
 }

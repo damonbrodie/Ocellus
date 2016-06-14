@@ -10,27 +10,76 @@ using System.Media;
 // *******************************************
 class Announcements
 {
-    public static void read(string text, string useVoice)
+    public static void read(string text, string voice, bool useAsync = false)
     {
-        if (text == null || text == "")
-        {
-            return;
-        }
         SpeechSynthesizer reader = new SpeechSynthesizer();
-        if (useVoice != null && useVoice != "")
+        if (voice != null && voice != "")
         {
             try
             {
-                reader.SelectVoice(useVoice);
+                reader.SelectVoice(voice);
             }
             catch
             {
-                Debug.Write("Error:  Unable to set voice: " + useVoice);
+                Debug.Write("Error:  Unable to set voice: " + voice);
             }
         }
+        reader.SetOutputToDefaultAudioDevice();
+        if (useAsync)
+        {
+            reader.SpeakAsync(text);
+        }
+        else
+        {
+            reader.Speak(text);
+        }
+    }
 
-        reader.Speak(text);
-        reader.Dispose();
+    public static void speak(Elite.MessageBus messageBus)
+    {
+        SpeechSynthesizer reader = new SpeechSynthesizer();
+
+        while (true)
+        {
+            if (messageBus.spokenAnnouncements.Count > 0)
+            {
+                try
+                {
+                    Elite.Speech message = messageBus.spokenAnnouncements[0];
+                    messageBus.spokenAnnouncements.RemoveAt(0);
+                    if (message.voice != null && message.voice != "")
+                    {
+                        try
+                        {
+                            reader.SelectVoice(message.voice);
+                        }
+                        catch
+                        {
+                            Debug.Write("Error:  Unable to set voice: " + message.voice);
+                        }
+                    }
+                    reader.SetOutputToDefaultAudioDevice();
+                    reader.Speak(message.text);
+                    Thread.Sleep(1500);
+                }
+                catch (Exception ex)
+                {
+                    Debug.Write(ex.ToString());
+                }
+            }
+            else
+            {
+                Thread.Sleep(250);
+            }
+        }
+    }
+
+    public static void addSpeech(Elite.MessageBus messageBus, string text, string voice)
+    {
+        Elite.Speech newMessage = new Elite.Speech();
+        newMessage.text = text;
+        newMessage.voice = voice;
+        messageBus.spokenAnnouncements.Add(newMessage);
     }
 
     public static void playSound(string file)
@@ -42,19 +91,19 @@ class Announcements
         }
     }
 
-    public static void errorAnnouncement(string error)
+    public static void errorAnnouncement(Elite.MessageBus messageBus, string error)
     {
         string voice = PluginRegistry.getStringValue("errorVoice");
-        read(error, voice);
+        addSpeech(messageBus, error, voice);
     }
 
-    public static void updateAnnouncement()
+    public static void updateAnnouncement(Elite.MessageBus messageBus)
     {
         string announcementType = PluginRegistry.getStringValue("updateNotification");
         if (announcementType == "tts")
         {
             string voice = PluginRegistry.getStringValue("updateVoice");
-            read(PluginRegistry.getStringValue("updateText"), voice);
+            addSpeech(messageBus, PluginRegistry.getStringValue("updateText"), voice);
         }
         else if (announcementType == "sound")
         {
@@ -64,13 +113,13 @@ class Announcements
 
     }
 
-    public static void eddnAnnouncement()
+    public static void eddnAnnouncement(Elite.MessageBus messageBus)
     {
         string announcementType = PluginRegistry.getStringValue("eddnNotification");
         if (announcementType == "tts")
         {
             string voice = PluginRegistry.getStringValue("eddnVoice");
-            read(PluginRegistry.getStringValue("eddnText"), voice);
+            addSpeech(messageBus, PluginRegistry.getStringValue("eddnText"), voice);
         }
         else if (announcementType == "sound")
         {
@@ -79,27 +128,26 @@ class Announcements
         }
     }
 
-    public static void startupNotifications(int registryCheck)
+    public static void startupNotifications(Elite.MessageBus messageBus, int registryCheck)
     {
         // This returns null if the registry key is missing - that's ok
         
 
         if (registryCheck == 1)
         {
-            read("Welcome to the Ocellus Assistant.  Say configure plug in to begin.", null);
+            addSpeech(messageBus, "Welcome to the Ocellus Assistant.  Say configure plug in to begin.", null);
         }
-        else if (registryCheck == 2)
+        else if (registryCheck == 2 || registryCheck == 3)
         {
-            read("New Configurations available.  Say Configure Plug in to make modifications.", null);
+            addSpeech(messageBus, "New Configurations available.  Say Configure Plug in to make modifications.", null);
         }
-        
         else
         {
             string announcementType = PluginRegistry.getStringValue("startupNotification");
             if (announcementType == "tts")
             {
                 string voice = PluginRegistry.getStringValue("startupVoice");
-                read(PluginRegistry.getStringValue("startupText"), voice);
+                addSpeech(messageBus, PluginRegistry.getStringValue("startupText"), voice);
             }
             else if (announcementType == "sound")
             {
@@ -107,10 +155,9 @@ class Announcements
                 playSound(file);
             }
         }
-        Thread.Sleep(3000);
         if (Upgrade.needUpgrade())
         {
-            updateAnnouncement();
+            updateAnnouncement(messageBus);
         }
     }
 }

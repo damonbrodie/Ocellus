@@ -211,9 +211,19 @@ class Companion
                 if (messageBus.currentSystem != result["lastSystem"]["name"])
                 {
                     messageBus.currentSystem = result["lastSystem"]["name"];
-                    messageBus.currentX = -9999.99;
-                    messageBus.currentY = -9999.99;
-                    messageBus.currentY = -9999.99;
+                    Dictionary<string, dynamic> atlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
+                    if (atlas.ContainsKey(messageBus.currentSystem))
+                    {
+                        messageBus.currentX = (double)atlas[messageBus.currentSystem]["x"];
+                        messageBus.currentY = (double)atlas[messageBus.currentSystem]["y"];
+                        messageBus.currentZ = (double)atlas[messageBus.currentSystem]["z"];
+                    }
+                    else
+                    {
+                        messageBus.currentX = -9999.99;
+                        messageBus.currentY = -9999.99;
+                        messageBus.currentZ = -9999.99;
+                    }
                 }
             }
             else

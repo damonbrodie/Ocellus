@@ -15,7 +15,7 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.9.1";
+        public const string pluginVersion = "0.91";
         public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
         public const string ttsConfig = "TextToSpeechConfig.txt";
 
@@ -39,15 +39,18 @@ namespace OcellusPlugin
             try
             {
                 Debug.Write("---------------------- Ocellus Plugin Initializing ----------------------");
+                Elite.MessageBus messageBus = new Elite.MessageBus();
                 int registryCheck = PluginRegistry.checkRegistry();
+
+                // Spin up Speech announcer thread
+                Task.Run(() => Announcements.speak(messageBus));
+
                 // Setup Speech engine
                 if (EliteGrammar.downloadGrammar())
                 {
                     SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
-                    recognitionEngine.SetInputToDefaultAudioDevice();
-                    Grammar grammar = new Grammar(Path.Combine(Config.Path(), "systems_grammar.xml"));
-                    Task.Run(() => recognitionEngine.LoadGrammar(grammar));
-                    state.Add("VAEDrecognitionEngine", recognitionEngine);
+                    messageBus.recognitionEngine = recognitionEngine;
+                    Task.Run(() => EliteGrammar.loadGrammar(messageBus));
                 }
 
                 // Setup plugin storage directory - used for cookies and debug logs
@@ -97,13 +100,12 @@ namespace OcellusPlugin
 
                 EliteBinds.getBinds(ref state, ref textValues, ref booleanValues);
 
-                Elite.MessageBus messageBus = new Elite.MessageBus();
                 messageBus.cookies = cookieJar;
                 messageBus.loggedinState = (string)state["VAEDloggedIn"];
 
                 state["VAEDmessageBus"] = messageBus;
 
-                Task.Run(() => Announcements.startupNotifications(registryCheck));
+                Task.Run(() => Announcements.startupNotifications(messageBus, registryCheck));
 
                 //Watch the netlog for docked and system change information
                 Task.Run(() => Elite.tailNetLog(messageBus));
@@ -158,6 +160,7 @@ namespace OcellusPlugin
                                 currentSystem = currentSystem = companion["lastSystem"]["name"];
                                 messageBus.currentSystem = currentSystem;
                                 // We didn't have current system from netlog, so erase out x,y,z
+
                                 messageBus.currentX = -9999.99;
                                 messageBus.currentY = -9999.99;
                                 messageBus.currentZ = -9999.99;
@@ -191,9 +194,9 @@ namespace OcellusPlugin
                         break;
                     case "dictate system":
                         booleanValues["VAEDrecognitionNotLoaded"] = false;
-                        if (state.ContainsKey("VAEDrecognitionEngine"))
+                        if (messageBus.grammarLoaded)
                         {
-                            SpeechRecognitionEngine recognitionEngine = (SpeechRecognitionEngine)state["VAEDrecognitionEngine"];
+                            SpeechRecognitionEngine recognitionEngine = messageBus.recognitionEngine;
 
                             Tuple<string,string> tSystemNames = EliteGrammar.dictateSystem(recognitionEngine, (List<String>)state["VAEDtrackedSystems"]);
                             textValues["VAEDdictateSystem"] = tSystemNames.Item1;

@@ -46,28 +46,49 @@ class EliteGrammar
         return true;
     }
 
-    private static bool loadGrammar()
+    public static void loadGrammar(Elite.MessageBus messageBus)
     {
+        SpeechRecognitionEngine recognitionEngine = messageBus.recognitionEngine;
+        recognitionEngine.SetInputToDefaultAudioDevice();
+        recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
+        recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1.5);
+        recognitionEngine.BabbleTimeout = TimeSpan.FromSeconds(5);
         string grammarFile = Path.Combine(Config.Path(), "systems_grammar.xml");
 
-        SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
-        recognitionEngine.SetInputToDefaultAudioDevice();
-        Grammar grammar = new Grammar(grammarFile);
-        recognitionEngine.LoadGrammar(grammar);
-   
-        return true;
-    }
-
-    public async Task<bool> initialize()
-    {
-        return await Task.Run(() => loadGrammar());
+        DateTime startTime = DateTime.Now;
+        Debug.Write("Begin loading star system grammar");
+        bool grammarLoaded = true;
+        try
+        {
+            Grammar grammar = new Grammar(grammarFile);
+            recognitionEngine.LoadGrammar(grammar);
+        }
+        catch
+        {
+            grammarLoaded = false;
+            Debug.Write("Error:  Unable to load grammar");
+            Announcements.errorAnnouncement(messageBus, "Unable to load star system recognition engine");
+            if (File.Exists(grammarFile))
+            {
+                File.Delete(grammarFile);
+            }
+        }
+        if (grammarLoaded)
+        {
+            DateTime endTime = DateTime.Now;
+            TimeSpan loadTime = endTime - startTime;
+            Debug.Write("Finished loading star system grammar.  Load time: " + loadTime.Seconds.ToString() + " seconds");
+            Debug.Write("Recognition Engine - Audio Level: " + recognitionEngine.AudioLevel.ToString());
+            Debug.Write("Recognition Engine - Audio Format: " + recognitionEngine.AudioFormat.ToString());
+            Debug.Write("Recognition Engine - Grammars Loaded: " + recognitionEngine.Grammars.Count.ToString());
+            Debug.Write("Recognition Engine - Recognizer Information: " + recognitionEngine.RecognizerInfo.Name.ToString());
+            messageBus.grammarLoaded = true;
+            Announcements.playSound(@"c:\windows\media\Windows Balloon.wav");
+        }
     }
 
     public static Tuple<String, String> dictateSystem(SpeechRecognitionEngine recognitionEngine, List<string> trackedSystems)
     {
-        recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
-        recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1.5);
-        recognitionEngine.BabbleTimeout = TimeSpan.FromSeconds(5);
         RecognitionResult result = recognitionEngine.Recognize();
         double topPickConfidence = 0.00;
         string topPickSystem = null;
