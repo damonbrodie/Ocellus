@@ -2,6 +2,7 @@
 using System.Net;
 using System.Windows.Forms;
 
+
 namespace VerificationCode
 {
     public partial class Validate : Form

@@ -4,8 +4,11 @@ using System.Net;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 using System.Speech.Recognition;
+
 
 // *****************************
 // *  Voice Attack functions   *
@@ -15,9 +18,8 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.91";
+        public const string pluginVersion = "0.95";
         public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
-        public const string ttsConfig = "TextToSpeechConfig.txt";
 
         public static string VA_DisplayName()
         {
@@ -38,20 +40,39 @@ namespace OcellusPlugin
         {
             try
             {
-                Debug.Write("---------------------- Ocellus Plugin Initializing ----------------------");
+                Debug.Write("---------------------- Ocellus Plugin " + pluginVersion + " Initializing ----------------------");
+                string configPath = Config.Path();
+                string drive = configPath.Substring(0, 2);
+                Debug.Write("Current culture set to: " + Thread.CurrentThread.CurrentCulture.ToString());
+
+                Utilities.ReportFreeSpace(drive);
                 Elite.MessageBus messageBus = new Elite.MessageBus();
+
                 int registryCheck = PluginRegistry.checkRegistry();
+
+                // Load System Index into memory
+                SystemIndex.loadSystemIndex(ref messageBus);
 
                 // Spin up Speech announcer thread
                 Task.Run(() => Announcements.speak(messageBus));
 
                 // Setup Speech engine
-                if (EliteGrammar.downloadGrammar())
+                try
                 {
-                    SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine();
+                    CultureInfo currCulture = Thread.CurrentThread.CurrentCulture;
+                    SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine(currCulture);
                     messageBus.recognitionEngine = recognitionEngine;
-                    Task.Run(() => EliteGrammar.loadGrammar(messageBus));
+                    messageBus.recognitionEngineLang = currCulture;
                 }
+                catch
+                {
+                    messageBus.recognitionEngineLang = new CultureInfo("en-US");
+                    SpeechRecognitionEngine recognitionEngine = new SpeechRecognitionEngine(messageBus.recognitionEngineLang);
+                    messageBus.recognitionEngine = recognitionEngine;
+                    Debug.Write("Warning:  Falling back to default language for recognition engine"); 
+                }
+                
+                Task.Run(() => EliteGrammar.loadGrammar(messageBus));
 
                 // Setup plugin storage directory - used for cookies and debug logs
                 string appPath = Config.Path();
@@ -64,14 +85,6 @@ namespace OcellusPlugin
                 string gameStartParams = PluginRegistry.getStringValue("startParams");
                 textValues["VAEDgameStartString"] = gameStartString;
                 textValues["VAEDgameStartParams"] = gameStartParams;
-
-                // Load EDDB Index into memory
-                Eddb.loadEddbIndex(ref state);
-
-                // Load Atlas Index into memory
-                Atlas.loadAtlasIndex(ref state);
-
-                Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
 
                 // Load Tracked Systems into memory
                 TrackSystems.Load(ref state);
@@ -135,8 +148,6 @@ namespace OcellusPlugin
                 switch (context.ToLower())
                 {
                     case "test":
-                        double currentX = Double.Parse("-80.75");
-                        Debug.Write("test " + currentX.ToString());
                         break;
                     case "check for upgrade":
                         if (Upgrade.needUpgradeWithCooldown(ref state))
@@ -161,9 +172,7 @@ namespace OcellusPlugin
                                 messageBus.currentSystem = currentSystem;
                                 // We didn't have current system from netlog, so erase out x,y,z
 
-                                messageBus.currentX = -9999.99;
-                                messageBus.currentY = -9999.99;
-                                messageBus.currentZ = -9999.99;
+                                messageBus.haveSystemCoords = false;
                             }
                         }
 
@@ -171,9 +180,7 @@ namespace OcellusPlugin
                         decimalValues["VAEDintDistance"] = null;
                         if (currentSystem != null)
                         {
-                            Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
-
-                            int distance = Atlas.calcDistanceFromHere(ref tempAtlas, messageBus, textValues["VAEDtargetSystem"]);
+                            int distance = Atlas.calcDistanceFromHere( messageBus, textValues["VAEDtargetSystem"]);
                             if (distance < 0)
                             {
                                 //Cound not find destination system

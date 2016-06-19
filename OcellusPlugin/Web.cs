@@ -236,8 +236,9 @@ class Web
             response.Close();
             return true;
         }
-        catch
+        catch(Exception ex)
         {
+            Debug.Write(ex.ToString());
             return false;
         }
     }

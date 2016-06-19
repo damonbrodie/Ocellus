@@ -128,6 +128,21 @@ class Announcements
         }
     }
 
+    public static void engineAnnouncement(Elite.MessageBus messageBus)
+    {
+        string announcementType = PluginRegistry.getStringValue("engineNotification");
+        if (announcementType == "tts")
+        {
+            string voice = PluginRegistry.getStringValue("engineVoice");
+            addSpeech(messageBus, PluginRegistry.getStringValue("engineText"), voice);
+        }
+        else if (announcementType == "sound")
+        {
+            string file = PluginRegistry.getStringValue("engineSound");
+            playSound(file);
+        }
+    }
+
     public static void startupNotifications(Elite.MessageBus messageBus, int registryCheck)
     {
         // This returns null if the registry key is missing - that's ok

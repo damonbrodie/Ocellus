@@ -83,7 +83,7 @@ class PluginRegistry
             setStringValue("startupText", "Welcome back Commander!");
         }
 
-        if (getStringValue("engineText") == null)
+        if (getStringValue("engineSound") == null)
         {
             if (check == 0)
             {

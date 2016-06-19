@@ -1,8 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
-using System.Collections.Generic;
-using System.Web.Script.Serialization;
 
 
 // **********************************************************************************
@@ -10,77 +6,7 @@ using System.Web.Script.Serialization;
 // **********************************************************************************
 class Atlas
 {
-    private const string atlasURL = "http://ocellus.io/data/atlas_index.zip";
-
-    public static bool downloadAtlas()
-    {
-        string path = Config.Path();
-        string zipFile = Path.Combine(path, "atlas_index.zip");
-        string atlasFile = Path.Combine(Config.Path(), "atlas_index.txt");
-
-        if (File.Exists(atlasFile))
-        {
-            // Download the index once a week
-            DateTime fileTime = File.GetLastWriteTime(atlasFile);
-            DateTime weekago = DateTime.Now.AddDays(-7);
-            if (fileTime > weekago)
-            {
-                return true;
-            }
-        }
-
-
-        if (Web.downloadFile(atlasURL, zipFile))
-        {
-            File.Delete(atlasFile);
-            ZipFile.ExtractToDirectory(zipFile, path);
-            File.Delete(zipFile);
-            return true;
-        }
-        else
-        {
-            Debug.Write("ERROR:  Unable to download Atlas Index from Ocellus.io");
-        }
-        if (!File.Exists(atlasFile))
-        {
-            return false;
-        }
-        return true;
-    }
-
-    public static void loadAtlasIndex(ref Dictionary<string, object> state)
-    {
-        string atlasIndexFile = Path.Combine(Config.Path(), "atlas_index.txt");
-        if (!downloadAtlas() && !File.Exists(atlasIndexFile) )
-        {
-            Debug.Write("Error getting the atlas index - returning");
-            return;
-        }
-        try
-        {
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            serializer.MaxJsonLength = 50000000;
-            Dictionary<string, dynamic> atlasIndex = new Dictionary<string, dynamic>();
-            string[] lines = File.ReadAllLines(atlasIndexFile);
-            atlasIndex = serializer.Deserialize<Dictionary<string, dynamic>>(lines[0]);
-
-            if (state.ContainsKey("VAEDatlasIndex"))
-            {
-                state["VAEDatlasIndex"] = atlasIndex;
-            }
-            else
-            {
-                state.Add("VAEDatlasIndex", atlasIndex);
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.Write(ex.ToString());
-        }
-
-    }
-
-    public static int calcDistanceFromHere(ref Dictionary<string, dynamic> atlas, Elite.MessageBus messageBus, string toSystem)
+    public static int calcDistanceFromHere(Elite.MessageBus messageBus, string toSystem)
     {
         double fromX;
         double fromY;
@@ -103,28 +29,30 @@ class Atlas
         {
             return 0;
         }
-        if (messageBus.currentX != -9999.99)
+        if (messageBus.haveSystemCoords)
         {
+            Debug.Write("Using coords from netlog");
             fromX = messageBus.currentX;
             fromY = messageBus.currentY;
             fromZ = messageBus.currentZ;
         }
-        else if (atlas.ContainsKey(messageBus.currentSystem))
+        else if (messageBus.systemIndex["systems"].ContainsKey(messageBus.currentSystem))
         {
-            fromX = (double)atlas[messageBus.currentSystem]["x"];
-            fromY = (double)atlas[messageBus.currentSystem]["y"];
-            fromZ = (double)atlas[messageBus.currentSystem]["z"];
+            Debug.Write("Using coords from Index");
+            fromX = Convert.ToDouble(messageBus.systemIndex["systems"][messageBus.currentSystem]["x"]);
+            fromY = Convert.ToDouble(messageBus.systemIndex["systems"][messageBus.currentSystem]["y"]);
+            fromZ = Convert.ToDouble(messageBus.systemIndex["systems"][messageBus.currentSystem]["z"]);
         }
         else
         {
             Debug.Write("Error:  Unable to determine your current coordinates in system '" + messageBus.currentSystem +"'");
             return -1;
         }
-        if (atlas.ContainsKey(toSystem))
+        if (messageBus.systemIndex["systems"].ContainsKey(toSystem))
         {
-            toX = (double)atlas[toSystem]["x"];
-            toY = (double)atlas[toSystem]["y"];
-            toZ = (double)atlas[toSystem]["z"];
+            toX = Convert.ToDouble(messageBus.systemIndex["systems"][toSystem]["x"]);
+            toY = Convert.ToDouble(messageBus.systemIndex["systems"][toSystem]["y"]);
+            toZ = Convert.ToDouble(messageBus.systemIndex["systems"][toSystem]["z"]);
         }
         else
         {

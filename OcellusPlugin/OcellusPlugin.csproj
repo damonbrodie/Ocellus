@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Web.Extensions" />
@@ -72,7 +73,6 @@
     </Compile>
     <Compile Include="Coriolis.cs" />
     <Compile Include="Ship.cs" />
-    <Compile Include="Eddb.cs" />
     <Compile Include="Eddn.cs" />
     <Compile Include="EDShipyard.cs" />
     <Compile Include="EliteBinds.cs" />
@@ -87,6 +87,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Announcements.cs" />
+    <Compile Include="SystemIndex.cs" />
     <Compile Include="TrackSystems.cs" />
     <Compile Include="WebVars.cs" />
     <Compile Include="Upgrade.cs" />

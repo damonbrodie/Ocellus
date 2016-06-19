@@ -211,18 +211,16 @@ class Companion
                 if (messageBus.currentSystem != result["lastSystem"]["name"])
                 {
                     messageBus.currentSystem = result["lastSystem"]["name"];
-                    Dictionary<string, dynamic> atlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
-                    if (atlas.ContainsKey(messageBus.currentSystem))
+                    if (messageBus.systemIndex["systems"].ContainsKey(messageBus.currentSystem))
                     {
-                        messageBus.currentX = (double)atlas[messageBus.currentSystem]["x"];
-                        messageBus.currentY = (double)atlas[messageBus.currentSystem]["y"];
-                        messageBus.currentZ = (double)atlas[messageBus.currentSystem]["z"];
+                        messageBus.currentX = (double)messageBus.systemIndex["Systems"][messageBus.currentSystem]["x"];
+                        messageBus.currentY = (double)messageBus.systemIndex["Systems"][messageBus.currentSystem]["y"];
+                        messageBus.currentZ = (double)messageBus.systemIndex["Systems"][messageBus.currentSystem]["z"];
+                        messageBus.haveSystemCoords = true;
                     }
                     else
                     {
-                        messageBus.currentX = -9999.99;
-                        messageBus.currentY = -9999.99;
-                        messageBus.currentZ = -9999.99;
+                        messageBus.haveSystemCoords = false;
                     }
                 }
             }
@@ -253,8 +251,8 @@ class Companion
                 int currDistance = -1;
                 if ( tempSystem != null)
                 {
-                    Dictionary<string, dynamic> tempAtlas = (Dictionary<string, dynamic>)state["VAEDatlasIndex"];
-                    currDistance = Atlas.calcDistanceFromHere(ref tempAtlas, messageBus, tempSystem);
+
+                    currDistance = Atlas.calcDistanceFromHere(messageBus, tempSystem);
                 }
             }
 
@@ -430,16 +428,14 @@ class Companion
                 Debug.Write("Not docked, skipping EDDN update");
             }
 
-            if (state.ContainsKey("VAEDeddbIndex"))
+            if (messageBus.systemIndexLoaded)
             {
-                Dictionary<string, dynamic> tempEddb = (Dictionary<string, dynamic>)state["VAEDeddbIndex"];
-
-                if (textValues["VAEDcurrentSystem"] != null && tempEddb.ContainsKey(textValues["VAEDcurrentSystem"]))
+                if (textValues["VAEDcurrentSystem"] != null && messageBus.systemIndex["systems"].ContainsKey(textValues["VAEDcurrentSystem"]))
                 {
-                    textValues["VAEDeddbSystemId"] = tempEddb[textValues["VAEDcurrentSystem"]]["id"].ToString();
-                    if (textValues["VAEDcurrentStarport"] != null && tempEddb[textValues["VAEDcurrentSystem"]]["stations"].ContainsKey(textValues["VAEDcurrentStarport"]))
+                    textValues["VAEDeddbSystemId"] = messageBus.systemIndex["systems"][textValues["VAEDcurrentSystem"]]["id"].ToString();
+                    if (textValues["VAEDcurrentStarport"] != null && messageBus.systemIndex["systems"][textValues["VAEDcurrentSystem"]]["stations"].ContainsKey(textValues["VAEDcurrentStarport"]))
                     {
-                        textValues["VAEDeddbStarportId"] = tempEddb[textValues["VAEDcurrentSystem"]]["stations"][textValues["VAEDcurrentStarport"]].ToString();
+                        textValues["VAEDeddbStarportId"] = messageBus.systemIndex["systems"][textValues["VAEDcurrentSystem"]]["stations"][textValues["VAEDcurrentStarport"]].ToString();
                     }
                 }
             }

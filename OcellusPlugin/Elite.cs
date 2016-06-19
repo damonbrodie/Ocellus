@@ -8,6 +8,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Speech.Recognition;
+using System.Globalization;
 
 
 // **********************************************
@@ -26,6 +27,7 @@ class Elite
     public class MessageBus
     {
         public string currentSystem = null;
+        public bool haveSystemCoords = false;
         public double currentX;
         public double currentY;
         public double currentZ;
@@ -43,6 +45,9 @@ class Elite
         public bool grammarLoaded = false;
         public SpeechRecognitionEngine recognitionEngine;
         public List<Speech> spokenAnnouncements = new List<Speech>();
+        public bool systemIndexLoaded = false;
+        public CultureInfo recognitionEngineLang;
+        public Dictionary<string, dynamic> systemIndex;
     }
 
     public static Tuple<string, string> getBindsFilename()

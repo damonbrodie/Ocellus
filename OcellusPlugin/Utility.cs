@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Management;
 using System.Collections.Generic;
 
 
@@ -51,6 +52,25 @@ class Debug
 
 class Utilities
 {
+    public static void ReportFreeSpace(string drive)
+    {
+        try
+        {
+
+            string strManagement = "win32_logicaldisk.deviceid=\"" + drive.ToLower() + "\"";
+            ManagementObject disk = new ManagementObject(strManagement);
+            disk.Get();
+            string strFreespace = disk["FreeSpace"].ToString();
+            UInt64 intFreespace = UInt64.Parse(strFreespace);
+
+            if (intFreespace < 100000000)
+            {
+                Debug.Write("Warning:  Low available disk space.");
+            }
+        }
+        catch { }
+    }
+
     public static int isCoolingDown(ref Dictionary<string, object> state, string cooldownName, int seconds = 60)
     {
         if (! state.ContainsKey(cooldownName))

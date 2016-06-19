@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.IO.Compression;
 using System.Speech.Recognition;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 
 
@@ -11,39 +8,15 @@ using System.Collections.Generic;
 // ******************************************************************
 class EliteGrammar
 {
-    private const string grammarURL = "http://ocellus.io/data/systems_grammar.zip";
-
-    public static bool downloadGrammar()
+    private static List<string> alternatePhonetics(string system)
     {
-        string zipFile = Path.Combine(Config.Path(), "systems_grammar.zip");
-        string grammarFile = Path.Combine(Config.Path(), "systems_grammar.xml");
-        if (File.Exists(grammarFile))
+        List<string> alternates = new List<string>();
+        alternates.Add(system);  // Add the plain system name by default
+        if (system == "Chun Hsi")
         {
-            // Download the index once a week
-            DateTime fileTime = File.GetLastWriteTime(grammarFile);
-            DateTime weekago = DateTime.Now.AddDays(-7);
-            if (fileTime > weekago)
-            {
-                return true;
-            }
+            alternates.Add("Chun Si");
         }
-        if (Web.downloadFile(grammarURL, zipFile))
-        {
-            File.Delete(grammarFile);
-            ZipFile.ExtractToDirectory(zipFile, Config.Path());
-            File.Delete(zipFile);
-            return true;
-        }
-        else
-        {
-            Debug.Write("ERROR:  Unable to download Systems Grammar from Ocellus.io");
-        }
-
-        if (!File.Exists(grammarFile))
-        {
-            return false;
-        }
-        return true;
+        return alternates;
     }
 
     public static void loadGrammar(Elite.MessageBus messageBus)
@@ -53,25 +26,37 @@ class EliteGrammar
         recognitionEngine.InitialSilenceTimeout = TimeSpan.FromSeconds(5);
         recognitionEngine.EndSilenceTimeout = TimeSpan.FromSeconds(1.5);
         recognitionEngine.BabbleTimeout = TimeSpan.FromSeconds(5);
-        string grammarFile = Path.Combine(Config.Path(), "systems_grammar.xml");
 
         DateTime startTime = DateTime.Now;
         Debug.Write("Begin loading star system grammar");
         bool grammarLoaded = true;
         try
         {
-            Grammar grammar = new Grammar(grammarFile);
+            GrammarBuilder gb = new GrammarBuilder();
+            gb.Culture = messageBus.recognitionEngineLang;
+            Choices systemChoice = new Choices();
+            foreach (string system in messageBus.systemIndex["systems"].Keys)
+            {
+                List<string> alternates = alternatePhonetics(system);
+                foreach (string alternate in alternates)
+                {
+                    GrammarBuilder systemBuilder = new GrammarBuilder(alternate);
+                    systemBuilder.Culture = messageBus.recognitionEngineLang;
+                    SemanticResultValue systemSemantic = new SemanticResultValue(systemBuilder, system);
+                    systemChoice.Add(new GrammarBuilder(systemSemantic));
+                }
+            }
+            gb.Append(systemChoice);
+            Grammar grammar = new Grammar(gb);
+            grammar.Name = "populated";
             recognitionEngine.LoadGrammar(grammar);
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.Write(ex.ToString());
             grammarLoaded = false;
             Debug.Write("Error:  Unable to load grammar");
             Announcements.errorAnnouncement(messageBus, "Unable to load star system recognition engine");
-            if (File.Exists(grammarFile))
-            {
-                File.Delete(grammarFile);
-            }
         }
         if (grammarLoaded)
         {
@@ -82,9 +67,10 @@ class EliteGrammar
             Debug.Write("Recognition Engine - Audio Format: " + recognitionEngine.AudioFormat.ToString());
             Debug.Write("Recognition Engine - Grammars Loaded: " + recognitionEngine.Grammars.Count.ToString());
             Debug.Write("Recognition Engine - Recognizer Information: " + recognitionEngine.RecognizerInfo.Name.ToString());
-            messageBus.grammarLoaded = true;
-            Announcements.playSound(@"c:\windows\media\Windows Balloon.wav");
+
+            Announcements.engineAnnouncement(messageBus);
         }
+        messageBus.grammarLoaded = grammarLoaded;
     }
 
     public static Tuple<String, String> dictateSystem(SpeechRecognitionEngine recognitionEngine, List<string> trackedSystems)
@@ -105,7 +91,9 @@ class EliteGrammar
                 double confidence = (double)phrase.Confidence;
                 var grammar = phrase.Grammar.Name;
                 var rule = phrase.Grammar.RuleName;
+                
                 var semantic = phrase.Semantics.Value;
+                Debug.Write("Semantic " + phrase.Semantics.ToString());
 
                 if (trackedSystems.Contains(phrase.Text))
                 {
