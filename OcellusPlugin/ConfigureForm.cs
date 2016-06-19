@@ -296,6 +296,12 @@ namespace ConfigureForm
 
                     this.Close();
                 }
+                else
+                {
+                    txtCurrentStatus.Text = "Not Authenticated";
+                    MessageBox.Show("Invalid Credentials, please re-enter them and retry");
+                }
+
             }
             else
             {
