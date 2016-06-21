@@ -33,13 +33,11 @@ namespace OcellusPlugin
             {
                 return true;
             }
-            
            return false;
         }
 
-        public static EliteBinds getBinds(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, bool?> booleanValues)
+        public static EliteBinds getBinds(ref Dictionary<string, object> state, ref Dictionary<string, string> textValues, ref Dictionary<string, bool?> booleanValues, Elite.MessageBus messageBus)
         {
-           
             EliteBinds eliteBinds = null;
 
             if (needsBindsReload(ref state, ref textValues, ref booleanValues) == true)
@@ -50,14 +48,18 @@ namespace OcellusPlugin
 
                 if (bindsPreset != null && bindsFile != null)
                 {
-
+                    Debug.Write("Current Binds file: " + bindsFile);
+                    var bindsTree = XElement.Load(bindsFile);
                     state["VAEDbindsFile"] = bindsFile;
                     state["VAEDbindsPreset"] = bindsPreset;
                     state["VAEDlastPresetTimestamp"] = File.GetLastWriteTime(bindsPreset);
                     state["VAEDlastBindsTimestamp"] = File.GetLastWriteTime(bindsFile);
+                    XElement keyboardLayout = bindsTree.Element("KeyboardLayout");
+                    string lang = keyboardLayout.Value.ToString();
+                    Debug.Write("Elite key bindings language set to: " + lang);
+                    state["VAEDbindsLanguage"] = lang;
 
-
-                    eliteBinds = new EliteBinds(bindsFile);
+                    eliteBinds = new EliteBinds(bindsTree, lang);
                     state["VAEDeliteBinds"] = eliteBinds;
                 }
             }
@@ -68,10 +70,13 @@ namespace OcellusPlugin
             return eliteBinds;
         }
 
-        public EliteBinds(string bindsFile)
+        public EliteBinds(XElement bindsTree, string lang)
         {
-            Debug.Write("Debug:  In EliteBinds - binds file is " + bindsFile);
-            var bindsTree = XElement.Load(bindsFile);
+
+            if (!langMap.ContainsKey(lang))
+            {
+                Utilities.ReportMissingData("Language: " + lang);
+            }
             _bindList = new Dictionary<string, List<string>>();
 
             foreach (var element in bindsTree.Elements())
@@ -89,12 +94,26 @@ namespace OcellusPlugin
             // TODO: look at version in file and balk if unknown
         }
 
-        public List<uint> GetCodes(string command)
+        public List<uint> GetCodes(string command, string keyboardLanguage)
         {
             var keys = _bindList.ContainsKey(command) ? _bindList[command] : null;
             // TODO: throw exceptions rather than returning null
             // TODO: die if key doesn't have key code
-            return keys == null ? null : (from key in keys where _keyMap.ContainsKey(key) select _keyMap[key]).ToList();
+            string lookup = "en-US";
+            if (langMap.ContainsKey(keyboardLanguage))
+            {
+                lookup = langMap[keyboardLanguage];
+            }
+
+            // Attempt to find the language specific keymap
+            List<uint> codes = keys == null ? null : (from key in keys where keyMap.ContainsKey(lookup + ":" + key) select keyMap[lookup + ":" + key]).ToList();
+            if (codes.Count != 0)
+            {
+                return codes;
+            }
+            
+            // If not found then default to en-US
+            return keys == null ? null : (from key in keys where keyMap.ContainsKey("en-US:" + key) select keyMap["en-US:" + key]).ToList();
         }
 
         private static List<string> ParseBindControlNode(XContainer bindControl)

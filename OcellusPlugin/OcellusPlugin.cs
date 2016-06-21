@@ -128,7 +128,7 @@ namespace OcellusPlugin
                     state.Add("VAEDloggedIn", "no");
                 }
 
-                EliteBinds.getBinds(ref state, ref textValues, ref booleanValues);
+                EliteBinds.getBinds(ref state, ref textValues, ref booleanValues, messageBus);
 
                 messageBus.cookies = cookieJar;
                 messageBus.loggedinState = (string)state["VAEDloggedIn"];
@@ -164,11 +164,6 @@ namespace OcellusPlugin
                 Debug.Write("COMMAND:  " + context);
                 switch (context.ToLower())
                 {
-                    case "test":
-                        
-                        string data = "this is the data";
-                        Utilities.ReportMissingData(data);
-                        break;
                     case "check for upgrade":
                         if (Upgrade.needUpgradeWithCooldown(ref state))
                         {
@@ -242,16 +237,28 @@ namespace OcellusPlugin
                         // If the Binds file changes then reload the binds.
 
                         string[] parts = textValues["VAEDkeyBinding"].Split(new char[] { ':' }, 2);
-                        EliteBinds eliteBinds = EliteBinds.getBinds(ref state, ref textValues, ref booleanValues);
+                        EliteBinds eliteBinds = EliteBinds.getBinds(ref state, ref textValues, ref booleanValues, messageBus);
                         if (eliteBinds != null)
                         {
-                            List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1]));
+                            string keyboardLanguage;
+                            if (state.ContainsKey("VAEDbindsLanguage"))
+                            {
+                                keyboardLanguage = (string)state["VAEDbindsLanguage"];
+                            }
+                            else
+                            {
+                                keyboardLanguage = "en-US";
+                            }
+                            List<uint> scanCodeExs = KeyMouse.MapVkToScanCodeExs(eliteBinds.GetCodes(parts[1], keyboardLanguage));
                             if (scanCodeExs.Count == 0)
                             {
                                 Debug.Write("Warning: No key binding found for: " + textValues["VAEDkeyBinding"]);
                                 booleanValues["VAEDkeyBindingError"] = true;
                                 break;
                             }
+
+                            
+
                             switch (parts[0])
                             {
                                 // For now we only "best effort" focus the game before keypressing.  Igorning the setFocus return code.

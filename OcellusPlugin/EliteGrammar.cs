@@ -150,7 +150,6 @@ class EliteGrammar
                 var rule = phrase.Grammar.RuleName;
                 
                 var semantic = phrase.Semantics.Value;
-                Debug.Write("Semantic " + phrase.Semantics.ToString());
 
                 if (trackedSystems.Contains(phrase.Text))
                 {
