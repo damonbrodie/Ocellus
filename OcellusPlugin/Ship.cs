@@ -242,7 +242,7 @@ class Ship
             { "hpt_beamlaser_fixed_small", new Hardpoint { @class=1, rating="E", group="Beam Laser", mount="Fixed" } },
             { "hpt_beamlaser_fixed_medium", new Hardpoint { @class=2, rating="D", group="Beam Laer", mount="Fixed" } },
             { "hpt_beamlaser_fixed_large", new Hardpoint { @class=3, rating="C", group="Beam Laser", mount="Fixed" } },
-            { "hpt_beamlaser_fixed_huge", new Hardpoint { @class=4, rating="A", group="Beam Laser", mount="Fixed" } },
+            { "hpt_beamlaser_fixed_huge", new Hardpoint { @class=4, rating="C", group="Beam Laser", mount="Fixed" } },
             { "hpt_beamlaser_gimbal_small", new Hardpoint { @class=1, rating="E", group="Beam Laser", mount="Gimballed" } },
             { "hpt_beamlaser_gimbal_medium", new Hardpoint { @class=2, rating="D", group="Beam Laser", mount="Gimballed" } },
             { "hpt_beamlaser_gimbal_large", new Hardpoint { @class=3, rating="C", group="Beam Laser", mount="Gimballed" } },

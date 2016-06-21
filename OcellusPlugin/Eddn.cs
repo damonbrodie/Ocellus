@@ -508,6 +508,20 @@ class Eddn
         {
 
             // Beam Lasers
+            case "128049431":
+                module.@class = "4";
+                module.rating = "C";
+                module.category = "hardpoint";
+                module.mount = "Fixed";
+                module.name = "Beam Laser";
+                break;
+            case "128681994":
+                module.@class = "4";
+                module.rating = "A";
+                module.category = "hardpoint";
+                module.mount = "Gimballed";
+                module.name = "Beam Laser";
+                break;
             case "128049430":
                 module.@class = "3";
                 module.rating = "C";
@@ -897,6 +911,34 @@ class Eddn
                 break;
 
             //Multi-Cannon
+            case "128681996":
+                module.@class = "4";
+                module.rating = "A";
+                module.category = "hardpoint";
+                module.mount = "Gimballed";
+                module.name = "Multi-Cannon";
+                break;
+            case "128049458":
+                module.@class = "4";
+                module.rating = "A";
+                module.category = "hardpoint";
+                module.mount = "Fixed";
+                module.name = "Multi-Cannon";
+                break;
+            case "128049461":
+                module.@class = "3";
+                module.rating = "A";
+                module.category = "hardpoint";
+                module.mount = "Gimballed";
+                module.name = "Multi-Cannon";
+                break;
+            case "128049457":
+                module.@class = "3";
+                module.rating = "A";
+                module.category = "hardpoint";
+                module.mount = "Fixed";
+                module.name = "Multi-Cannon";
+                break;
             case "128049456":
                 module.@class = "2";
                 module.rating = "E";
@@ -979,6 +1021,20 @@ class Eddn
                 break;
 
             // Pulse Lasers
+            case "128049384":
+                module.@class = "4";
+                module.rating = "A";
+                module.category = "hardpoint";
+                module.mount = "Fixed";
+                module.name = "Pulse Laser";
+                break;
+            case "128681995":
+                module.@class = "4";
+                module.rating = "A";
+                module.category = "hardpoint";
+                module.mount = "Gimballed";
+                module.name = "Pulse Laser";
+                break;
             case "128049383":
                 module.@class = "3";
                 module.rating = "D";
