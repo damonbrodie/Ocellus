@@ -251,6 +251,10 @@ class Eddn
                             {
                                 eddnCommodities.message.commodities.Add(toAdd);
                             }
+                            else
+                            {
+                                Utilities.ReportMissingData("Commodity id: " + currCommodity["id"] + " name: " + currCommodity["name"]);
+                            }
                         }
                         DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObjectCommodities));
                         MemoryStream stream = new MemoryStream();
@@ -268,10 +272,20 @@ class Eddn
 
                     foreach (string key in keys)
                     {
+                        string tmpModule = modules[key]["name"].ToString().ToLower();
+
+                        if (tmpModule.StartsWith("paintjob") || tmpModule.StartsWith("bobble") || tmpModule.StartsWith("decal"))
+                        {
+                            continue;
+                        }
                         Tuple<bool, Module> tResponse = decodeModule(key);
                         if (tResponse.Item1 == true)
                         {
                             eddnOutfitting.message.modules.Add(tResponse.Item2);
+                        }
+                        else
+                        {
+                            Utilities.ReportMissingData("Oufitting module id: " + key + " name: " + modules[key]["name"]);
                         }
                     }
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObjectOutfitting));
@@ -294,6 +308,10 @@ class Eddn
                         if (toAdd != null)
                         {
                             eddnShips.message.ships.Add(toAdd);
+                        }
+                        else
+                        {
+                            Utilities.ReportMissingData("Shipyard ship: " + shipId + " name: " + ships[key]["name"]);
                         }
                     }
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RootObjectShips));

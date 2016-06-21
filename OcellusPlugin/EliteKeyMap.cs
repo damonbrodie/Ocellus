@@ -113,14 +113,15 @@ namespace OcellusPlugin
             {"BackSlash", 220},
             {"RightBracket", 221},
             {"Apostrophe", 222},
+         };
 
-            // Deal with en_ca
-
-            {"é", 191 },
-            {"¸", 221 },
-            {"Hash", 192 },
-            {"Circumflex", 219 },
-            {"<", 220 }
-        };
+       // private readonly Dictionary<string, uint>  = new Dictionary<string, uint>
+       // {
+       //     {"é", 191 },
+       //     {"¸", 221 },
+         //   {"Hash", 192 },
+       //     {"Circumflex", 219 },
+       //     {"<", 220 }
+      ///  };
     }
 }

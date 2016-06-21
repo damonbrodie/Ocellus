@@ -828,6 +828,7 @@ class Ship
                     }
                     else
                     {
+                        Utilities.ReportMissingData(currModule.Key);
                         Debug.Write("Error:  Unexpected module in Companion Output: " + currModule.Key);
                     }
                 }
@@ -842,6 +843,7 @@ class Ship
                     }
                     else
                     {
+                        Utilities.ReportMissingData(currModule.Key);
                         Debug.Write("Error:  Unexpected module in Companion Output: " + currModule.Key);
                     }
                 }
@@ -856,6 +858,7 @@ class Ship
                     }
                     else
                     {
+                        Utilities.ReportMissingData(currModule.Key);
                         Debug.Write("Error:  Unexpected module in Companion Output: " + currModule.Key);
                     }
                 }
@@ -870,6 +873,7 @@ class Ship
                     }
                     else
                     {
+                        Utilities.ReportMissingData(currModule.Key);
                         Debug.Write("Error:  Unexpected module in Companion Output: " + currModule.Key);
                     }
                 }
@@ -884,13 +888,12 @@ class Ship
                     }
                     else
                     {
+                        Utilities.ReportMissingData(currModule.Key);
                         Debug.Write("Error:  Unexpected module in Companion Output: " + currModule.Key);
                     }
                 }
-
             }
             return shipObj;
-
         }
         catch (Exception ex)
         {

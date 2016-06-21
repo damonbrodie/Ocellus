@@ -52,11 +52,22 @@ class Debug
 
 class Utilities
 {
+    public static void ReportMissingData(string data)
+    {
+        // Used to upload missing data to Ocellus.io
+        if (PluginRegistry.getStringValue("reportMissingData") == "true")
+        {
+            string url = "http://ocellus.io/missingdata";
+            string sendData = "data=" + OcellusPlugin.OcellusPlugin.pluginVersion + "|" + data;
+         
+            Web.sendRequest(url, null, null, sendData);
+        }
+        Debug.Write("Missing data:  " + data);
+    }
     public static void ReportFreeSpace(string drive)
     {
         try
         {
-
             string strManagement = "win32_logicaldisk.deviceid=\"" + drive.ToLower() + "\"";
             ManagementObject disk = new ManagementObject(strManagement);
             disk.Get();

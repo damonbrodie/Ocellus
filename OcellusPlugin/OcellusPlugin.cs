@@ -45,6 +45,23 @@ namespace OcellusPlugin
                 string drive = configPath.Substring(0, 2);
                 Debug.Write("Current culture set to: " + Thread.CurrentThread.CurrentCulture.ToString());
 
+                // Cleanup
+                string oldGrammar = Path.Combine(configPath, "systems_grammar.xml");
+                if (File.Exists(oldGrammar))
+                {
+                    File.Delete(oldGrammar);
+                }
+                string oldEddb = Path.Combine(configPath, "eddb_index.txt");
+                if (File.Exists(oldEddb))
+                {
+                    File.Delete(oldEddb);
+                }
+                string oldAtlas = Path.Combine(configPath, "atlas_index.txt");
+                if (File.Exists(oldAtlas))
+                {
+                    File.Delete(oldAtlas);
+                }
+
                 Utilities.ReportFreeSpace(drive);
                 Elite.MessageBus messageBus = new Elite.MessageBus();
 
@@ -148,6 +165,9 @@ namespace OcellusPlugin
                 switch (context.ToLower())
                 {
                     case "test":
+                        
+                        string data = "this is the data";
+                        Utilities.ReportMissingData(data);
                         break;
                     case "check for upgrade":
                         if (Upgrade.needUpgradeWithCooldown(ref state))

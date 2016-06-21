@@ -269,16 +269,8 @@ class Web
 
         // Frontier's companion API currently requires an Apple User-Agent
         request.UserAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4";
-
-        // WebRequest doesn't pick up cookies on 302 Redirects.  We have to do this manually
         request.AllowAutoRedirect = false;
-        //request.ProtocolVersion = HttpVersion.Version11;
-        //request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-        //request.Headers["Cache-Control"] = "max-age=0";
-        //request.Headers["Upgrade-Insecure-Requests"] = "1";
-        //request.Headers["Accept-Language"] = "en-US,en;q=0.8";
-        //request.Headers["Cache-Control"] = "max-age=0";
-        //request.Timeout = 10000; // 10 seconds
+
         if (referer != null)
         {
             request.Referer = referer;

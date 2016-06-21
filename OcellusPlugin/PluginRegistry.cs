@@ -92,6 +92,10 @@ class PluginRegistry
             setStringValue("engineNotification", "sound");
             setStringValue("engineSound", @"c:\windows\media\Windows Balloon.wav");
         }
+        if (getStringValue("reportMissingData") == null)
+        {
+            setStringValue("reportMissingData", "true");
+        }
         return check;
     }
 }

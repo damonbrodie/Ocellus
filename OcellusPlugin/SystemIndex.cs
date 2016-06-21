@@ -10,7 +10,7 @@ using System.Web.Script.Serialization;
 // ********************************************************************************
 class SystemIndex
 {
-    private const string IndexURL = "http://ocellus.io/data/ocellus_index.zip";
+    private const string IndexURL = "http://api.ocellus.io/static/system_index/ocellus_index.zip";
 
     public static bool downloadIndex()
     {

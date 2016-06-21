@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Speech.Recognition;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 
 // ******************************************************************
@@ -8,14 +9,67 @@ using System.Collections.Generic;
 // ******************************************************************
 class EliteGrammar
 {
+    public class TupleList<T1, T2, T3> : List<Tuple<T1, T2, T3>>
+    {
+        public void Add(T1 item1, T2 item2, T3 item3)
+        {
+            Add(new Tuple<T1, T2, T3>(item1, item2, item3));
+        }
+    }
+
     private static List<string> alternatePhonetics(string system)
     {
-        List<string> alternates = new List<string>();
-        alternates.Add(system);  // Add the plain system name by default
-        if (system == "Chun Hsi")
+        TupleList<string, string, bool> substitutions = new TupleList<string, string, bool>
         {
-            alternates.Add("Chun Si");
+            { @"(^| )([A-Z])([A-Z][ +-])",   @"$1$2 $3",    false},
+            { @" *\+ *",                     @" ",          true},
+            { @" *\+ *",                     @" + ",        false},
+            { @"([a-z])-",                   @"$1 ",        false},
+            { @" *- *",                      @" ",          true},
+            { @" *- *",                      @" - ",        false},
+
+            { @"\. ",                        @" ",          false},
+
+            { @"([A-Za-z])([0-9])",          @"$1 $2",      false},
+            { @"([0-9])([A-Za-z])",          @"$1 $2",      false},
+
+            { @"^A([a-z] )",                 @"A $1",       true},
+            { @"\bD([jxz])",                 @"$1",         true},
+            { @"\bHs",                       @"S",          true},
+            { @"\bKv",                       @"Kev",        true},
+            { @"\bMb",                       @"Emb",        true},
+            { @"mii\b",                      @"mee",        true},
+            { @"\bN([dgj])",                 @"En$1",       true},
+            { @"\bNg",                       @"N",          true},
+            { @"\bNj",                       @"Y",          true},
+            { @"\bPsa",                      @"Sa",         true},
+            { @"\bPt",                       @"Pet",        true},
+            { @"\bT([cjpz])",                @"$1",         true},
+            { @"\bTl",                       @"Tel",        true},
+            { @"\bXpi",                      @"Spee",       true},
+            { @"\bZm",                       @"Zem",        true},
+        };
+        List<string> alternates = new List<string>();
+        foreach (Tuple<string, string, bool> rule in substitutions)
+        {
+            string search = rule.Item1;
+            string replace = rule.Item2;
+            bool addPhrase = rule.Item3;
+            Regex rgx = new Regex(search);
+            string result = rgx.Replace(system, replace);
+            if (system != result)
+            {
+                if (addPhrase)
+                {
+                    alternates.Add(result);
+                }
+                else
+                {
+                    system = result;
+                }
+            }
         }
+        alternates.Add(system);
         return alternates;
     }
 
@@ -30,6 +84,7 @@ class EliteGrammar
         DateTime startTime = DateTime.Now;
         Debug.Write("Begin loading star system grammar");
         bool grammarLoaded = true;
+        int counter = 0;
         try
         {
             GrammarBuilder gb = new GrammarBuilder();
@@ -40,6 +95,7 @@ class EliteGrammar
                 List<string> alternates = alternatePhonetics(system);
                 foreach (string alternate in alternates)
                 {
+                    counter += 1;
                     GrammarBuilder systemBuilder = new GrammarBuilder(alternate);
                     systemBuilder.Culture = messageBus.recognitionEngineLang;
                     SemanticResultValue systemSemantic = new SemanticResultValue(systemBuilder, system);
@@ -50,6 +106,7 @@ class EliteGrammar
             Grammar grammar = new Grammar(gb);
             grammar.Name = "populated";
             recognitionEngine.LoadGrammar(grammar);
+            Debug.Write("Star system recognition engine rules loaded:  " + counter);
         }
         catch (Exception ex)
         {
@@ -113,4 +170,3 @@ class EliteGrammar
         return Tuple.Create<String, String>(null, null);
     }
 }
-
