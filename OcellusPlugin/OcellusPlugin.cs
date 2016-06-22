@@ -18,7 +18,7 @@ namespace OcellusPlugin
     public class OcellusPlugin
     {
         public const string pluginName = "Ocellus - Elite: Dangerous Assistant";
-        public const string pluginVersion = "0.951";
+        public const string pluginVersion = "0.952";
         public const string eliteWindowTitle = "Elite - Dangerous (CLIENT)";
 
         public static string VA_DisplayName()

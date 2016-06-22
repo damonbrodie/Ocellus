@@ -9,9 +9,7 @@ namespace OcellusPlugin
     {
         private readonly Dictionary<string, string> langMap = new Dictionary<string, string>
         {
-            {"en-US", "en-US" },
-            {"en-CA", "en-FR" },
-            {"fr-CA", "en-FR" },
+            {"en-CA", "fr-CA" },
         };
 
         private readonly Dictionary<string, uint> keyMap = new Dictionary<string, uint>
@@ -115,17 +113,22 @@ namespace OcellusPlugin
             {"en-US:Minus", 189},
             {"en-US:Period", 190},
             {"en-US:Slash", 191},
-            {"en-US:Grave", 192},
+            {"en-US:Grave", 192}, // CHECK THIS
             {"en-US:LeftBracket", 219},
             {"en-US:BackSlash", 220},
             {"en-US:RightBracket", 221},
             {"en-US:Apostrophe", 222},
 
-            {"en-FR:é", 191 },
-            {"en-FR:¸", 221 },
-            {"en-FR:Hash", 192 },
-            {"en-FR:Circumflex", 219 },
-            {"en-FR:<", 220 }
+            {"fr-CA:é", 191},
+            {"fr-CA:¸", 221},
+            {"fr-CA:Hash", 192},
+            {"fr-CA:Circumflex", 219},
+            {"fr-CA:<", 220},
+
+            {"en-GB:Grave", 223},
+            {"en-GB:Hash:", 222},
+            {"en-GB:Apostrophe", 192},
+
         };
     }
 }

@@ -73,10 +73,6 @@ namespace OcellusPlugin
         public EliteBinds(XElement bindsTree, string lang)
         {
 
-            if (!langMap.ContainsKey(lang))
-            {
-                Utilities.ReportMissingData("Language: " + lang);
-            }
             _bindList = new Dictionary<string, List<string>>();
 
             foreach (var element in bindsTree.Elements())
@@ -104,14 +100,20 @@ namespace OcellusPlugin
             {
                 lookup = langMap[keyboardLanguage];
             }
+            else
+            {
+                lookup = keyboardLanguage;
+            }
 
+            Debug.Write("Lookup Lang " + lookup);
             // Attempt to find the language specific keymap
             List<uint> codes = keys == null ? null : (from key in keys where keyMap.ContainsKey(lookup + ":" + key) select keyMap[lookup + ":" + key]).ToList();
             if (codes.Count != 0)
             {
+                Debug.Write("Using the lookup lang");
                 return codes;
             }
-            
+            Debug.Write("Falling back to en-US");
             // If not found then default to en-US
             return keys == null ? null : (from key in keys where keyMap.ContainsKey("en-US:" + key) select keyMap["en-US:" + key]).ToList();
         }
