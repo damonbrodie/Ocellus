@@ -60,6 +60,7 @@ namespace OcellusPlugin
                     state["VAEDbindsLanguage"] = lang;
 
                     eliteBinds = new EliteBinds(bindsTree, lang);
+                    
                     state["VAEDeliteBinds"] = eliteBinds;
                 }
             }
@@ -80,6 +81,11 @@ namespace OcellusPlugin
                 var keys = ParseBindControlNode(element);
                 if (keys == null) continue;
                 _bindList.Add(element.Name.LocalName, keys);
+                foreach (string key in keys)
+                {
+                    checkMissingKey(key, lang);
+                }
+
             }
             _bindList.Add("HUD", new List < string >{ "LeftControl", "LeftAlt", "G" } );
             _bindList.Add("FrameRate", new List<string> { "LeftControl", "F" });
@@ -88,6 +94,27 @@ namespace OcellusPlugin
             _bindList.Add("HighResSnapshot", new List<string> { "LeftAlt", "F10" });
             _bindList.Add("CloseQuickComms", new List<string> { "Esc" });
             // TODO: look at version in file and balk if unknown
+        }
+
+        private void checkMissingKey(string checkKey, string keyboardLanguage)
+        {
+            string lookup = "en-US";
+            if (langMap.ContainsKey(keyboardLanguage))
+            {
+                lookup = langMap[keyboardLanguage];
+            }
+            else
+            {
+                lookup = keyboardLanguage;
+            }
+
+            // Attempt to find the language specific keymap
+            if (keyMap.ContainsKey(lookup + ":" + checkKey) || keyMap.ContainsKey("en-US:" + checkKey))
+            {
+                return;
+            }
+            Debug.Write("Warning:  Ocellus doesn't support key " + checkKey + " for language " + keyboardLanguage);
+            Utilities.ReportMissingData("Missing Key: " + checkKey + " for language " + keyboardLanguage);
         }
 
         public List<uint> GetCodes(string command, string keyboardLanguage)
@@ -105,7 +132,6 @@ namespace OcellusPlugin
                 lookup = keyboardLanguage;
             }
 
-            Debug.Write("Lookup Lang " + lookup);
             // Attempt to find the language specific keymap
             List<uint> codes = keys == null ? null : (from key in keys where keyMap.ContainsKey(lookup + ":" + key) select keyMap[lookup + ":" + key]).ToList();
             if (codes.Count != 0)
@@ -113,7 +139,6 @@ namespace OcellusPlugin
                 Debug.Write("Using the lookup lang");
                 return codes;
             }
-            Debug.Write("Falling back to en-US");
             // If not found then default to en-US
             return keys == null ? null : (from key in keys where keyMap.ContainsKey("en-US:" + key) select keyMap["en-US:" + key]).ToList();
         }

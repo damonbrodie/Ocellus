@@ -134,6 +134,48 @@ class Eddn
 
     private const string uploadURL = "http://eddn-gateway.elite-markets.net:8080/upload/";
 
+    private static readonly Dictionary<string, string> commodityMap = new Dictionary<string, string>
+    {
+        { "Agricultural Medicines"             , "Agri-Medicines"},
+        { "Ai Relics"                          , "AI Relics"},
+        { "Animalmeat"                         , "Animal Meat"},
+        { "Atmospheric Extractors"             , "Atmospheric Processors"},
+        { "Auto Fabricators"                   , "Auto-Fabricators"},
+        { "Basic Narcotics"                    , "Narcotics"},
+        { "Bio Reducing Lichen"                , "Bioreducing Lichen"},
+        { "C M M Composite"                    , "CMM Composite"},
+        { "Comercial Samples"                  , "Commercial Samples"},
+        { "Diagnostic Sensor"                  , "Hardware Diagnostic Sensor"},
+        { "Drones"                             , "Limpet"},
+        { "Encripted Data Storage"             , "Encrypted Data Storage"},
+        { "H N Shock Mount"                    , "HN Shock Mount"},
+        { "Hafnium178"                         , "Hafnium 178"},
+        { "Hazardous Environment Suits"        , "H.E. Suits"},
+        { "Heliostatic Furnaces"               , "Microbial Furnaces"},
+        { "Low Temperature Diamond"            , "Low Temperature Diamonds"},
+        { "Marine Supplies"                    , "Marine Equipment"},
+        { "Meta Alloys"                        , "Meta-Alloys"},
+        { "Methanol Monohydrate Crystals"      , "Methanol Monohydrate"},
+        { "Mu Tom Imager"                      , "Muon Imager"},
+        { "Non Lethal Weapons"                 , "Non-Lethal Weapons"},
+        { "Power Grid Assembly"                , "Energy Grid Assembly"},
+        { "Power Transfer Conduits"            , "Power Transfer Bus"},
+        { "S A P8 Core Container"              , "SAP 8 Core Container"},
+        {  "Skimer Components"                  , "Skimmer Components"},
+        { "Terrain Enrichment Systems"         , "Land Enrichment Systems"},
+        { "Trinkets Of Fortune"                , "Trinkets Of Hidden Fortune"},
+        { "Unknown Artifact"                   , "Unknown Artefact"},
+        { "Unknown Artifact 2"                 , "Unknown Probe"},
+        { "U S S Cargo Ancient Artefact"       , "Ancient Artefact"},
+        { "U S S Cargo Experimental Chemicals" , "Experimental Chemicals"},
+        { "U S S Cargo Military Plans"         , "Military Plans"},
+        { "U S S Cargo Prototype Tech"         , "Prototype Tech"},
+        { "U S S Cargo Rebel Transmissions"    , "Rebel Transmissions"},
+        { "U S S Cargo Technical Blueprints"   , "Technical Blueprints"},
+        { "U S S Cargo Trade Data"             , "Trade Data"},
+        { "Wreckage Components"                , "Salvageable Wreckage"},
+    };
+
     private static string mapBracket(int bracket)
     {
         switch (bracket)
@@ -151,10 +193,21 @@ class Eddn
         return null;
     }
 
+
+
+
     private static Commodity extractCommodity(Dictionary<string, object> currCommodity)
     {
         Commodity newCommodity = new Commodity();
-        newCommodity.name = currCommodity["name"].ToString();
+        string currName = currCommodity["name"].ToString();
+        if (commodityMap.ContainsKey(currName))
+        {
+            newCommodity.name = commodityMap[currName];
+        }
+        else
+        {
+            newCommodity.name = currName;
+        }
         newCommodity.buyPrice = (int) currCommodity["buyPrice"];
         switch (currCommodity["stock"].GetType().ToString())
         {
@@ -394,6 +447,7 @@ class Eddn
         if (tResponse.Item1 != null)
         {
             Debug.Write("About to submit Commodities to EDDN");
+            Debug.Write(tResponse.Item1);
             Web.sendRequest(uploadURL, null, null, tResponse.Item1);
         }
         else

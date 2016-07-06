@@ -126,7 +126,7 @@ namespace OcellusPlugin
             {"fr-CA:<", 220},
 
             {"en-GB:Grave", 223},
-            {"en-GB:Hash:", 222},
+            {"en-GB:Hash", 222},
             {"en-GB:Apostrophe", 192},
 
         };
