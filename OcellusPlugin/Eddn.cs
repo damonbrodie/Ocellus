@@ -648,6 +648,20 @@ class Eddn
                 break;
 
             // Burst Lasers
+            case "128049403":
+                module.@class = "4";
+                module.rating = "E";
+                module.category = "hardpoint";
+                module.mount = "Fixed";
+                module.name = "Burst Laser";
+                break;
+            case "128727920":
+                module.@class = "4";
+                module.rating = "E";
+                module.category = "hardpoint";
+                module.mount = "Gimballed";
+                module.name = "Burst Laser";
+                break;
             case "128049402":
                 module.@class = "3";
                 module.rating = "D";
